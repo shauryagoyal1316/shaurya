@@ -1,9 +1,8 @@
 /**
- * Core TypeScript interfaces for Frame Portfolio
- * Based on SPECIFICATION.md data model requirements
+ * Core TypeScript interfaces for Shaurya Goyal's frontend developer portfolio.
  */
 
-export type ProjectCategory = 'portraits' | 'landscapes' | 'editorial' | 'architecture' | 'documentary';
+export type ProjectCategory = 'landing' | 'web-app' | 'experiment';
 
 export type AspectRatio = 'portrait' | 'landscape' | 'square';
 
@@ -17,43 +16,47 @@ export interface ProjectImage {
 
 export interface Project {
   id: string;
-  title: string;
+  /** Public-facing label (the URL is intentionally hidden — only this label is shown). */
+  label: string;
+  /** Short subtitle / project type, displayed under the label. */
+  role: string;
   category: ProjectCategory;
   year: string;
-  coverImage: string;
-  images: ProjectImage[];
-  description: string;
-  client?: string;
-  camera?: string;
-  location?: string;
   slug: string;
+  coverImage: string;
+  /** Two-line tagline used on cards and hero. */
+  tagline: string;
+  /** Long description used on the case-study page. */
+  description: string;
+  /** Process / approach paragraph(s), separated by \n\n. */
+  approach?: string;
+  stack: string[];
+  images: ProjectImage[];
+  /** Live URL — never displayed as text, only opened by the hidden ExternalLinkButton. */
+  liveUrl?: string;
+  featured?: boolean;
 }
 
-export interface PhotographerInfo {
+export interface ProfileInfo {
   name: string;
+  firstName: string;
+  lastName: string;
   tagline: string;
   heroIntroduction: string;
   biography: string;
   approach: string;
-  awards: string[];
-  clients: string[];
-  education: string;
+  skills: string[];
+  stack: string[];
   location: string;
-  email: string;
-  phone: string;
   availability: string;
   socialLinks: {
-    instagram?: string;
+    github?: string;
     linkedin?: string;
-    behance?: string;
+    x?: string;
+    email?: string;
   };
   portraitImage: string;
 }
 
-export interface ContactSubmission {
-  name: string;
-  email: string;
-  projectType: 'editorial' | 'commercial' | 'personal';
-  message: string;
-  timestamp: Date;
-}
+// Legacy alias kept so any stragglers still compile during migration.
+export type PhotographerInfo = ProfileInfo;

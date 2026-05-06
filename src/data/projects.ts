@@ -1,373 +1,189 @@
 import type { Project } from '@/types';
 
+/**
+ * Featured project list for the portfolio.
+ *
+ * Real case studies are kept first. Their `liveUrl` is intentionally never
+ * rendered as visible text anywhere in the UI — it is only attached to a
+ * hidden ExternalLinkButton component that opens the link in a new tab.
+ */
 export const projects: Project[] = [
   {
-    id: '1',
-    title: 'Desert Solitude',
-    category: 'landscapes',
+    id: 'barbershop',
+    label: 'Barbershop example',
+    role: 'Editorial landing page',
+    category: 'landing',
+    year: '2025',
+    slug: 'barbershop-example',
+    featured: true,
+    liveUrl: 'https://shauryagoyal1316.github.io/fade-co-showcase/',
+    tagline: 'A dark, editorial landing page for a Brooklyn barbershop.',
+    description:
+      'A single-page experience built around one idea — three barbers, one uncompromising standard. The brief called for a brand that felt closer to a fashion house than a salon: heavy serif type, deep shadows, and a single warm gold that earns its place by appearing only twice on the page.',
+    approach: `I started by stripping every assumption — no carousel of stock photos, no "our process" timeline, no smiling-staff grid. Just one room, one chair, one promise.
+
+The hero pairs a slow zoom on a portrait crop with a serif/italic headline split across two lines, so the layout reads like a magazine spread rather than a marketing page. Below the fold, every section breathes — generous spacing, locked vertical rhythm, and a gold accent that only ever marks an action.
+
+Type is doing 90% of the work. The rest is restraint.`,
+    stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
+    coverImage:
+      'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    images: [
+      {
+        id: 'barbershop-1',
+        src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Barbershop hero — close portrait, deep shadows, gold accent',
+        aspectRatio: 'landscape',
+      },
+      {
+        id: 'barbershop-2',
+        src: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+        alt: 'Detail of vintage barber tools on marble',
+        aspectRatio: 'portrait',
+      },
+      {
+        id: 'barbershop-3',
+        src: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Interior of the shop, warm tungsten light',
+        aspectRatio: 'landscape',
+      },
+    ],
+  },
+  {
+    id: 'private-chef',
+    label: 'Private chef example',
+    role: 'Cinematic single-page portfolio',
+    category: 'landing',
+    year: '2025',
+    slug: 'private-chef-example',
+    featured: true,
+    liveUrl: 'https://shauryagoyal1316.github.io/privatechefportfolio/',
+    tagline: 'A cinematic portfolio for a Lyon-trained private chef.',
+    description:
+      'A landing page for a private chef whose work is built around a single line: where every dinner becomes a memory. The site had to feel like the rooms he cooks in — candlelit, intimate, slow.',
+    approach: `The whole site hinges on one image: a long table, candles, herbs, copper. Everything else is restraint. A serif/italic headline anchors the hero, kept deliberately low in the frame so the photograph leads first and the type closes second.
+
+Below, the layout reads like an editorial: generous margins, narrow body column, and a quiet "01 — HELLO" marker tucked in the corner so the page feels composed rather than decorated.
+
+Color palette: true black, off-white, two earth tones, one muted forest green for actions. Typography is the loudest thing in the room — and it never raises its voice.`,
+    stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
+    coverImage:
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    images: [
+      {
+        id: 'chef-1',
+        src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Long candlelit table set for a private dinner',
+        aspectRatio: 'landscape',
+      },
+      {
+        id: 'chef-2',
+        src: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+        alt: 'Plated course, overhead, low key',
+        aspectRatio: 'portrait',
+      },
+      {
+        id: 'chef-3',
+        src: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Hands working with fresh herbs',
+        aspectRatio: 'landscape',
+      },
+    ],
+  },
+  {
+    id: 'halo',
+    label: 'Halo design system',
+    role: 'Component library & token system',
+    category: 'web-app',
+    year: '2025',
+    slug: 'halo-design-system',
+    featured: false,
+    tagline: 'A token-driven design system for a fintech product team.',
+    description:
+      'A headless component library built on Radix and Tailwind tokens, designed to keep eight squads visually aligned without slowing any of them down.',
+    approach:
+      'Started with the tokens, not the components. Once color, type, spacing, and motion were locked as CSS variables, the components practically wrote themselves — and theming became a one-file change.',
+    stack: ['React', 'TypeScript', 'Radix UI', 'Tailwind', 'Storybook'],
+    coverImage:
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    images: [
+      {
+        id: 'halo-1',
+        src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Design system documentation interface',
+        aspectRatio: 'landscape',
+      },
+    ],
+  },
+  {
+    id: 'drift',
+    label: 'Drift WebGL experiment',
+    role: 'Interactive landing prototype',
+    category: 'experiment',
     year: '2024',
-    slug: 'desert-solitude',
-    // Photo by Zain Creations on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1733496637708-9470e9c8cfe2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjB8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'An exploration of the stark beauty and quiet majesty of the American Southwest. This series captures the interplay of light, shadow, and ancient geological formations that define the desert landscape.',
-    client: 'National Geographic',
-    camera: 'Hasselblad X2D 100C',
-    location: 'Arizona & Utah',
+    slug: 'drift-webgl',
+    featured: false,
+    tagline: 'A scroll-driven WebGL hero, just to see how far it would go.',
+    description:
+      'A weekend prototype exploring how far a single GLSL shader and a ScrollTrigger timeline can carry a landing page before the framework has to step in.',
+    approach:
+      'No frameworks beyond Vite. One shader, one canvas, one scroll handler. The whole thing is under 40KB and runs at 60fps on a four-year-old laptop — which is the only metric I cared about.',
+    stack: ['Three.js', 'GLSL', 'GSAP', 'Vite'],
+    coverImage:
+      'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     images: [
       {
-        id: '1-1',
-        // Photo by Joe Dudeck on Unsplash
-        src: 'https://images.unsplash.com/photo-1610142004358-e4e987e4c5af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjF8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Desert canyon at golden hour',
-        aspectRatio: 'landscape'
+        id: 'drift-1',
+        src: 'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Abstract shader gradient',
+        aspectRatio: 'landscape',
       },
-      {
-        id: '1-2',
-        // Photo by Giorgio Fouarge on Unsplash
-        src: 'https://images.unsplash.com/photo-1705321217071-b1b6672fa23c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjF8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Sand dunes in morning light',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '1-3',
-        // Photo by Astroby krishna on Unsplash
-        src: 'https://images.unsplash.com/photo-1727319384541-8b96ca1526e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjF8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Rock formations under starry sky',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '1-4',
-        // Photo by Ilker Ozmen on Unsplash
-        src: 'https://images.unsplash.com/photo-1725986951716-75fb278ecaec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjJ8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Desert vista at sunset',
-        aspectRatio: 'square'
-      }
-    ]
+    ],
   },
   {
-    id: '2',
-    title: 'Urban Portraits',
-    category: 'portraits',
+    id: 'ledger',
+    label: 'Ledger dashboard',
+    role: 'Data-dense product UI',
+    category: 'web-app',
     year: '2024',
-    slug: 'urban-portraits',
-    // Photo by Bradley Andrews on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1761069234906-a7c77124f641?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjJ8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'A portrait series celebrating the diversity and character of city dwellers. Each subject was photographed in their favorite urban location, revealing the intimate connection between people and their environment.',
-    client: 'The New York Times Magazine',
-    camera: 'Canon EOS R5',
-    location: 'New York City',
+    slug: 'ledger-dashboard',
+    featured: false,
+    tagline: 'A trading dashboard that makes 14 charts feel calm.',
+    description:
+      'A dashboard concept for a portfolio analytics tool — the design problem was hierarchy, not features. The first version had every chart at equal weight and read like a wall of noise.',
+    approach:
+      'Reduced the palette to three values, locked everything to a 4px grid, and used motion only for state changes (never decoration). The screen is doing more, but feels like less.',
+    stack: ['React', 'TypeScript', 'Recharts', 'Tailwind'],
+    coverImage:
+      'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     images: [
       {
-        id: '2-1',
-        // Photo by ali mahmoodi on Unsplash
-        src: 'https://images.unsplash.com/photo-1559123988-ebd5228736b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjJ8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Portrait of young man in urban setting',
-        aspectRatio: 'portrait'
+        id: 'ledger-1',
+        src: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+        alt: 'Dashboard with multiple charts',
+        aspectRatio: 'landscape',
       },
-      {
-        id: '2-2',
-        // Photo by mouad bouallayel on Unsplash
-        src: 'https://images.unsplash.com/photo-1628173422874-0d18ff5bfb83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjN8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Professional portrait in natural light',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '2-3',
-        // Photo by Ivan Lenin on Unsplash
-        src: 'https://images.unsplash.com/photo-1581329318020-a226e3713ea8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjN8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Candid street portrait',
-        aspectRatio: 'square'
-      },
-      {
-        id: '2-4',
-        // Photo by Elric Pxl on Unsplash
-        src: 'https://images.unsplash.com/photo-1651464416004-60ae4e4846d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjR8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Portrait with city backdrop',
-        aspectRatio: 'portrait'
-      }
-    ]
+    ],
   },
-  {
-    id: '3',
-    title: 'Architectural Visions',
-    category: 'architecture',
-    year: '2023',
-    slug: 'architectural-visions',
-    // Photo by E Vos on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1758543437543-6d61ca0fd530?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjR8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Modern architecture captured through a minimalist lens. This series focuses on geometric forms, materiality, and the interplay of structure with natural light.',
-    client: 'Architectural Digest',
-    camera: 'Sony A7R V',
-    location: 'International',
-    images: [
-      {
-        id: '3-1',
-        // Photo by Zulfugar Karimov on Unsplash
-        src: 'https://images.unsplash.com/photo-1762344682624-176d89eb3bfe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjR8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Modern glass building facade',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '3-2',
-        // Photo by Jason Leung on Unsplash
-        src: 'https://images.unsplash.com/photo-1690927324729-bcf7d2b3ecac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjV8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Architectural interior with natural light',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '3-3',
-        // Photo by Declan Sun on Unsplash
-        src: 'https://images.unsplash.com/photo-1752756351017-bbe91e0439a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjV8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Geometric concrete structure',
-        aspectRatio: 'square'
-      },
-      {
-        id: '3-4',
-        // Photo by Alessandro Ricossa on Unsplash
-        src: 'https://images.unsplash.com/photo-1748940644273-47564655923f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjV8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Contemporary building at dusk',
-        aspectRatio: 'landscape'
-      }
-    ]
-  },
-  {
-    id: '4',
-    title: 'Fashion Forward',
-    category: 'editorial',
-    year: '2023',
-    slug: 'fashion-forward',
-    // Photo by Yigit ARISOY on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1682232568244-edbb92614c2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjZ8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'An editorial series exploring contemporary fashion through bold compositions and dramatic lighting. Shot on location and in studio.',
-    client: 'Vogue',
-    camera: 'Phase One XF IQ4',
-    location: 'New York & Paris',
-    images: [
-      {
-        id: '4-1',
-        // Photo by Cord Allman on Unsplash
-        src: 'https://images.unsplash.com/photo-1730724620317-2b806898bdda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NjZ8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Fashion editorial portrait',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '4-2',
-        // Photo by Happy Face Emoji on Unsplash
-        src: 'https://images.unsplash.com/photo-1704137892949-e480ceaebe24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njd8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Model in dramatic lighting',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '4-3',
-        // Photo by Lawrence Krowdeed on Unsplash
-        src: 'https://images.unsplash.com/photo-1631970283992-6b57250a4a29?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njd8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Fashion photography in urban setting',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '4-4',
-        // Photo by Ayo Ogunseinde on Unsplash
-        src: 'https://images.unsplash.com/photo-1540513325222-55b3afd3ed5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njh8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Editorial fashion portrait',
-        aspectRatio: 'portrait'
-      }
-    ]
-  },
-  {
-    id: '5',
-    title: 'Mountain Stories',
-    category: 'documentary',
-    year: '2023',
-    slug: 'mountain-stories',
-    // Photo by Eva Šumah on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1742260765447-239ed006350a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njh8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Documentary series following mountain communities and their relationship with the changing alpine environment. A year-long project documenting life at altitude.',
-    client: 'Personal Project',
-    camera: 'Fujifilm GFX 100 II',
-    location: 'Swiss Alps',
-    images: [
-      {
-        id: '5-1',
-        // Photo by Marek Piwnicki on Unsplash
-        src: 'https://images.unsplash.com/photo-1680287327539-9467451a8b81?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njh8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Mountain landscape at dawn',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '5-2',
-        // Photo by Wang John on Unsplash
-        src: 'https://images.unsplash.com/photo-1621765808360-5b2ea25d147a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njl8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Alpine village in winter',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '5-3',
-        // Photo by Peter Robbins on Unsplash
-        src: 'https://images.unsplash.com/photo-1721960778604-6a814f039347?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njl8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Mountain peaks in fog',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '5-4',
-        // Photo by FETHI BOUHAOUCHINE on Unsplash
-        src: 'https://images.unsplash.com/photo-1654362248566-6804dbcc5bdc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njl8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Sunrise over mountain range',
-        aspectRatio: 'landscape'
-      }
-    ]
-  },
-  {
-    id: '6',
-    title: 'Coastal Light',
-    category: 'landscapes',
-    year: '2022',
-    slug: 'coastal-light',
-    // Photo by Max Kukurudziak on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1669908752972-e04c3b65e855?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1Njl8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'The ever-changing mood of the coastline captured through different seasons and weather conditions. A meditation on light, water, and time.',
-    location: 'Pacific Northwest',
-    camera: 'Nikon Z9',
-    images: [
-      {
-        id: '6-1',
-        // Photo by Stefanie Jockschat on Unsplash
-        src: 'https://images.unsplash.com/photo-1619508126123-3586ee993858?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzB8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Ocean waves at sunset',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '6-2',
-        // Photo by Vladimir Shubarin on Unsplash
-        src: 'https://images.unsplash.com/photo-1566303060899-999a74200af8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzB8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Rocky coastline in morning mist',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '6-3',
-        // Photo by Panchanok Juntanarach on Unsplash
-        src: 'https://images.unsplash.com/photo-1762686185418-2bffbb8d8fea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzB8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Beach at golden hour',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '6-4',
-        // Photo by Emma Watson on Unsplash
-        src: 'https://images.unsplash.com/photo-1594927058779-aa4c1b5804a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzF8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Coastal cliffs in dramatic light',
-        aspectRatio: 'portrait'
-      }
-    ]
-  },
-  {
-    id: '7',
-    title: 'Studio Sessions',
-    category: 'portraits',
-    year: '2022',
-    slug: 'studio-sessions',
-    // Photo by Kyle Loftus on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1616267624976-b45d3a7bac73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzF8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Controlled studio portraiture emphasizing form, light, and expression. Classic approach to contemporary subjects.',
-    client: 'Various Editorial',
-    camera: 'Hasselblad H6D-100c',
-    location: 'New York Studio',
-    images: [
-      {
-        id: '7-1',
-        // Photo by Kyle Loftus on Unsplash
-        src: 'https://images.unsplash.com/photo-1616267624976-b45d3a7bac73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzF8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Studio portrait with dramatic lighting',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '7-2',
-        // Photo by Robert Piosik on Unsplash
-        src: 'https://images.unsplash.com/photo-1551536548-4de53e534e3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzJ8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Classic portrait in soft light',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '7-3',
-        // Photo by Bench Accounting on Unsplash
-        src: 'https://images.unsplash.com/photo-1449247709967-d4461a6a6103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzJ8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Portrait with minimalist background',
-        aspectRatio: 'square'
-      },
-      {
-        id: '7-4',
-        // Photo by Vitaly Gariev on Unsplash
-        src: 'https://images.unsplash.com/photo-1758521233019-e53cb9ce77b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzJ8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Contemporary studio portrait',
-        aspectRatio: 'portrait'
-      }
-    ]
-  },
-  {
-    id: '8',
-    title: 'City Lights',
-    category: 'editorial',
-    year: '2022',
-    slug: 'city-lights',
-    // Photo by Michael Wu on Unsplash
-    coverImage: 'https://images.unsplash.com/photo-1582210413269-f0bf6d13f58f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzN8&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Urban nightscapes and the electric energy of city life after dark. Long exposures and ambient light create a dreamlike quality.',
-    client: 'Adobe Creative Cloud',
-    camera: 'Sony A7S III',
-    location: 'Tokyo & New York',
-    images: [
-      {
-        id: '8-1',
-        // Photo by Li Zhang on Unsplash
-        src: 'https://images.unsplash.com/photo-1617293134227-0ec282f3ed89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzN8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'City street at night with neon lights',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '8-2',
-        // Photo by Clay LeConey on Unsplash
-        src: 'https://images.unsplash.com/photo-1643124859906-b5f7ef3e210d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzN8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Urban skyline at dusk',
-        aspectRatio: 'landscape'
-      },
-      {
-        id: '8-3',
-        // Photo by Lutz Stallknecht on Unsplash
-        src: 'https://images.unsplash.com/photo-1761870033405-d1474ec5dae9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzR8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Night photography of city architecture',
-        aspectRatio: 'portrait'
-      },
-      {
-        id: '8-4',
-        // Photo by stable pattern on Unsplash
-        src: 'https://images.unsplash.com/photo-1701012292510-83de4283ef1e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDA2OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjI3Njk1NzR8&ixlib=rb-4.1.0&q=80&w=1080',
-        alt: 'Downtown at night with light trails',
-        aspectRatio: 'landscape'
-      }
-    ]
-  }
 ];
 
-// Helper function to get project by slug
-export const getProjectBySlug = (slug: string): Project | undefined => {
-  return projects.find(project => project.slug === slug);
-};
+export const getProjectBySlug = (slug: string): Project | undefined =>
+  projects.find((p) => p.slug === slug);
 
-// Helper function to get projects by category
 export const getProjectsByCategory = (category: string): Project[] => {
   if (category === 'all') return projects;
-  return projects.filter(project => project.category === category);
+  return projects.filter((p) => p.category === category);
 };
 
-// Helper function to get featured projects (first 4)
-export const getFeaturedProjects = (): Project[] => {
-  return projects.slice(0, 4);
-};
+export const getFeaturedProjects = (): Project[] =>
+  projects.filter((p) => p.featured);
 
-// Helper function to get next/previous project
-export const getAdjacentProjects = (currentSlug: string): { prev: Project | null; next: Project | null } => {
-  const currentIndex = projects.findIndex(p => p.slug === currentSlug);
-  
+export const getAdjacentProjects = (
+  currentSlug: string,
+): { prev: Project | null; next: Project | null } => {
+  const i = projects.findIndex((p) => p.slug === currentSlug);
   return {
-    prev: currentIndex > 0 ? projects[currentIndex - 1] : null,
-    next: currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null
+    prev: i > 0 ? projects[i - 1] : null,
+    next: i >= 0 && i < projects.length - 1 ? projects[i + 1] : null,
   };
 };
