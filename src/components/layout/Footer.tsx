@@ -1,69 +1,52 @@
-import { Instagram, Linkedin } from 'lucide-react';
-import { photographerInfo } from '@/data/photographer';
-import { Separator } from '@/components/ui/separator';
+import { Github } from 'lucide-react';
+import { profile } from '@/data/profile';
+import { MagneticLink } from '@/components/effects/MagneticLink';
 
 /**
- * Minimal footer component with social links and copyright
+ * Editorial footer: oversized name as the visual anchor, mono metadata
+ * row underneath. No contact form — by design.
  */
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          {/* Copyright */}
-          <p className="text-sm text-muted-foreground font-light tracking-wide">
-            © {currentYear} {photographerInfo.name}. All rights reserved.
-          </p>
+    <footer className="relative z-[2] border-t border-border bg-background">
+      <div className="mx-auto max-w-[1440px] px-6 pb-10 pt-24 lg:px-10 lg:pt-32">
+        {/* Big name */}
+        <div className="mb-16 select-none">
+          <h2 className="font-display text-[20vw] leading-[0.85] tracking-tight text-foreground/95 sm:text-[16vw] md:text-[14vw] lg:text-[12vw]">
+            <span className="block">Shaurya</span>
+            <span className="block italic text-foreground/60">Goyal.</span>
+          </h2>
+        </div>
 
-          {/* Social Links */}
-          <div className="flex items-center gap-6">
-            {photographerInfo.socialLinks.instagram && (
-              <a
-                href={photographerInfo.socialLinks.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Instagram"
+        {/* Metadata row */}
+        <div className="grid gap-8 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground/60 md:grid-cols-4">
+          <div>
+            <div className="mb-2 text-foreground/40">© {year}</div>
+            <div className="text-foreground">All rights reserved</div>
+          </div>
+          <div>
+            <div className="mb-2 text-foreground/40">Status</div>
+            <div className="text-foreground">
+              <span className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary align-middle" />
+              {profile.availability}
+            </div>
+          </div>
+          <div>
+            <div className="mb-2 text-foreground/40">Based</div>
+            <div className="text-foreground">{profile.location}</div>
+          </div>
+          <div className="flex items-start justify-start gap-4 md:justify-end">
+            {profile.socialLinks.github && (
+              <MagneticLink
+                href={profile.socialLinks.github}
+                aria-label="GitHub"
+                className="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-surface-2"
+                strength={8}
               >
-                <Instagram className="size-5" />
-              </a>
-            )}
-            {photographerInfo.socialLinks.linkedin && (
-              <a
-                href={photographerInfo.socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="size-5" />
-              </a>
-            )}
-            {photographerInfo.socialLinks.behance && (
-              <a
-                href={photographerInfo.socialLinks.behance}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Behance"
-              >
-                <svg
-                  className="size-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 8h6a3 3 0 0 1 0 6H3V8z" />
-                  <path d="M3 14h7a3 3 0 0 1 0 6H3v-6z" />
-                  <path d="M14 7h7" />
-                  <path d="M17 8a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-                </svg>
-              </a>
+                <Github className="size-4" />
+              </MagneticLink>
             )}
           </div>
         </div>
