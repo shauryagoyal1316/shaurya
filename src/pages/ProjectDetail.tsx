@@ -1,160 +1,176 @@
-import { useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Calendar, MapPin, Camera, User } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { useRef } from 'react';
+import { useParams, Navigate, Link } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { getProjectBySlug } from '@/data/projects';
-import { ImageWithLightbox } from '@/components/portfolio/ImageWithLightbox';
-import { Lightbox } from '@/components/portfolio/Lightbox';
+import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
+import { ExternalLinkButton } from '@/components/work/ExternalLinkButton';
+import { ProjectNavigation } from '@/components/portfolio/ProjectNavigation';
+import { getProjectBySlug, getAdjacentProjects } from '@/data/projects';
 
 /**
- * Project detail page with hero image, gallery, and full-screen lightbox
- * Features smooth animations and immersive image viewing experience
+ * Case-study page. Pinned hero with parallax cover image, long-form story,
+ * gallery with image parallax, hidden-URL "View live" button at the bottom,
+ * prev/next strip.
  */
 export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
   const project = slug ? getProjectBySlug(slug) : undefined;
+  const heroRef = useRef<HTMLDivElement>(null);
 
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.25]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.55, 0.9]);
 
-  // 404 if project not found
-  if (!project) {
-    return <Navigate to="/404" replace />;
-  }
+  if (!project) return <Navigate to="/404" replace />;
 
-  const openLightbox = (index: number) => {
-    setCurrentImageIndex(index);
-    setLightboxOpen(true);
-  };
-
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-  };
+  const { prev, next } = getAdjacentProjects(project.slug);
 
   return (
     <>
       <SEOHead
-        title={project.title}
-        description={project.description}
+        title={project.label}
+        description={project.tagline}
         image={project.coverImage}
         type="article"
       />
-      
-      <div className="min-h-screen">
-        {/* Hero Image - 70vh */}
-      <motion.div
-        className="relative w-full h-[70vh] overflow-hidden bg-muted"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <img
+
+      {/* HERO */}
+      <section ref={heroRef} className="relative h-[100vh] overflow-hidden bg-background">
+        <motion.img
           src={project.coverImage}
-          alt={project.title}
-          className="w-full h-full object-cover"
+          alt={project.label}
           loading="eager"
           fetchPriority="high"
+          style={{ scale: imgScale, y: imgY }}
+          className="absolute inset-0 h-full w-full object-cover"
         />
-        {/* Gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-      </motion.div>
-
-      {/* Project Info Section */}
-      <section className="max-w-4xl mx-auto px-6 lg:px-8 py-12 md:py-16">
         <motion.div
-          className="space-y-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          {/* Title and Category */}
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide">
-              {project.title}
-            </h1>
-            <div className="flex flex-wrap gap-6 text-sm text-muted-foreground font-light">
-              <div className="flex items-center gap-2">
-                <Calendar className="size-4" />
-                <span>{project.year}</span>
-              </div>
-              <div className="flex items-center gap-2 capitalize">
-                <span>•</span>
-                <span>{project.category}</span>
-              </div>
-              {project.location && (
-                <>
-                  <span>•</span>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="size-4" />
-                    <span>{project.location}</span>
-                  </div>
-                </>
-              )}
+          style={{ opacity: overlayOpacity }}
+          className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background"
+        />
+
+        <div className="relative z-10 flex h-full flex-col px-6 pb-12 pt-32 md:px-10">
+          <Link
+            to="/work"
+            data-cursor="hover"
+            className="group inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-white/70 transition-colors hover:text-white"
+          >
+            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+            Back to work
+          </Link>
+
+          <div className="mt-auto max-w-[1440px]">
+            <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.28em] text-white/70">
+              {project.year} · {project.role} · {project.category}
             </div>
-          </div>
-
-          <Separator />
-
-          {/* Description */}
-          <div className="space-y-4">
-            <p className="text-lg md:text-xl font-light leading-relaxed text-foreground">
-              {project.description}
+            <h1 className="font-display text-6xl leading-[0.9] tracking-tight text-white md:text-8xl lg:text-[10rem]">
+              <SplitTextReveal text={project.label} stagger={0.04} />
+            </h1>
+            <p className="mt-8 max-w-2xl text-balance text-lg font-light leading-relaxed text-white/80 md:text-xl">
+              {project.tagline}
             </p>
           </div>
-
-          {/* Technical Details */}
-          <div className="grid md:grid-cols-2 gap-6 pt-4">
-            {project.camera && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-light tracking-wide uppercase text-muted-foreground">
-                  <Camera className="size-4" />
-                  <span>Camera</span>
-                </div>
-                <p className="font-light text-foreground">{project.camera}</p>
-              </div>
-            )}
-            {project.client && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-light tracking-wide uppercase text-muted-foreground">
-                  <User className="size-4" />
-                  <span>Client</span>
-                </div>
-                <p className="font-light text-foreground">{project.client}</p>
-              </div>
-            )}
-          </div>
-        </motion.div>
+        </div>
       </section>
 
-        {/* Image Gallery - Edge to edge */}
-        <section className="py-12 md:py-16">
-          <div className="space-y-8 md:space-y-12">
-            {project.images.map((image, index) => (
-              <ScrollReveal key={image.id} delay={index * 0.1}>
-                <ImageWithLightbox
-                  image={image}
-                  onClick={() => openLightbox(index)}
-                  priority={index === 0}
-                  index={0}
-                  className="w-full"
+      {/* META + DESCRIPTION */}
+      <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
+          {/* Sidebar meta */}
+          <aside className="md:col-span-4 md:col-start-1">
+            <div className="space-y-10 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60">
+              <div>
+                <div className="mb-2 text-foreground/40">Year</div>
+                <div className="text-foreground">{project.year}</div>
+              </div>
+              <div>
+                <div className="mb-2 text-foreground/40">Role</div>
+                <div className="text-foreground">{project.role}</div>
+              </div>
+              <div>
+                <div className="mb-2 text-foreground/40">Stack</div>
+                <ul className="space-y-1 text-foreground">
+                  {project.stack.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ul>
+              </div>
+              {project.liveUrl && (
+                <div className="pt-4">
+                  <ExternalLinkButton href={project.liveUrl} label="View live" />
+                </div>
+              )}
+            </div>
+          </aside>
+
+          {/* Long-form */}
+          <article className="prose prose-invert max-w-none md:col-span-7 md:col-start-6">
+            <p className="mb-10 font-display text-3xl leading-[1.15] text-foreground/95 md:text-4xl">
+              {project.description}
+            </p>
+            {project.approach &&
+              project.approach.split('\n\n').map((para, i) => (
+                <p
+                  key={i}
+                  className="mb-6 text-lg font-light leading-[1.75] text-foreground/70"
+                >
+                  {para}
+                </p>
+              ))}
+          </article>
+        </div>
+      </section>
+
+      {/* GALLERY */}
+      {project.images.length > 0 && (
+        <section className="bg-background px-6 pb-24 md:px-10 md:pb-32">
+          <div className="mx-auto max-w-[1440px] space-y-10 md:space-y-16">
+            {project.images.map((img, i) => (
+              <motion.figure
+                key={img.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
+                className="overflow-hidden bg-surface-2"
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  className="block h-auto w-full object-cover"
                 />
-              </ScrollReveal>
+                {img.caption && (
+                  <figcaption className="mt-3 px-1 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
+                    {img.caption}
+                  </figcaption>
+                )}
+              </motion.figure>
             ))}
           </div>
         </section>
+      )}
 
-        {/* Lightbox */}
-        <Lightbox
-          images={project.images}
-          currentIndex={currentImageIndex}
-          isOpen={lightboxOpen}
-          onClose={closeLightbox}
-          onNavigate={setCurrentImageIndex}
-        />
-      </div>
+      {/* CTA before next */}
+      {project.liveUrl && (
+        <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">
+          <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-10 md:flex-row md:items-end">
+            <h2 className="font-display text-5xl leading-[0.95] text-foreground md:text-7xl">
+              See it
+              <span className="italic text-foreground/55"> running.</span>
+            </h2>
+            <ExternalLinkButton href={project.liveUrl} label="View live" />
+          </div>
+        </section>
+      )}
+
+      {/* PREV / NEXT */}
+      <ProjectNavigation prev={prev} next={next} />
     </>
   );
 }
