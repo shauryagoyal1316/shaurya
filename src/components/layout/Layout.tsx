@@ -1,29 +1,26 @@
 import { ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { MagneticCursor } from '@/components/effects/MagneticCursor';
+import { ScrollProgress } from '@/components/effects/ScrollProgress';
+import { NoiseOverlay } from '@/components/effects/NoiseOverlay';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 /**
- * Main layout wrapper component
- * Provides consistent header and footer across all pages
- * Homepage removes top padding to allow header overlay on hero
+ * Root layout: sticky header + main + footer, plus the global decorations
+ * (custom cursor, scroll progress rail, film-grain overlay).
  */
 export function Layout({ children }: LayoutProps) {
-  const location = useLocation();
-  const isHomepage = location.pathname === '/';
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col bg-background text-foreground">
+      <NoiseOverlay />
+      <MagneticCursor />
+      <ScrollProgress />
       <Header />
-      <main 
-        id="main-content" 
-        className={`flex-1 ${isHomepage ? '' : 'pt-16'}`}
-        tabIndex={-1}
-      >
+      <main id="main-content" className="relative z-[2] flex-1" tabIndex={-1}>
         {children}
       </main>
       <Footer />

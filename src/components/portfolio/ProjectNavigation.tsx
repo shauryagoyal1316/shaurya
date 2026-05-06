@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Project } from '@/types';
 import { cn } from '@/lib/utils';
@@ -10,80 +9,59 @@ interface ProjectNavigationProps {
 }
 
 /**
- * Previous/Next project navigation component
- * Shows project title and thumbnail on hover
+ * Edge-to-edge prev/next strip at the foot of a case study.
  */
 export function ProjectNavigation({ prev, next }: ProjectNavigationProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-border">
-      {/* Previous Project */}
-      <div className={cn('border-b md:border-b-0 md:border-r border-border', !prev && 'opacity-50')}>
+    <div className="grid grid-cols-1 border-t border-border md:grid-cols-2">
+      {/* Prev */}
+      <div className={cn('border-b border-border md:border-b-0 md:border-r', !prev && 'opacity-40')}>
         {prev ? (
           <Link
-            to={`/project/${prev.slug}`}
-            className="group block p-8 md:p-12 hover:bg-accent transition-colors duration-300"
+            to={`/work/${prev.slug}`}
+            data-cursor="view"
+            className="group block p-10 transition-colors hover:bg-surface-1 md:p-14"
           >
-            <motion.div
-              className="space-y-4"
-              whileHover={{ x: -5 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground transition-colors">
-                <ArrowLeft className="size-5" />
-                <span className="text-sm font-light tracking-wide uppercase">Previous Project</span>
-              </div>
-              <div>
-                <h3 className="text-2xl md:text-3xl font-light tracking-wide text-foreground">
-                  {prev.title}
-                </h3>
-                <p className="text-sm text-muted-foreground font-light mt-2 capitalize">
-                  {prev.category} • {prev.year}
-                </p>
-              </div>
-            </motion.div>
+            <div className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50 transition-colors group-hover:text-foreground">
+              <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+              Previous
+            </div>
+            <div className="font-display text-4xl text-foreground md:text-5xl">
+              {prev.label}
+            </div>
+            <div className="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
+              {prev.role} · {prev.year}
+            </div>
           </Link>
         ) : (
-          <div className="p-8 md:p-12">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <ArrowLeft className="size-5" />
-              <span className="text-sm font-light tracking-wide uppercase">No Previous Project</span>
-            </div>
+          <div className="p-10 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/40 md:p-14">
+            <div className="flex items-center gap-3"><ArrowLeft className="size-3.5" /> No previous</div>
           </div>
         )}
       </div>
 
-      {/* Next Project */}
-      <div className={cn(!next && 'opacity-50')}>
+      {/* Next */}
+      <div className={cn(!next && 'opacity-40')}>
         {next ? (
           <Link
-            to={`/project/${next.slug}`}
-            className="group block p-8 md:p-12 hover:bg-accent transition-colors duration-300"
+            to={`/work/${next.slug}`}
+            data-cursor="view"
+            className="group block p-10 text-right transition-colors hover:bg-surface-1 md:p-14"
           >
-            <motion.div
-              className="space-y-4 text-right"
-              whileHover={{ x: 5 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex items-center justify-end gap-3 text-muted-foreground group-hover:text-foreground transition-colors">
-                <span className="text-sm font-light tracking-wide uppercase">Next Project</span>
-                <ArrowRight className="size-5" />
-              </div>
-              <div>
-                <h3 className="text-2xl md:text-3xl font-light tracking-wide text-foreground">
-                  {next.title}
-                </h3>
-                <p className="text-sm text-muted-foreground font-light mt-2 capitalize">
-                  {next.category} • {next.year}
-                </p>
-              </div>
-            </motion.div>
+            <div className="mb-6 flex items-center justify-end gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50 transition-colors group-hover:text-foreground">
+              Next
+              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+            </div>
+            <div className="font-display text-4xl text-foreground md:text-5xl">
+              {next.label}
+            </div>
+            <div className="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
+              {next.role} · {next.year}
+            </div>
           </Link>
         ) : (
-          <div className="p-8 md:p-12 text-right">
-            <div className="flex items-center justify-end gap-3 text-muted-foreground">
-              <span className="text-sm font-light tracking-wide uppercase">No Next Project</span>
-              <ArrowRight className="size-5" />
-            </div>
+          <div className="p-10 text-right font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/40 md:p-14">
+            <div className="flex items-center justify-end gap-3">No next <ArrowRight className="size-3.5" /></div>
           </div>
         )}
       </div>

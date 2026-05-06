@@ -1,92 +1,42 @@
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SEOHead } from "@/components/seo/SEOHead";
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
+import { SEOHead } from '@/components/seo/SEOHead';
+import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 
-/**
- * 404 Not Found page with branded design and smooth animations
- * Provides clear navigation back to home
- */
-const NotFound = () => {
+/** 404 — keeps the editorial voice. */
+export default function NotFound() {
   return (
     <>
-      <SEOHead
-        title="Page Not Found"
-        description="The page you're looking for doesn't exist. Return to the homepage to continue browsing."
-      />
-      
-      <main className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-6">
-        <motion.div
-          className="max-w-2xl w-full text-center space-y-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* 404 Number */}
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <h1 className="text-[120px] md:text-[180px] font-extralight tracking-wider leading-none text-foreground/10">
-              404
-            </h1>
-          </motion.div>
-
-          {/* Content */}
-          <div className="space-y-4 -mt-8">
-            <motion.h2
-              className="text-3xl md:text-5xl font-light tracking-wide"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              Page Not Found
-            </motion.h2>
-            
-            <motion.p
-              className="text-base md:text-lg text-muted-foreground font-light leading-relaxed max-w-md mx-auto"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              The page you're looking for doesn't exist or has been moved.
-              Let's get you back on track.
-            </motion.p>
+      <SEOHead title="Not found" description="This page doesn't exist." />
+      <section className="flex min-h-[100vh] items-center px-6 md:px-10">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-8 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+            <span className="mr-3 text-primary">/</span>404
           </div>
-
-          {/* Action Button */}
+          <h1 className="font-display text-[20vw] leading-[0.85] text-foreground md:text-[14vw]">
+            <SplitTextReveal text="Lost." stagger={0.05} />
+            <span className="block italic text-foreground/55">
+              <SplitTextReveal text="Nothing here." stagger={0.04} delay={0.15} />
+            </span>
+          </h1>
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+            transition={{ delay: 0.6, duration: 0.7 }}
+            className="mt-12"
           >
-            <Button
-              asChild
-              size="lg"
-              className="px-8 py-6 text-base font-light tracking-wide group"
+            <Link
+              to="/"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground transition-colors hover:text-primary"
             >
-              <Link to="/">
-                <ArrowLeft className="mr-2 size-5 transition-transform group-hover:-translate-x-1" />
-                Return to Home
-              </Link>
-            </Button>
+              <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+              Back to index
+            </Link>
           </motion.div>
-
-          {/* Decorative Element */}
-          <motion.div
-            className="pt-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-          >
-            <div className="h-px w-24 mx-auto bg-border" />
-          </motion.div>
-        </motion.div>
-      </main>
+        </div>
+      </section>
     </>
   );
-};
-
-export default NotFound;
+}
