@@ -37,8 +37,7 @@ export const profile: ProfileInfo = {
     github: 'https://github.com/shauryagoyal1316',
     email: 'mailto:hello@shauryagoyal.com',
   },
-  portraitImage:
-    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+  portraitImage: '',
 };
 
 // Legacy alias so any leftover imports of `photographerInfo` keep compiling.

@@ -44,14 +44,7 @@ export default function About() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="md:col-span-4"
           >
-            <div className="aspect-[3/4] overflow-hidden bg-surface-2">
-              <img
-                src={profile.portraitImage}
-                alt={profile.name}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <div className="aspect-[3/4] bg-surface-2" />
             <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
               {profile.location}
             </div>

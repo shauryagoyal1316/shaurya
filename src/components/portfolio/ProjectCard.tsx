@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '@/types';
 import { TiltCard } from '@/components/effects/TiltCard';
@@ -20,8 +20,9 @@ interface ProjectCardProps {
 
 /**
  * Project card — image on a dark surface, label and role appear on hover.
- * Uses `data-cursor="view"` so the magnetic cursor swaps to the "VIEW"
- * variant when entering the card.
+ * Adds an Apple-style scroll-linked image parallax (image translates -8%
+ * to 8% as the card passes through the viewport) on top of the existing
+ * 3D tilt. Cursor variant `view` swaps to the "VIEW" pill.
  */
 export function ProjectCard({
   project,
@@ -31,6 +32,18 @@ export function ProjectCard({
   flat = false,
 }: ProjectCardProps) {
   const [loaded, setLoaded] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll-linked image parallax. The image drifts opposite to scroll
+  // direction inside its overflow-hidden frame for a layered feel.
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ['start end', 'end start'],
+  });
+  const rawY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
+  const imageY = useSpring(rawY, { stiffness: 90, damping: 22, mass: 0.4 });
+  const rawScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1.0, 1.08]);
+  const imageScale = useSpring(rawScale, { stiffness: 90, damping: 22, mass: 0.4 });
 
   const ratioClass = {
     portrait: 'aspect-[3/4]',
@@ -45,21 +58,11 @@ export function ProjectCard({
       className="group relative block overflow-hidden bg-surface-2"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
-        {!loaded && <div className="absolute inset-0 bg-surface-2" />}
-        <motion.img
-          src={project.coverImage}
-          alt={project.label}
-          className={cn(
-            'absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
-            loaded ? 'opacity-100' : 'opacity-0',
-            'group-hover:scale-[1.06]'
-          )}
-          loading={index < 3 ? 'eager' : 'lazy'}
-          onLoad={() => setLoaded(true)}
-        />
+        {/* Image-free: solid surface placeholder */}
+        <div className="absolute inset-0 bg-surface-2" />
 
-        {/* Bottom gradient + meta overlay */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 opacity-0 transition-opacity duration-500 group-hover:opacity-100 md:p-8">
+        {/* Bottom meta overlay — slides up with content on hover */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 md:p-8">
           <div className="space-y-1">
             <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/60">
               {project.year} · {project.role}
@@ -68,7 +71,7 @@ export function ProjectCard({
               {project.label}
             </div>
           </div>
-          <div className="flex size-10 items-center justify-center rounded-full border border-white/40 text-white">
+          <div className="flex size-10 items-center justify-center rounded-full border border-white/40 text-white transition-transform duration-500 group-hover:rotate-45">
             <ArrowUpRight className="size-4" />
           </div>
         </div>
@@ -87,10 +90,11 @@ export function ProjectCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      ref={cardRef}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-10% 0px' }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
     >
       <TiltCard className="will-change-transform">{inner}</TiltCard>
     </motion.div>

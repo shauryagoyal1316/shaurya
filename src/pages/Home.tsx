@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { getFeaturedProjects, projects } from '@/data/projects';
@@ -10,33 +10,32 @@ import { Marquee } from '@/components/effects/Marquee';
 import { CountUp } from '@/components/effects/CountUp';
 import { MagneticLink } from '@/components/effects/MagneticLink';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
+import { EASE } from '@/lib/motion';
 
 /**
- * Home — the cinematic entry. Hero with split-letter reveal, scroll-driven
- * scale-out into the about teaser, featured work, tech marquee, oversized
- * footer CTA.
+ * Home — the cinematic entry. Spring-driven scroll exit on the hero so the
+ * scale + blur + lift feel like physical motion rather than a linear tween.
+ * Tags drift in from the corners; subtitle eases up beneath the headline.
  */
 export default function Home() {
   const featured = getFeaturedProjects();
   const heroRef = useRef<HTMLElement>(null);
 
-  // Apple-style "small element scales 8x then dissolves" on first scroll.
+  // Apple-style "scales out + blurs + dissolves" on first scroll, but
+  // wrapped through a spring so it never feels mechanical.
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.4, 0]);
-  const heroBlur = useTransform(scrollYProgress, [0, 1], ['blur(0px)', 'blur(8px)']);
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
-
-  // Smooth-scroll anchors on the page.
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = 'smooth';
-    return () => {
-      document.documentElement.style.scrollBehavior = '';
-    };
-  }, []);
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    mass: 0.4,
+  });
+  const heroScale = useTransform(smoothProgress, [0, 1], [1, 1.5]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.65, 1], [1, 0.4, 0]);
+  const heroBlur = useTransform(smoothProgress, [0, 1], ['blur(0px)', 'blur(14px)']);
+  const heroY = useTransform(smoothProgress, [0, 1], ['0%', '-22%']);
 
   return (
     <>
@@ -51,20 +50,24 @@ export default function Home() {
           style={{ scale: heroScale, opacity: heroOpacity, filter: heroBlur, y: heroY }}
           className="relative z-[2] flex h-full flex-col items-center justify-center px-6"
         >
-          {/* Top mono tag */}
+          {/* Top-left mono tag */}
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: -12, y: -6 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.5, ease: EASE.snappy }}
             className="absolute left-6 top-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:left-10 md:top-10"
           >
-            <span className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary align-middle" />
+            <motion.span
+              className="mr-2 inline-block size-1.5 rounded-full bg-primary align-middle"
+              animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
+              transition={{ duration: 2.4, ease: 'easeInOut', repeat: Infinity }}
+            />
             Portfolio · 2026
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: 12, y: -6 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.6, ease: EASE.snappy }}
             className="absolute right-6 top-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:right-10 md:top-10"
           >
             Frontend Developer / Interface Engineer
@@ -76,22 +79,22 @@ export default function Home() {
               text="Shaurya"
               as="span"
               className="block text-[22vw] tracking-[-0.04em] md:text-[18vw]"
-              stagger={0.05}
+              stagger={0.045}
             />
             <SplitTextReveal
               text="Goyal."
               as="span"
               className="block italic text-[22vw] tracking-[-0.04em] text-foreground/55 md:text-[18vw]"
-              delay={0.4}
-              stagger={0.05}
+              delay={0.45}
+              stagger={0.045}
             />
           </h1>
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 22, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 1, delay: 1.3, ease: EASE.snappy }}
             className="mt-10 max-w-xl text-balance text-center text-base font-light leading-relaxed text-foreground/70 md:text-lg"
           >
             {profile.heroIntroduction}
@@ -100,16 +103,24 @@ export default function Home() {
           {/* Bottom row */}
           <div className="absolute inset-x-0 bottom-8 flex items-center justify-between px-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:px-10">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 1.6 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 1.7, ease: EASE.snappy }}
+              className="inline-flex items-center"
             >
-              Scroll <span className="ml-2">↓</span>
+              Scroll
+              <motion.span
+                className="ml-2 inline-block"
+                animate={{ y: [0, 4, 0] }}
+                transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
+              >
+                ↓
+              </motion.span>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 1.6 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 1.7, ease: EASE.snappy }}
             >
               {profile.location}
             </motion.div>
@@ -126,21 +137,21 @@ export default function Home() {
           <h2 className="font-display text-4xl leading-[1.05] text-foreground/90 md:text-6xl lg:text-7xl">
             <SplitTextReveal
               text="I build cinematic, high-craft web interfaces."
-              stagger={0.025}
+              stagger={0.022}
             />
             <span className="mt-4 block italic text-foreground/55">
               <SplitTextReveal
                 text="Type, motion, and the obsession with details no one notices."
-                stagger={0.02}
+                stagger={0.018}
               />
             </span>
           </h2>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-10% 0px' }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            transition={{ duration: 0.9, delay: 0.25, ease: EASE.snappy }}
             className="mt-12 flex flex-wrap items-baseline gap-x-12 gap-y-6 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60"
           >
             <div>
@@ -208,7 +219,7 @@ export default function Home() {
 
       {/* TECH MARQUEE */}
       <section className="relative z-[3] overflow-hidden border-y border-border bg-background py-12 md:py-16">
-        <Marquee duration={45}>
+        <Marquee speed={60}>
           {profile.stack.map((tech, i) => (
             <span
               key={i}

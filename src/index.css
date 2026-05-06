@@ -211,21 +211,12 @@
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
 
-  /* Subtle film-grain noise overlay applied via ::after */
-  .grain {
-    position: relative;
-    isolation: isolate;
-  }
-  .grain::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.035;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  }
+  /*
+   * Grain is rendered exclusively by the <NoiseOverlay /> component now.
+   * The duplicate `.grain::after` utility was removed to eliminate the
+   * stacked-overlay washout (mix-blend-overlay over near-black + a second
+   * fixed grain layer caused a faint sepia tint and cursor flicker).
+   */
 
   .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
   .hide-scrollbar::-webkit-scrollbar { display: none; }
