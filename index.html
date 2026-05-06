@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shaurya Goyal — Frontend Developer</title>
+    <title>Shaurya Goyal - Full-Stack Website Builder</title>
     <meta
       name="description"
-      content="Shaurya Goyal — frontend developer building cinematic, high-craft web interfaces. Selected work and case studies."
+      content="Shaurya Goyal builds complete websites, front end and back end, with professional AI-assisted workflows."
     />
     <meta name="author" content="Shaurya Goyal" />
     <meta name="theme-color" content="#0a0a0a" />
@@ -18,16 +18,24 @@
       rel="stylesheet"
     />
 
-    <meta property="og:title" content="Shaurya Goyal — Frontend Developer" />
+    <meta property="og:title" content="Shaurya Goyal - Full-Stack Website Builder" />
     <meta
       property="og:description"
-      content="Cinematic, high-craft web interfaces. Selected work and case studies."
+      content="Complete websites built with professional AI-assisted workflows."
     />
     <meta property="og:type" content="website" />
   </head>
 
   <body>
     <div id="root"></div>
+    <script>
+      if (
+        window.location.protocol === "file:" &&
+        !window.location.pathname.replace(/\\/g, "/").endsWith("/dist/index.html")
+      ) {
+        window.location.replace(new URL("./dist/index.html", window.location.href));
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

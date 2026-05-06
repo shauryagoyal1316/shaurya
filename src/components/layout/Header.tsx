@@ -3,7 +3,7 @@ import { Menu } from 'lucide-react';
 import { useState } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { profile } from '@/data/profile';
 import { cn } from '@/lib/utils';
 
@@ -121,6 +121,8 @@ export function Header() {
               <Menu className="size-4" />
             </SheetTrigger>
             <SheetContent side="right" className="w-full border-l-border bg-background p-0 sm:w-96">
+              <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+              <SheetDescription className="sr-only">Primary site navigation links</SheetDescription>
               <div className="flex h-full flex-col justify-between p-8">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/70">

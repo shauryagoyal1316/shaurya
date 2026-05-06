@@ -10,8 +10,6 @@ import type { ProjectCategory } from '@/types';
 const CATEGORIES: { id: 'all' | ProjectCategory; label: string }[] = [
   { id: 'all', label: 'All' },
   { id: 'landing', label: 'Landing' },
-  { id: 'web-app', label: 'Web app' },
-  { id: 'experiment', label: 'Experiment' },
 ];
 
 /**
@@ -50,7 +48,7 @@ export default function Work() {
     <>
       <SEOHead
         title="Work"
-        description="Selected frontend builds, case studies, and experiments by Shaurya Goyal."
+        description="Two real website examples by Shaurya Goyal."
       />
 
       {/* HERO */}
@@ -66,9 +64,8 @@ export default function Work() {
             <SplitTextReveal text="Work." stagger={0.06} />
           </h1>
           <p className="mt-10 max-w-xl text-balance text-base font-light leading-relaxed text-foreground/70 md:text-lg">
-            A short list of things I've built or shipped recently. Each one
-            taught me something different about the line between craft and
-            decoration.
+            Two real website examples: one barbershop landing page and one
+            private chef portfolio.
           </p>
         </motion.div>
       </section>
