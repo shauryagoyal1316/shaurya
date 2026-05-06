@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { profile } from '@/data/profile';
@@ -14,13 +14,20 @@ const navLinks = [
 ];
 
 /**
- * Editorial header: monogram on the left, navigation right, mono availability
- * tag below at the rightmost edge. Becomes a thin frosted bar after scroll.
+ * Editorial header that compresses as the user scrolls — height shrinks,
+ * monogram scales down, and the bar gets a frosted background. All driven
+ * by `useScroll` so it tracks momentum smoothly with the Lenis scroll.
  */
 export function Header() {
   const location = useLocation();
   const { isScrolled } = useScrollPosition();
   const [open, setOpen] = useState(false);
+
+  const { scrollY } = useScroll();
+  const smoothY = useSpring(scrollY, { stiffness: 200, damping: 30, mass: 0.4 });
+  const headerHeight = useTransform(smoothY, [0, 220], [76, 56]);
+  const monogramScale = useTransform(smoothY, [0, 220], [1, 0.9]);
+  const barOpacity = useTransform(smoothY, [0, 60, 220], [0, 0.55, 0.78]);
 
   return (
     <motion.header
@@ -28,24 +35,34 @@ export function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-[background,backdrop-filter,border-color] duration-500',
-        isScrolled
-          ? 'border-b border-border bg-background/70 backdrop-blur-md'
-          : 'border-b border-transparent bg-transparent'
+        'fixed inset-x-0 top-0 z-50 transition-[border-color] duration-500',
+        isScrolled ? 'border-b border-border' : 'border-b border-transparent'
       )}
+      style={{ height: headerHeight }}
     >
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 lg:px-10">
+      {/* Frosted backdrop — opacity follows scroll for a smooth fade-in */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 -z-10 backdrop-blur-md"
+        style={{ background: `hsla(0, 0%, 4%, ${0})`, opacity: barOpacity }}
+      >
+        <div className="absolute inset-0 bg-background" />
+      </motion.div>
+
+      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-6 lg:px-10">
         {/* Monogram */}
-        <Link
-          to="/"
-          className="font-mono text-[11px] uppercase tracking-[0.28em] text-foreground transition-opacity hover:opacity-70"
-          aria-label={`${profile.name} — home`}
-        >
-          <span className="inline-flex items-center gap-2">
-            <span className="inline-block size-1.5 rounded-full bg-primary" />
-            Shaurya / Goyal
-          </span>
-        </Link>
+        <motion.div style={{ scale: monogramScale }} className="origin-left">
+          <Link
+            to="/"
+            className="font-mono text-[11px] uppercase tracking-[0.28em] text-foreground transition-opacity hover:opacity-70"
+            aria-label={`${profile.name} — home`}
+          >
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-block size-1.5 rounded-full bg-primary" />
+              Shaurya / Goyal
+            </span>
+          </Link>
+        </motion.div>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-10 md:flex">
@@ -60,15 +77,31 @@ export function Header() {
                 to={link.path}
                 className="group relative font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/80 transition-colors hover:text-foreground"
               >
-                <span className="relative">
-                  {link.name}
-                  <span
-                    className={cn(
-                      'absolute -bottom-1 left-0 h-px bg-primary transition-all duration-500',
-                      active ? 'w-full' : 'w-0 group-hover:w-full'
-                    )}
-                  />
+                <span className="relative inline-block overflow-hidden">
+                  <motion.span
+                    className="inline-block"
+                    initial={false}
+                    whileHover={{ y: '-100%' }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {link.name}
+                  </motion.span>
+                  <motion.span
+                    aria-hidden
+                    className="absolute left-0 top-full inline-block text-primary"
+                    initial={false}
+                    whileHover={{ y: '-100%' }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {link.name}
+                  </motion.span>
                 </span>
+                <span
+                  className={cn(
+                    'absolute -bottom-1 left-0 h-px bg-primary transition-all duration-500',
+                    active ? 'w-full' : 'w-0 group-hover:w-full'
+                  )}
+                />
               </Link>
             );
           })}

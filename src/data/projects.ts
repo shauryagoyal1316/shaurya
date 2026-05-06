@@ -1,12 +1,5 @@
 import type { Project } from '@/types';
 
-/**
- * Featured project list for the portfolio.
- *
- * Real case studies are kept first. Their `liveUrl` is intentionally never
- * rendered as visible text anywhere in the UI — it is only attached to a
- * hidden ExternalLinkButton component that opens the link in a new tab.
- */
 export const projects: Project[] = [
   {
     id: 'barbershop',
@@ -26,28 +19,8 @@ The hero pairs a slow zoom on a portrait crop with a serif/italic headline split
 
 Type is doing 90% of the work. The rest is restraint.`,
     stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
-    coverImage:
-      'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-    images: [
-      {
-        id: 'barbershop-1',
-        src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Barbershop hero — close portrait, deep shadows, gold accent',
-        aspectRatio: 'landscape',
-      },
-      {
-        id: 'barbershop-2',
-        src: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
-        alt: 'Detail of vintage barber tools on marble',
-        aspectRatio: 'portrait',
-      },
-      {
-        id: 'barbershop-3',
-        src: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Interior of the shop, warm tungsten light',
-        aspectRatio: 'landscape',
-      },
-    ],
+    coverImage: '',
+    images: [],
   },
   {
     id: 'private-chef',
@@ -67,28 +40,8 @@ Below, the layout reads like an editorial: generous margins, narrow body column,
 
 Color palette: true black, off-white, two earth tones, one muted forest green for actions. Typography is the loudest thing in the room — and it never raises its voice.`,
     stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
-    coverImage:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-    images: [
-      {
-        id: 'chef-1',
-        src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Long candlelit table set for a private dinner',
-        aspectRatio: 'landscape',
-      },
-      {
-        id: 'chef-2',
-        src: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
-        alt: 'Plated course, overhead, low key',
-        aspectRatio: 'portrait',
-      },
-      {
-        id: 'chef-3',
-        src: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Hands working with fresh herbs',
-        aspectRatio: 'landscape',
-      },
-    ],
+    coverImage: '',
+    images: [],
   },
   {
     id: 'halo',
@@ -104,16 +57,8 @@ Color palette: true black, off-white, two earth tones, one muted forest green fo
     approach:
       'Started with the tokens, not the components. Once color, type, spacing, and motion were locked as CSS variables, the components practically wrote themselves — and theming became a one-file change.',
     stack: ['React', 'TypeScript', 'Radix UI', 'Tailwind', 'Storybook'],
-    coverImage:
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-    images: [
-      {
-        id: 'halo-1',
-        src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Design system documentation interface',
-        aspectRatio: 'landscape',
-      },
-    ],
+    coverImage: '',
+    images: [],
   },
   {
     id: 'drift',
@@ -129,16 +74,8 @@ Color palette: true black, off-white, two earth tones, one muted forest green fo
     approach:
       'No frameworks beyond Vite. One shader, one canvas, one scroll handler. The whole thing is under 40KB and runs at 60fps on a four-year-old laptop — which is the only metric I cared about.',
     stack: ['Three.js', 'GLSL', 'GSAP', 'Vite'],
-    coverImage:
-      'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-    images: [
-      {
-        id: 'drift-1',
-        src: 'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Abstract shader gradient',
-        aspectRatio: 'landscape',
-      },
-    ],
+    coverImage: '',
+    images: [],
   },
   {
     id: 'ledger',
@@ -154,16 +91,8 @@ Color palette: true black, off-white, two earth tones, one muted forest green fo
     approach:
       'Reduced the palette to three values, locked everything to a 4px grid, and used motion only for state changes (never decoration). The screen is doing more, but feels like less.',
     stack: ['React', 'TypeScript', 'Recharts', 'Tailwind'],
-    coverImage:
-      'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-    images: [
-      {
-        id: 'ledger-1',
-        src: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-        alt: 'Dashboard with multiple charts',
-        aspectRatio: 'landscape',
-      },
-    ],
+    coverImage: '',
+    images: [],
   },
 ];
 

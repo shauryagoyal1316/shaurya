@@ -4,6 +4,7 @@ import { Footer } from './Footer';
 import { MagneticCursor } from '@/components/effects/MagneticCursor';
 import { ScrollProgress } from '@/components/effects/ScrollProgress';
 import { NoiseOverlay } from '@/components/effects/NoiseOverlay';
+import { SmoothScroll } from '@/components/effects/SmoothScroll';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,11 +12,12 @@ interface LayoutProps {
 
 /**
  * Root layout: sticky header + main + footer, plus the global decorations
- * (custom cursor, scroll progress rail, film-grain overlay).
+ * (Lenis smooth scroll, custom cursor, scroll progress rail, film-grain).
  */
 export function Layout({ children }: LayoutProps) {
   return (
     <div className="relative min-h-screen flex flex-col bg-background text-foreground">
+      <SmoothScroll />
       <NoiseOverlay />
       <MagneticCursor />
       <ScrollProgress />

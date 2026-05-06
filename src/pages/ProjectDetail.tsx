@@ -1,6 +1,5 @@
-import { useRef } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
@@ -16,15 +15,6 @@ import { getProjectBySlug, getAdjacentProjects } from '@/data/projects';
 export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
   const project = slug ? getProjectBySlug(slug) : undefined;
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.25]);
-  const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.55, 0.9]);
 
   if (!project) return <Navigate to="/404" replace />;
 
@@ -40,19 +30,9 @@ export default function ProjectDetail() {
       />
 
       {/* HERO */}
-      <section ref={heroRef} className="relative h-[100vh] overflow-hidden bg-background">
-        <motion.img
-          src={project.coverImage}
-          alt={project.label}
-          loading="eager"
-          fetchPriority="high"
-          style={{ scale: imgScale, y: imgY }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <motion.div
-          style={{ opacity: overlayOpacity }}
-          className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background"
-        />
+      <section className="relative h-[100vh] overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-surface-2" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/20 to-background" />
 
         <div className="relative z-10 flex h-full flex-col px-6 pb-12 pt-32 md:px-10">
           <Link

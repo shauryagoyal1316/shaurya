@@ -18,18 +18,17 @@ interface SplitTextRevealProps {
 }
 
 /**
- * Splits a string into words and letters and animates each letter in with
- * a small Y offset + opacity fade, staggered to feel like type reveal.
- *
- * Words are kept whole (no inter-word breaks mid-letter) and the layout
- * preserves whitespace so wrapping behaves naturally.
+ * Apple-grade type reveal: each character sits in an overflow-hidden mask
+ * and rises from below the baseline with a spring-like easing. The mask is
+ * what sells it — letters appear as if they were always there, just hidden
+ * by the line above. Words stay whole so wrapping is natural.
  */
 export function SplitTextReveal({
   text,
   as: Tag = 'span',
   className,
   delay = 0,
-  stagger = 0.04,
+  stagger = 0.035,
   once = true,
   children,
 }: SplitTextRevealProps) {
@@ -40,30 +39,41 @@ export function SplitTextReveal({
     return <Tag className={className}>{text}{children}</Tag>;
   }
 
+  let charIndex = 0;
+
   return (
     <Tag className={className}>
       <span className="sr-only">{text}</span>
       <span aria-hidden className="inline">
         {words.map((word, wi) => (
-          <span key={wi} className="inline-block whitespace-nowrap">
-            {word.split('').map((char, ci) => (
-              <motion.span
-                key={ci}
-                className="inline-block"
-                initial={{ y: '0.6em', opacity: 0 }}
-                whileInView={once ? { y: 0, opacity: 1 } : undefined}
-                animate={!once ? { y: 0, opacity: 1 } : undefined}
-                viewport={once ? { once: true, margin: '-10% 0px' } : undefined}
-                transition={{
-                  duration: 0.7,
-                  ease: EASE.snappy,
-                  delay: delay + (wi * 4 + ci) * stagger,
-                }}
-              >
-                {char}
-              </motion.span>
-            ))}
-            {wi < words.length - 1 && <span className="inline-block">&nbsp;</span>}
+          <span
+            key={wi}
+            className="inline-block whitespace-nowrap align-baseline"
+            style={{ overflow: 'hidden', verticalAlign: 'top' }}
+          >
+            {word.split('').map((char, ci) => {
+              const i = charIndex++;
+              return (
+                <motion.span
+                  key={ci}
+                  className="inline-block will-change-transform"
+                  initial={{ y: '110%', opacity: 0, rotate: 4 }}
+                  whileInView={once ? { y: 0, opacity: 1, rotate: 0 } : undefined}
+                  animate={!once ? { y: 0, opacity: 1, rotate: 0 } : undefined}
+                  viewport={once ? { once: true, margin: '-10% 0px' } : undefined}
+                  transition={{
+                    duration: 0.95,
+                    ease: EASE.snappy,
+                    delay: delay + i * stagger,
+                  }}
+                >
+                  {char}
+                </motion.span>
+              );
+            })}
+            {wi < words.length - 1 && (
+              <span className="inline-block">&nbsp;</span>
+            )}
           </span>
         ))}
       </span>
