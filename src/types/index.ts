@@ -1,5 +1,5 @@
 /**
- * Core TypeScript interfaces for Shaurya Goyal's frontend developer portfolio.
+ * Core TypeScript interfaces for Shaurya Goyal's website portfolio.
  */
 
 export type ProjectCategory = 'landing' | 'web-app' | 'experiment';

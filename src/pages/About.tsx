@@ -1,9 +1,9 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Github, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
-import { MagneticLink } from '@/components/effects/MagneticLink';
 
 /**
  * About — split editorial layout: oversized title, bio narrative, skill
@@ -135,22 +135,13 @@ export default function About() {
             Want to <span className="italic text-foreground/55">see the work?</span>
           </h2>
           <div className="mt-12 flex flex-wrap items-center gap-6">
-            <MagneticLink
-              href="/work"
+            <Link
+              to="/work"
               aria-label="View work"
               className="inline-flex items-center gap-3 bg-primary px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] text-primary-foreground"
             >
               View work <ArrowRight className="size-3.5" />
-            </MagneticLink>
-            {profile.socialLinks.github && (
-              <MagneticLink
-                href={profile.socialLinks.github}
-                aria-label="GitHub"
-                className="inline-flex items-center gap-3 border border-border-strong px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-surface-2"
-              >
-                <Github className="size-3.5" /> GitHub
-              </MagneticLink>
-            )}
+            </Link>
           </div>
         </div>
       </section>

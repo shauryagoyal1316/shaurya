@@ -8,7 +8,6 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { Marquee } from '@/components/effects/Marquee';
 import { CountUp } from '@/components/effects/CountUp';
-import { MagneticLink } from '@/components/effects/MagneticLink';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { EASE } from '@/lib/motion';
 
@@ -50,12 +49,14 @@ export default function Home() {
           style={{ scale: heroScale, opacity: heroOpacity, filter: heroBlur, y: heroY }}
           className="relative z-[2] flex h-full flex-col items-center justify-center px-6"
         >
+          {false && (
+            <>
           {/* Top-left mono tag */}
           <motion.div
             initial={{ opacity: 0, x: -12, y: -6 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 0.9, delay: 0.5, ease: EASE.snappy }}
-            className="absolute left-6 top-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:left-10 md:top-10"
+            className="hidden"
           >
             <motion.span
               className="mr-2 inline-block size-1.5 rounded-full bg-primary align-middle"
@@ -68,26 +69,17 @@ export default function Home() {
             initial={{ opacity: 0, x: 12, y: -6 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 0.9, delay: 0.6, ease: EASE.snappy }}
-            className="absolute right-6 top-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:right-10 md:top-10"
+            className="hidden"
           >
-            Frontend Developer / Interface Engineer
+            Full-Stack Website Builder / AI Web Specialist
           </motion.div>
+            </>
+          )}
 
-          {/* The big name */}
-          <h1 className="text-balance text-center font-display leading-[0.85] text-foreground">
-            <SplitTextReveal
-              text="Shaurya"
-              as="span"
-              className="block text-[22vw] tracking-[-0.04em] md:text-[18vw]"
-              stagger={0.045}
-            />
-            <SplitTextReveal
-              text="Goyal."
-              as="span"
-              className="block italic text-[22vw] tracking-[-0.04em] text-foreground/55 md:text-[18vw]"
-              delay={0.45}
-              stagger={0.045}
-            />
+          {/* Footer-style name, visible on first landing viewport */}
+          <h1 className="select-none text-center font-display text-[20vw] leading-[0.85] tracking-tight text-foreground/95 sm:text-[16vw] md:text-[14vw] lg:text-[12vw]">
+            <span className="block">Shaurya</span>
+            <span className="block italic text-foreground/60">Goyal.</span>
           </h1>
 
           {/* Subtitle */}
@@ -159,7 +151,7 @@ export default function Home() {
               <div className="mt-1">Projects shipped</div>
             </div>
             <div>
-              <span className="font-display text-5xl normal-case tracking-normal text-foreground">5y+</span>
+              <span className="font-display text-5xl normal-case tracking-normal text-foreground">2y+</span>
               <div className="mt-1">Building for the web</div>
             </div>
             <div className="ml-auto">
@@ -249,13 +241,6 @@ export default function Home() {
             </h2>
           </Link>
           <div className="mt-12 flex flex-wrap items-center gap-6">
-            <MagneticLink
-              href={profile.socialLinks.github}
-              aria-label="GitHub"
-              className="inline-flex items-center gap-3 border border-border-strong px-6 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-surface-2"
-            >
-              GitHub <ArrowRight className="size-3.5" />
-            </MagneticLink>
             <Link
               to="/about"
               data-cursor="hover"

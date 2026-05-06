@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '@/types';
 import { TiltCard } from '@/components/effects/TiltCard';
@@ -31,19 +31,7 @@ export function ProjectCard({
   index = 0,
   flat = false,
 }: ProjectCardProps) {
-  const [loaded, setLoaded] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-
-  // Scroll-linked image parallax. The image drifts opposite to scroll
-  // direction inside its overflow-hidden frame for a layered feel.
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-  const rawY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
-  const imageY = useSpring(rawY, { stiffness: 90, damping: 22, mass: 0.4 });
-  const rawScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1.0, 1.08]);
-  const imageScale = useSpring(rawScale, { stiffness: 90, damping: 22, mass: 0.4 });
 
   const ratioClass = {
     portrait: 'aspect-[3/4]',

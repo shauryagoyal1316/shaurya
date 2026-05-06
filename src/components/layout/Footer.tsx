@@ -1,6 +1,4 @@
-import { Github } from 'lucide-react';
 import { profile } from '@/data/profile';
-import { MagneticLink } from '@/components/effects/MagneticLink';
 
 /**
  * Editorial footer: oversized name as the visual anchor, mono metadata
@@ -37,17 +35,16 @@ export function Footer() {
             <div className="mb-2 text-foreground/40">Based</div>
             <div className="text-foreground">{profile.location}</div>
           </div>
-          <div className="flex items-start justify-start gap-4 md:justify-end">
-            {profile.socialLinks.github && (
-              <MagneticLink
-                href={profile.socialLinks.github}
-                aria-label="GitHub"
-                className="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-surface-2"
-                strength={8}
-              >
-                <Github className="size-4" />
-              </MagneticLink>
-            )}
+          <div>
+            <div className="mb-2 text-foreground/40">More work</div>
+            <a
+              href="https://github.com/shauryagoyal1316"
+              target="_blank"
+              rel="noreferrer"
+              className="break-all text-foreground transition-colors hover:text-primary"
+            >
+              Some projects may be on GitHub: github.com/shauryagoyal1316
+            </a>
           </div>
         </div>
       </div>
