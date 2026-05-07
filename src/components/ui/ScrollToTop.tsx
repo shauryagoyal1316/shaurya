@@ -2,16 +2,26 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
- * Resets scroll position to the top whenever the route changes. Without this,
- * navigating from a long page (e.g. a case study) to a shorter page leaves
- * the user mid-page on the new route. Uses an instant jump rather than a
- * smooth scroll so it doesn't compete with the page-transition animation.
+ * Resets scroll to the top on every route change. Lenis intercepts wheel
+ * events and tracks its own `targetScroll`, so a plain `window.scrollTo(0)`
+ * is overridden on the next rAF tick. We call Lenis's own `scrollTo` (with
+ * `immediate: true`) when it's available, and fall back to the native call
+ * when it isn't (reduced-motion users, or before Lenis has mounted).
  */
+type LenisLike = {
+  scrollTo: (target: number, options?: { immediate?: boolean; force?: boolean }) => void;
+};
+
 export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    const lenis = (window as unknown as { __lenis?: LenisLike }).__lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true, force: true });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
   }, [pathname]);
 
   return null;

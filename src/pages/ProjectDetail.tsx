@@ -2,7 +2,6 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { ExternalLinkButton } from '@/components/work/ExternalLinkButton';
 import { ProjectNavigation } from '@/components/portfolio/ProjectNavigation';
 import { getProjectBySlug, getAdjacentProjects } from '@/data/projects';
@@ -33,40 +32,14 @@ export default function ProjectDetail() {
         type="article"
       />
 
-      {/* HERO */}
-      <section className="relative h-[100vh] overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-surface-2" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 to-background" />
+      {/* Spacer so the sticky breadcrumb lands below the fixed header on
+          first paint (header is up to 76px tall before scroll-compress). */}
+      <div className="h-20 md:h-24" aria-hidden />
 
-        <div className="relative z-10 flex h-full flex-col px-6 pb-12 pt-32 md:px-10">
-          <Link
-            to="/work"
-            data-cursor="hover"
-            className="group inline-flex w-fit items-center gap-2 rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-white/70 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-          >
-            <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
-            Back to work
-          </Link>
-
-          <div className="mt-auto max-w-[1440px]">
-            <div className="mb-6 font-mono text-[11px] uppercase tracking-[0.28em] text-white/70">
-              {project.year} · {project.role} · {project.category}
-            </div>
-            <h1 className="font-display text-6xl leading-[0.9] tracking-tight text-white md:text-8xl lg:text-[10rem]">
-              <SplitTextReveal text={project.label} stagger={0.04} />
-            </h1>
-            <p className="mt-8 max-w-2xl text-balance text-lg font-light leading-relaxed text-white/80 md:text-xl">
-              {project.tagline}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Persistent back-to-work bar — keeps the listing one click away once
-          the hero scrolls off-screen, so users on long case studies aren't
-          forced to scroll to the prev/next strip just to escape. */}
-      <div className="sticky top-14 z-20 border-b border-border bg-background/85 px-6 py-3 backdrop-blur-md md:px-10">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em]">
+      {/* Persistent back-to-work bar — first row of the page now that the
+          hero is gone, also sticks just below the header once you scroll. */}
+      <div className="sticky top-14 z-20 border-y border-border bg-background/85 px-6 py-3 backdrop-blur-md md:px-10">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.22em]">
           <Link
             to="/work"
             data-cursor="hover"
@@ -75,12 +48,12 @@ export default function ProjectDetail() {
             <ArrowLeft className="size-3 transition-transform group-hover:-translate-x-0.5" />
             All work
           </Link>
-          <span className="hidden text-foreground/40 md:inline">{project.label}</span>
+          <span className="truncate text-foreground/50">{project.label}</span>
         </div>
       </div>
 
       {/* META + DESCRIPTION */}
-      <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">
+      <section className="bg-background px-6 py-24 md:px-10 md:py-32">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
           {/* Sidebar meta */}
           <aside className="md:col-span-4 md:col-start-1">
