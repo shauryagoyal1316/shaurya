@@ -37,6 +37,9 @@ export function TiltCard({
 
   const handleMove = (e: React.PointerEvent) => {
     if (reduced) return;
+    // Tilt is purely a mouse-hover affordance — bail on touch / pen so the
+    // card doesn't lurch sideways when a finger lands on it.
+    if (e.pointerType !== 'mouse') return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();

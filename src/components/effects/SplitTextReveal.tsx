@@ -39,6 +39,13 @@ export function SplitTextReveal({
     return <Tag className={className}>{text}{children}</Tag>;
   }
 
+  // The route-level `<PageTransition>` fades incoming content in with a
+  // ~300ms delay. Without offsetting, every letter would have already
+  // animated underneath the curtain, and the user would see the heading
+  // appear fully formed. Push the reveal past the curtain so it actually
+  // plays on the visible page.
+  const transitionOffset = 0.35;
+  const charIndexOffset = transitionOffset;
   let charIndex = 0;
 
   return (
@@ -64,7 +71,7 @@ export function SplitTextReveal({
                   transition={{
                     duration: 0.95,
                     ease: EASE.snappy,
-                    delay: delay + i * stagger,
+                    delay: charIndexOffset + delay + i * stagger,
                   }}
                 >
                   {char}

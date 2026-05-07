@@ -54,7 +54,7 @@ export function Header() {
         <motion.div style={{ scale: monogramScale }} className="origin-left">
           <Link
             to="/"
-            className="font-mono text-[11px] uppercase tracking-[0.28em] text-foreground transition-opacity hover:opacity-70"
+            className="rounded-sm font-mono text-[11px] uppercase tracking-[0.28em] text-foreground transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label={`${profile.name} — home`}
           >
             <span className="inline-flex items-center gap-2">
@@ -75,7 +75,8 @@ export function Header() {
               <Link
                 key={link.path}
                 to={link.path}
-                className="group relative font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/80 transition-colors hover:text-foreground"
+                aria-current={active ? 'page' : undefined}
+                className="group relative rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/80 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <span className="relative inline-block overflow-hidden">
                   <motion.span
@@ -115,7 +116,7 @@ export function Header() {
         <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
-              className="flex size-10 items-center justify-center rounded-full border border-border text-foreground"
+              className="flex size-10 items-center justify-center rounded-full border border-border text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               aria-label="Open menu"
             >
               <Menu className="size-4" />
@@ -130,18 +131,27 @@ export function Header() {
                   </span>
                 </div>
                 <nav className="flex flex-col gap-6">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      onClick={() => setOpen(false)}
-                      className="font-display text-5xl italic text-foreground transition-opacity hover:opacity-60"
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
+                  {navLinks.map((link) => {
+                    const active =
+                      link.path === '/'
+                        ? location.pathname === '/'
+                        : location.pathname.startsWith(link.path);
+                    return (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? 'page' : undefined}
+                        className="rounded-sm font-display text-5xl italic text-foreground transition-opacity hover:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      >
+                        {link.name}
+                      </Link>
+                    );
+                  })}
                 </nav>
                 <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
+                  <span className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary align-middle" />
+                  <span className="text-foreground/40">Status — </span>
                   {profile.availability}
                 </div>
               </div>

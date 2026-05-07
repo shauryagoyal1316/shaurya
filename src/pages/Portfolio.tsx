@@ -13,6 +13,17 @@ const CATEGORIES: { id: 'all' | ProjectCategory; label: string }[] = [
 ];
 
 /**
+ * Only show categories that actually have at least one project (besides "All").
+ * Avoids dead filter buttons that resolve to "Nothing here yet."
+ */
+function getVisibleCategories(allProjects: { category: ProjectCategory }[]) {
+  return CATEGORIES.filter((c) => {
+    if (c.id === 'all') return true;
+    return allProjects.some((p) => p.category === c.id);
+  });
+}
+
+/**
  * Work / archive page. Top hero, mono filter row, asymmetric grid below.
  * Featured items occupy a wider column on desktop for visual rhythm.
  */
@@ -26,7 +37,7 @@ export default function Work() {
 
   const categoriesWithCounts = useMemo(
     () =>
-      CATEGORIES.map((c) => ({
+      getVisibleCategories(projects).map((c) => ({
         ...c,
         count:
           c.id === 'all'
@@ -35,6 +46,10 @@ export default function Work() {
       })),
     []
   );
+
+  // If there's only the "All" pseudo-category there's nothing to filter by.
+  // Hide the filter row entirely instead of showing a single dead button.
+  const showFilter = categoriesWithCounts.length > 1;
 
   // Subtle parallax on the heading as the user scrolls into the grid.
   const headerRef = useRef<HTMLDivElement>(null);
@@ -58,7 +73,7 @@ export default function Work() {
       >
         <motion.div style={{ y: headingY }} className="mx-auto max-w-[1440px]">
           <div className="mb-8 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-            <span className="mr-3 text-primary">02</span>Index of work
+            <span className="mr-3 text-primary">/</span>Index of work
           </div>
           <h1 className="font-display text-[18vw] leading-[0.85] text-foreground md:text-[14vw]">
             <SplitTextReveal text="Work." stagger={0.06} />
@@ -70,16 +85,19 @@ export default function Work() {
         </motion.div>
       </section>
 
-      {/* FILTER */}
-      <section className="sticky top-16 z-30 border-y border-border bg-background/85 px-6 py-5 backdrop-blur-md md:px-10">
-        <div className="mx-auto max-w-[1440px]">
-          <WorkFilter
-            categories={categoriesWithCounts}
-            active={active}
-            onChange={(id) => setActive(id as 'all' | ProjectCategory)}
-          />
-        </div>
-      </section>
+      {/* FILTER — sticky just below the compressed header height (56px) so
+          the bar lands flush against the header instead of overlapping it. */}
+      {showFilter && (
+        <section className="sticky top-14 z-30 border-y border-border bg-background/85 px-6 py-5 backdrop-blur-md md:px-10">
+          <div className="mx-auto max-w-[1440px]">
+            <WorkFilter
+              categories={categoriesWithCounts}
+              active={active}
+              onChange={(id) => setActive(id as 'all' | ProjectCategory)}
+            />
+          </div>
+        </section>
+      )}
 
       {/* GRID */}
       <section className="px-6 py-20 md:px-10 md:py-32">

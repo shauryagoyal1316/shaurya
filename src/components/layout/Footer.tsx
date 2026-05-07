@@ -1,8 +1,16 @@
+import { Link } from 'react-router-dom';
 import { profile } from '@/data/profile';
+
+const footerNav = [
+  { name: 'Index', path: '/' },
+  { name: 'Work', path: '/work' },
+  { name: 'About', path: '/about' },
+];
 
 /**
  * Editorial footer: oversized name as the visual anchor, mono metadata
- * row underneath. No contact form — by design.
+ * row underneath, plus a small site-nav so users at the bottom of a long
+ * case study aren't forced to scroll back up to navigate.
  */
 export function Footer() {
   const year = new Date().getFullYear();
@@ -17,6 +25,23 @@ export function Footer() {
             <span className="block italic text-foreground/60">Goyal.</span>
           </h2>
         </div>
+
+        {/* Site nav — repeats the header so the bottom of any page is also
+            navigable without scrolling back up. */}
+        <nav
+          aria-label="Footer navigation"
+          className="mb-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.22em]"
+        >
+          {footerNav.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className="rounded-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
 
         {/* Metadata row */}
         <div className="grid gap-8 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground/60 md:grid-cols-4">
@@ -36,14 +61,14 @@ export function Footer() {
             <div className="text-foreground">{profile.location}</div>
           </div>
           <div>
-            <div className="mb-2 text-foreground/40">More work</div>
+            <div className="mb-2 text-foreground/40">GitHub</div>
             <a
               href="https://github.com/shauryagoyal1316"
               target="_blank"
-              rel="noreferrer"
-              className="break-all text-foreground transition-colors hover:text-primary"
+              rel="noopener noreferrer"
+              className="break-all text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              Some projects may be on GitHub: github.com/shauryagoyal1316
+              github.com/shauryagoyal1316
             </a>
           </div>
         </div>
