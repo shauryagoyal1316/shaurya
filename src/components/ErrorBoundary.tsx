@@ -32,7 +32,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleReset = () => {
     this.setState({ hasError: false, error: undefined });
-    window.location.href = '/';
+    // HashRouter on a GitHub Pages project site lives under /<repo>/.
+    // `href = '/'` would jump to the user's pages root and 404.
+    // Stay on the same path, just reset the hash route.
+    window.location.hash = '#/';
+    window.location.reload();
   };
 
   public render() {
