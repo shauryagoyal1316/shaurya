@@ -42,6 +42,3 @@ I focus on the outcome, not pretending every line was typed manually. AI is the 
   socialLinks: {},
   portraitImage: '',
 };
-
-// Legacy alias so any leftover imports of `photographerInfo` keep compiling.
-export const photographerInfo = profile;

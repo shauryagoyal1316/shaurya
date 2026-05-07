@@ -49,33 +49,6 @@ export default function Home() {
           style={{ scale: heroScale, opacity: heroOpacity, filter: heroBlur, y: heroY }}
           className="relative z-[2] flex h-full flex-col items-center justify-center px-6"
         >
-          {false && (
-            <>
-          {/* Top-left mono tag */}
-          <motion.div
-            initial={{ opacity: 0, x: -12, y: -6 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.5, ease: EASE.snappy }}
-            className="hidden"
-          >
-            <motion.span
-              className="mr-2 inline-block size-1.5 rounded-full bg-primary align-middle"
-              animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
-              transition={{ duration: 2.4, ease: 'easeInOut', repeat: Infinity }}
-            />
-            Portfolio · 2026
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 12, y: -6 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.6, ease: EASE.snappy }}
-            className="hidden"
-          >
-            Full-Stack Website Builder / AI Web Specialist
-          </motion.div>
-            </>
-          )}
-
           {/* Footer-style name, visible on first landing viewport */}
           <h1 className="select-none text-center font-display text-[20vw] leading-[0.85] tracking-tight text-foreground/95 sm:text-[16vw] md:text-[14vw] lg:text-[12vw]">
             <span className="block">Shaurya</span>
@@ -94,11 +67,17 @@ export default function Home() {
 
           {/* Bottom row */}
           <div className="absolute inset-x-0 bottom-8 flex items-center justify-between px-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:px-10">
-            <motion.div
+            <motion.button
+              type="button"
+              onClick={() =>
+                window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+              }
+              data-cursor="hover"
+              aria-label="Scroll to next section"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1.7, ease: EASE.snappy }}
-              className="inline-flex items-center"
+              className="inline-flex items-center rounded-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               Scroll
               <motion.span
@@ -108,7 +87,7 @@ export default function Home() {
               >
                 ↓
               </motion.span>
-            </motion.div>
+            </motion.button>
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -186,7 +165,7 @@ export default function Home() {
             <Link
               to="/work"
               data-cursor="hover"
-              className="hidden font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60 transition-colors hover:text-foreground md:inline-flex"
+              className="hidden whitespace-nowrap rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background md:inline-flex"
             >
               View archive →
             </Link>
@@ -201,7 +180,7 @@ export default function Home() {
           <div className="mt-12 md:hidden">
             <Link
               to="/work"
-              className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70"
+              className="rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               View archive →
             </Link>

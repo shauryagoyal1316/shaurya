@@ -21,8 +21,9 @@ export function WorkFilter({ categories, active, onChange }: WorkFilterProps) {
             key={c.id}
             type="button"
             onClick={() => onChange(c.id)}
+            aria-pressed={isActive}
             className={cn(
-              'group relative pb-2 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors',
+              'group relative rounded-sm pb-2 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background',
               isActive ? 'text-foreground' : 'text-foreground/40 hover:text-foreground/80'
             )}
           >

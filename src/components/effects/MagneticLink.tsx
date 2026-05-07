@@ -39,6 +39,8 @@ export function MagneticLink({
 
   const handleMove = (e: React.PointerEvent) => {
     if (reduced) return;
+    // Skip touch / pen — the magnet would compete with the user's tap.
+    if (e.pointerType !== 'mouse') return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();

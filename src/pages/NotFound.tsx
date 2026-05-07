@@ -24,15 +24,22 @@ export default function NotFound() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
-            className="mt-12"
+            className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-4"
           >
             <Link
               to="/"
               data-cursor="hover"
-              className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground transition-colors hover:text-primary"
+              className="group inline-flex items-center gap-3 rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
               Back to index
+            </Link>
+            <Link
+              to="/work"
+              data-cursor="hover"
+              className="rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              See the work →
             </Link>
           </motion.div>
         </div>

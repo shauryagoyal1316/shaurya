@@ -57,6 +57,3 @@ export interface ProfileInfo {
   };
   portraitImage: string;
 }
-
-// Legacy alias kept so any stragglers still compile during migration.
-export type PhotographerInfo = ProfileInfo;

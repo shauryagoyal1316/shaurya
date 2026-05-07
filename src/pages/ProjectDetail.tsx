@@ -1,4 +1,4 @@
-import { useParams, Navigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -6,6 +6,7 @@ import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { ExternalLinkButton } from '@/components/work/ExternalLinkButton';
 import { ProjectNavigation } from '@/components/portfolio/ProjectNavigation';
 import { getProjectBySlug, getAdjacentProjects } from '@/data/projects';
+import NotFound from './NotFound';
 
 /**
  * Case-study page. Pinned hero with parallax cover image, long-form story,
@@ -16,7 +17,10 @@ export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
   const project = slug ? getProjectBySlug(slug) : undefined;
 
-  if (!project) return <Navigate to="/404" replace />;
+  // Render the 404 view in place rather than redirecting — keeps the URL the
+  // user typed, avoids a back-button redirect loop, and lets the wildcard
+  // route own its own URL ("/work/<unknown>", not "/404").
+  if (!project) return <NotFound />;
 
   const { prev, next } = getAdjacentProjects(project.slug);
 
@@ -38,7 +42,7 @@ export default function ProjectDetail() {
           <Link
             to="/work"
             data-cursor="hover"
-            className="group inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-white/70 transition-colors hover:text-white"
+            className="group inline-flex w-fit items-center gap-2 rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-white/70 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           >
             <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
             Back to work
@@ -57,6 +61,23 @@ export default function ProjectDetail() {
           </div>
         </div>
       </section>
+
+      {/* Persistent back-to-work bar — keeps the listing one click away once
+          the hero scrolls off-screen, so users on long case studies aren't
+          forced to scroll to the prev/next strip just to escape. */}
+      <div className="sticky top-14 z-20 border-b border-border bg-background/85 px-6 py-3 backdrop-blur-md md:px-10">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em]">
+          <Link
+            to="/work"
+            data-cursor="hover"
+            className="group inline-flex items-center gap-2 rounded-sm text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <ArrowLeft className="size-3 transition-transform group-hover:-translate-x-0.5" />
+            All work
+          </Link>
+          <span className="hidden text-foreground/40 md:inline">{project.label}</span>
+        </div>
+      </div>
 
       {/* META + DESCRIPTION */}
       <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">

@@ -43,7 +43,8 @@ export function ProjectCard({
     <Link
       to={`/work/${project.slug}`}
       data-cursor="view"
-      className="group relative block overflow-hidden bg-surface-2"
+      aria-label={`${project.label} — ${project.role}, ${project.year}`}
+      className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
         {/* Image-free: solid surface placeholder */}

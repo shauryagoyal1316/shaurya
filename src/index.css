@@ -194,11 +194,19 @@
     color: var(--primary-foreground);
   }
 
-  /* Hide native cursor when custom cursor is active (desktop only) */
+  /* Hide native cursor when custom cursor is active (desktop only).
+     Inputs / textareas / contenteditable still need a real I-beam, so they
+     are explicitly excluded — otherwise typing into a form is disorienting. */
   @media (hover: hover) and (pointer: fine) {
     body[data-cursor='custom'],
     body[data-cursor='custom'] * {
       cursor: none !important;
+    }
+    body[data-cursor='custom'] input,
+    body[data-cursor='custom'] textarea,
+    body[data-cursor='custom'] select,
+    body[data-cursor='custom'] [contenteditable='true'] {
+      cursor: text !important;
     }
   }
 }

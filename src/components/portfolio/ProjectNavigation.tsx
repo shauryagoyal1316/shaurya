@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Project } from '@/types';
-import { cn } from '@/lib/utils';
 
 interface ProjectNavigationProps {
   prev: Project | null;
@@ -9,18 +8,30 @@ interface ProjectNavigationProps {
 }
 
 /**
- * Edge-to-edge prev/next strip at the foot of a case study.
+ * Edge-to-edge prev/next strip at the foot of a case study. When only one
+ * neighbour exists, the strip collapses to a single full-width cell instead
+ * of showing a dead "No previous"/"No next" label — that placeholder reads
+ * like a broken state and adds nothing.
  */
 export function ProjectNavigation({ prev, next }: ProjectNavigationProps) {
+  if (!prev && !next) return null;
+
+  const single = !prev || !next;
+
   return (
-    <div className="grid grid-cols-1 border-t border-border md:grid-cols-2">
-      {/* Prev */}
-      <div className={cn('border-b border-border md:border-b-0 md:border-r', !prev && 'opacity-40')}>
-        {prev ? (
+    <div
+      className={
+        single
+          ? 'grid grid-cols-1 border-t border-border'
+          : 'grid grid-cols-1 border-t border-border md:grid-cols-2'
+      }
+    >
+      {prev && (
+        <div className={!single ? 'border-b border-border md:border-b-0 md:border-r' : ''}>
           <Link
             to={`/work/${prev.slug}`}
             data-cursor="view"
-            className="group block p-10 transition-colors hover:bg-surface-1 md:p-14"
+            className="group block p-10 transition-colors hover:bg-surface-1 focus-visible:bg-surface-1 focus-visible:outline-none md:p-14"
           >
             <div className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50 transition-colors group-hover:text-foreground">
               <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
@@ -33,20 +44,15 @@ export function ProjectNavigation({ prev, next }: ProjectNavigationProps) {
               {prev.role} · {prev.year}
             </div>
           </Link>
-        ) : (
-          <div className="p-10 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/40 md:p-14">
-            <div className="flex items-center gap-3"><ArrowLeft className="size-3.5" /> No previous</div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Next */}
-      <div className={cn(!next && 'opacity-40')}>
-        {next ? (
+      {next && (
+        <div>
           <Link
             to={`/work/${next.slug}`}
             data-cursor="view"
-            className="group block p-10 text-right transition-colors hover:bg-surface-1 md:p-14"
+            className="group block p-10 text-right transition-colors hover:bg-surface-1 focus-visible:bg-surface-1 focus-visible:outline-none md:p-14"
           >
             <div className="mb-6 flex items-center justify-end gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50 transition-colors group-hover:text-foreground">
               Next
@@ -59,12 +65,8 @@ export function ProjectNavigation({ prev, next }: ProjectNavigationProps) {
               {next.role} · {next.year}
             </div>
           </Link>
-        ) : (
-          <div className="p-10 text-right font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/40 md:p-14">
-            <div className="flex items-center justify-end gap-3">No next <ArrowRight className="size-3.5" /></div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

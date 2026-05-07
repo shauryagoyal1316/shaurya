@@ -24,8 +24,17 @@ export function SEOHead({
     ? `${title} — ${profile.name}`
     : `${profile.name} — ${profile.tagline}`;
   const fullDescription = description || profile.heroIntroduction;
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const fullUrl = `${baseUrl}${location.pathname}`;
+  // Under HashRouter the visible browser URL is `${origin}${pathname}#${route}`,
+  // so reading `window.location.href` is the only reliable way to share the
+  // *actual* URL a visitor would see — `location.pathname` from React Router
+  // is the route inside the hash, not the page URL.
+  const fullUrl =
+    typeof window !== 'undefined' ? window.location.href : '';
+
+  // Use location.pathname (a real string that updates on every nav) as the
+  // dependency, not the derived `fullUrl` (which reads window.location at
+  // render time and can lag the route change).
+  void location.pathname;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -53,7 +62,7 @@ export function SEOHead({
     set('twitter:description', fullDescription);
     if (image) set('twitter:image', image);
     set('author', profile.name);
-  }, [fullTitle, fullDescription, fullUrl, image, type]);
+  }, [fullTitle, fullDescription, fullUrl, image, type, location.pathname]);
 
   return null;
 }
