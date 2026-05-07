@@ -47,8 +47,17 @@ export function ProjectCard({
       className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
-        {/* Image-free: solid surface placeholder */}
-        <div className="absolute inset-0 bg-surface-2" />
+        {/* Image (or surface fallback if none provided) */}
+        {project.coverImage ? (
+          <img
+            src={project.coverImage}
+            alt={`${project.label} — ${project.role}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-surface-2" />
+        )}
 
         {/* Bottom meta overlay — slides up with content on hover */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 md:p-8">

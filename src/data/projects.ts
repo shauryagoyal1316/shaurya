@@ -19,7 +19,8 @@ The hero pairs a slow zoom on a portrait crop with a serif and italic headline s
 
 Type is doing most of the work. The rest is restraint.`,
     stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
-    coverImage: '',
+    coverImage:
+      'https://image.thum.io/get/width/1600/crop/1000/noanimate/https://shauryagoyal1316.github.io/fade-co-showcase/',
     images: [],
   },
   {
@@ -40,7 +41,8 @@ Below, the layout reads like an editorial: generous margins, narrow body column,
 
 The typography is the loudest thing in the room, and it never raises its voice.`,
     stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
-    coverImage: '',
+    coverImage:
+      'https://image.thum.io/get/width/1600/crop/1000/noanimate/https://shauryagoyal1316.github.io/privatechefportfolio/',
     images: [],
   },
 ];

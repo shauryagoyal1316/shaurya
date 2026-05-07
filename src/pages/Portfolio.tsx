@@ -47,9 +47,10 @@ export default function Work() {
     []
   );
 
-  // If there's only the "All" pseudo-category there's nothing to filter by.
-  // Hide the filter row entirely instead of showing a single dead button.
-  const showFilter = categoriesWithCounts.length > 1;
+  // Hide the filter when there's only one real category in play — "All"
+  // and "Landing" pointing at the same set is dead UI.
+  const realCategories = categoriesWithCounts.filter((c) => c.id !== 'all');
+  const showFilter = realCategories.length > 1;
 
   // Subtle parallax on the heading as the user scrolls into the grid.
   const headerRef = useRef<HTMLDivElement>(null);
