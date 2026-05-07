@@ -21,6 +21,11 @@ export function SmoothScroll() {
       lerp: 0.1,
     });
 
+    // Expose so route-change scroll-resets can reach Lenis. Without this,
+    // window.scrollTo(0) is overridden by Lenis's own targetScroll on the
+    // next frame and the new page lands mid-scroll.
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
     let frame = 0;
     const raf = (time: number) => {
       lenis.raf(time);
@@ -31,6 +36,7 @@ export function SmoothScroll() {
     return () => {
       cancelAnimationFrame(frame);
       lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
 
