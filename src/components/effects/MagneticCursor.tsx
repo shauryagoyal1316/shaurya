@@ -12,7 +12,9 @@ import { hasFinePointer, prefersReducedMotion } from '@/lib/motion';
  */
 export function MagneticCursor() {
   const [enabled, setEnabled] = useState(false);
-  const [variant, setVariant] = useState<'default' | 'hover' | 'view'>('default');
+  const [variant, setVariant] = useState<'default' | 'hover' | 'view' | 'text'>(
+    'default'
+  );
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
@@ -35,12 +37,18 @@ export function MagneticCursor() {
     const onOver = (e: PointerEvent) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
+      // Text inputs need the native I-beam, not the white dot — switch to
+      // a "text" variant which renders nothing so the OS cursor shows.
+      if (t.closest('input, textarea, select, [contenteditable="true"]')) {
+        setVariant('text');
+        return;
+      }
       const cursorAttr = t.closest('[data-cursor]')?.getAttribute('data-cursor');
       if (cursorAttr === 'view') {
         setVariant('view');
         return;
       }
-      if (t.closest('a, button, [role="button"], input, textarea, select, [data-cursor="hover"]')) {
+      if (t.closest('a, button, [role="button"], [data-cursor="hover"]')) {
         setVariant('hover');
       }
     };
@@ -60,6 +68,9 @@ export function MagneticCursor() {
   }, [x, y]);
 
   if (!enabled) return null;
+
+  // Over text inputs, render nothing so the OS I-beam is the only cursor.
+  if (variant === 'text') return null;
 
   const ringSize = variant === 'view' ? 96 : variant === 'hover' ? 56 : 28;
 

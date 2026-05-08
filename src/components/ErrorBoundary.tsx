@@ -11,10 +11,6 @@ interface State {
   error?: Error;
 }
 
-/**
- * Error Boundary component to catch and handle React errors gracefully
- * Provides a user-friendly error message and recovery option
- */
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
@@ -25,22 +21,27 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    if (import.meta.env.DEV) {
-      console.error('Error caught by boundary:', error, errorInfo);
-    }
+    // Log in dev and prod so issues are diagnosable from the deployed site.
+    console.error('Error caught by boundary:', error, errorInfo);
   }
 
   private handleReset = () => {
+    // Just clear the error state and re-render — don't navigate.
+    // Navigating to a hard-coded path breaks under HashRouter on a GitHub
+    // Pages project subpath, and there's no need to leave the current route
+    // anyway: a re-render usually recovers if the cause was transient.
     this.setState({ hasError: false, error: undefined });
-    // HashRouter on a GitHub Pages project site lives under /<repo>/.
-    // `href = '/'` would jump to the user's pages root and 404.
-    // Stay on the same path, just reset the hash route.
+  };
+
+  private handleHome = () => {
+    // HashRouter route reset: clear the hash route, keep the project subpath.
     window.location.hash = '#/';
-    window.location.reload();
+    this.setState({ hasError: false, error: undefined });
   };
 
   public render() {
     if (this.state.hasError) {
+      const msg = this.state.error?.message ?? 'Unknown error';
       return (
         <div className="min-h-screen flex items-center justify-center px-6">
           <div className="max-w-md text-center space-y-6">
@@ -49,22 +50,31 @@ export class ErrorBoundary extends Component<Props, State> {
                 <AlertCircle className="size-12 text-destructive" />
               </div>
             </div>
-            
+
             <div className="space-y-3">
               <h1 className="text-3xl md:text-4xl font-light tracking-wide">
                 Something went wrong
               </h1>
               <p className="text-base text-muted-foreground font-light leading-relaxed">
-                We encountered an unexpected error. Don't worry, your data is safe.
+                {msg}
               </p>
             </div>
 
-            <Button
-              onClick={this.handleReset}
-              className="w-full md:w-auto px-8 py-6 text-base font-light tracking-wide"
-            >
-              Return to Home
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                onClick={this.handleReset}
+                variant="outline"
+                className="w-full sm:w-auto px-6 py-5 text-base font-light tracking-wide"
+              >
+                Try again
+              </Button>
+              <Button
+                onClick={this.handleHome}
+                className="w-full sm:w-auto px-6 py-5 text-base font-light tracking-wide"
+              >
+                Return home
+              </Button>
+            </div>
           </div>
         </div>
       );

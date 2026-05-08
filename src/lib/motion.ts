@@ -16,6 +16,14 @@ export const DURATION = {
   hero:  1.1,
 };
 
+/**
+ * How long the page-transition curtain takes to clear the new route's
+ * content. Anything that animates on mount (e.g. SplitTextReveal) should
+ * offset its start by at least this much, otherwise the reveal plays under
+ * the curtain and the user never sees it.
+ */
+export const PAGE_TRANSITION_REVEAL_DELAY = 0.35;
+
 /** Hook-friendly check for users who prefer reduced motion. */
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false;

@@ -27,10 +27,12 @@ export function Footer() {
         </div>
 
         {/* Site nav — repeats the header so the bottom of any page is also
-            navigable without scrolling back up. */}
+            navigable without scrolling back up. Hidden on mobile because
+            the hamburger menu in the header already covers this and a
+            bottom-of-page nav just adds scroll depth on small screens. */}
         <nav
           aria-label="Footer navigation"
-          className="mb-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.22em]"
+          className="mb-10 hidden flex-wrap gap-x-8 gap-y-3 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.22em] md:flex"
         >
           {footerNav.map((link) => (
             <Link

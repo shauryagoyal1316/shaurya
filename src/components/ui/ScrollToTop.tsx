@@ -1,26 +1,31 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-/**
- * Resets scroll to the top on every route change. Lenis intercepts wheel
- * events and tracks its own `targetScroll`, so a plain `window.scrollTo(0)`
- * is overridden on the next rAF tick. We call Lenis's own `scrollTo` (with
- * `immediate: true`) when it's available, and fall back to the native call
- * when it isn't (reduced-motion users, or before Lenis has mounted).
- */
 type LenisLike = {
-  scrollTo: (target: number, options?: { immediate?: boolean; force?: boolean }) => void;
+  scrollTo: (target: number, options?: { immediate?: boolean }) => void;
 };
 
+/**
+ * Reset scroll position on every route change.
+ *
+ * Lenis (smooth scroll) tracks its own targetScroll, so a plain
+ * `window.scrollTo(0)` gets overridden on the next rAF tick. When Lenis is
+ * available we call its scrollTo with `immediate: true`. We only fall back
+ * to the native call if Lenis isn't there — calling both fights the engine.
+ */
 export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const lenis = (window as unknown as { __lenis?: LenisLike }).__lenis;
-    if (lenis) {
-      lenis.scrollTo(0, { immediate: true, force: true });
-    } else {
+    try {
+      const lenis = (window as unknown as { __lenis?: LenisLike }).__lenis;
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        lenis.scrollTo(0, { immediate: true });
+        return;
+      }
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    } catch {
+      // Non-fatal — never let scroll-reset break the app.
     }
   }, [pathname]);
 
