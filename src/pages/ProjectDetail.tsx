@@ -32,9 +32,10 @@ export default function ProjectDetail() {
         type="article"
       />
 
-      {/* Spacer so the sticky breadcrumb lands below the fixed header on
-          first paint (header is up to 76px tall before scroll-compress). */}
-      <div className="h-20 md:h-24" aria-hidden />
+      {/* Spacer matching the expanded header height (76px) so the breadcrumb
+          starts flush below it on first paint. The header compresses on
+          scroll, but by then the breadcrumb's already in its sticky position. */}
+      <div className="h-[76px]" aria-hidden />
 
       {/* Persistent back-to-work bar — first row of the page now that the
           hero is gone, also sticks just below the header once you scroll. */}

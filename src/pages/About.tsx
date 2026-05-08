@@ -146,13 +146,17 @@ export default function About() {
       {/* OUTRO */}
       <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">
         <div className="mx-auto max-w-[1440px]">
+          <div className="mb-8 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+            <span className="mr-3 text-primary">/</span>Next
+          </div>
           <h2 className="font-display text-5xl leading-[0.95] text-foreground md:text-8xl">
             Want to <span className="italic text-foreground/55">see the work?</span>
           </h2>
           <div className="mt-12 flex flex-wrap items-center gap-6">
             <Link
               to="/work"
-              className="inline-flex items-center gap-3 rounded-sm bg-primary px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              data-cursor="view"
+              className="inline-flex items-center gap-3 rounded-sm bg-primary px-7 py-4 font-mono text-[11px] uppercase tracking-[0.22em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               View work <ArrowRight className="size-3.5" />
             </Link>

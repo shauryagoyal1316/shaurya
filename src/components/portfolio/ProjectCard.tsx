@@ -35,18 +35,21 @@ export function ProjectCard({
   const [imgFailed, setImgFailed] = useState(false);
   const showImage = Boolean(project.coverImage) && !imgFailed;
 
-  const ratioClass = {
+  // `satisfies` ensures the map covers every AspectRatio variant — adding a
+  // new variant in `src/types` without updating this map becomes a compile
+  // error instead of silently rendering an undefined class.
+  const ratioClass = ({
     portrait: 'aspect-[3/4]',
     landscape: 'aspect-[16/10]',
     square: 'aspect-square',
-  }[aspectRatio];
+  } satisfies Record<NonNullable<ProjectCardProps['aspectRatio']>, string>)[aspectRatio];
 
   const inner = (
     <Link
       to={`/work/${project.slug}`}
       data-cursor="view"
       aria-label={`${project.label} — ${project.role}, ${project.year}`}
-      className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+      className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
         {/* Surface base — also acts as the fallback when an image fails. */}
