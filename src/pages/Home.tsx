@@ -69,9 +69,18 @@ export default function Home() {
           <div className="absolute inset-x-0 bottom-8 flex items-center justify-between px-6 font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:px-10">
             <motion.button
               type="button"
-              onClick={() =>
-                window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
-              }
+              onClick={() => {
+                // Use Lenis if it's running so this doesn't fight the
+                // smooth-scroll momentum; fall back to native otherwise.
+                const lenis = (window as unknown as {
+                  __lenis?: { scrollTo: (t: number, o?: object) => void };
+                }).__lenis;
+                if (lenis) {
+                  lenis.scrollTo(window.innerHeight);
+                } else {
+                  window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+                }
+              }}
               data-cursor="hover"
               aria-label="Scroll to next section"
               initial={{ opacity: 0, y: 8 }}
@@ -180,6 +189,7 @@ export default function Home() {
           <div className="mt-12 md:hidden">
             <Link
               to="/work"
+              data-cursor="hover"
               className="rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               View archive →

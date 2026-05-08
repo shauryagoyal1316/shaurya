@@ -22,7 +22,9 @@ export function MagneticLink({
   href,
   onClick,
   className = '',
-  strength = 18,
+  // Lowered from 18 → 6: stronger pulls were jumping tap targets near the
+  // edge of dense layouts and causing mis-clicks on adjacent elements.
+  strength = 6,
   'aria-label': ariaLabel,
 }: MagneticLinkProps) {
   const ref = useRef<HTMLElement>(null);

@@ -54,7 +54,7 @@ export function Header() {
         <motion.div style={{ scale: monogramScale }} className="origin-left">
           <Link
             to="/"
-            className="rounded-sm font-mono text-[11px] uppercase tracking-[0.28em] text-foreground transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="rounded-sm font-mono text-[11px] uppercase tracking-[0.28em] text-foreground transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-inset"
             aria-label={`${profile.name} — home`}
           >
             <span className="inline-flex items-center gap-2">
@@ -76,7 +76,7 @@ export function Header() {
                 key={link.path}
                 to={link.path}
                 aria-current={active ? 'page' : undefined}
-                className="group relative rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/80 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group relative rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/80 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-inset"
               >
                 <span className="relative inline-block overflow-hidden">
                   <motion.span
@@ -116,7 +116,7 @@ export function Header() {
         <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
-              className="flex size-10 items-center justify-center rounded-full border border-border text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="flex size-10 items-center justify-center rounded-full border border-border text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-inset"
               aria-label="Open menu"
             >
               <Menu className="size-4" />
@@ -142,7 +142,7 @@ export function Header() {
                         to={link.path}
                         onClick={() => setOpen(false)}
                         aria-current={active ? 'page' : undefined}
-                        className="rounded-sm font-display text-5xl italic text-foreground transition-opacity hover:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        className="rounded-sm font-display text-5xl italic text-foreground transition-opacity hover:opacity-60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-inset"
                       >
                         {link.name}
                       </Link>

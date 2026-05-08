@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
-import { EASE } from '@/lib/motion';
+import { EASE, PAGE_TRANSITION_REVEAL_DELAY } from '@/lib/motion';
 
 interface SplitTextRevealProps {
   text: string;
@@ -39,13 +39,11 @@ export function SplitTextReveal({
     return <Tag className={className}>{text}{children}</Tag>;
   }
 
-  // The route-level `<PageTransition>` fades incoming content in with a
-  // ~300ms delay. Without offsetting, every letter would have already
-  // animated underneath the curtain, and the user would see the heading
-  // appear fully formed. Push the reveal past the curtain so it actually
-  // plays on the visible page.
-  const transitionOffset = 0.35;
-  const charIndexOffset = transitionOffset;
+  // The route-level `<PageTransition>` fades incoming content in after the
+  // shared PAGE_TRANSITION_REVEAL_DELAY. Without offsetting, every letter
+  // would have already animated underneath the curtain. Push the reveal
+  // past the curtain so it actually plays on the visible page.
+  const charIndexOffset = PAGE_TRANSITION_REVEAL_DELAY;
   let charIndex = 0;
 
   return (

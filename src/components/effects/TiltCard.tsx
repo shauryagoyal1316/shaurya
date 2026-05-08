@@ -55,13 +55,8 @@ export function TiltCard({
   return (
     <motion.div
       ref={ref}
-      className={className}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: 'preserve-3d',
-        transformPerspective: 1200,
-      }}
+      className={`[transform-style:preserve-3d] [perspective:1200px] ${className}`}
+      style={{ rotateX, rotateY }}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
     >
