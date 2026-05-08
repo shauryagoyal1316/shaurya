@@ -52,6 +52,24 @@ export default function ProjectDetail() {
         </div>
       </div>
 
+      {/* COVER — landing-page screenshot of the live site, full-bleed within
+          the page padding. Falls back to the surface tone if the image fails. */}
+      {project.coverImage && (
+        <section className="bg-background px-6 pt-12 md:px-10 md:pt-20">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="relative aspect-[16/10] overflow-hidden bg-surface-2">
+              <img
+                src={project.coverImage}
+                alt={`${project.label} — landing page`}
+                loading="eager"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* META + DESCRIPTION */}
       <section className="bg-background px-6 py-24 md:px-10 md:py-32">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
