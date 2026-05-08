@@ -4,26 +4,26 @@ export const profile: ProfileInfo = {
   name: 'Shaurya Goyal',
   firstName: 'Shaurya',
   lastName: 'Goyal',
-  tagline: 'Full-Stack Website Builder / AI Web Specialist',
+  tagline: 'Full-Stack Website Builder',
   heroIntroduction:
-    'I build complete websites, front end and back end, using modern AI-assisted workflows to move faster without losing polish.',
-  biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, and deployment all matter to me because a website only works when the whole thing feels intentional.
+    'I build complete websites — front end and back end — that look expensive, work properly, and feel intentional in every detail.',
+  biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, and deployment all matter, because a website only works when the whole thing feels intentional.
 
-I do not hand-code every line from scratch. My strength is using AI tools professionally: turning a business idea into a clear brief, prompting and steering the build, debugging with AI assistance, choosing the right stack, and polishing the final site until it feels custom. I have spent time learning structured AI workflows and AI web-building courses so I can use these tools with control instead of guesswork.
+I work fast, but the bar is craft: editorial typography, considered motion, responsive layouts that hold up everywhere, and code that's clean enough to keep building on.
 
-The result is simple: clients get a website that looks expensive, works properly, and can be shipped much faster than a traditional build.`,
-  approach: `My process is direct: understand the business, map the pages, generate strong first passes with AI, then refine the design, content, responsiveness, and behavior until the site feels finished.
+The result is simple: a site that looks expensive, works properly, and ships in a fraction of the time of a traditional build.`,
+  approach: `My process is direct: understand the business, map the pages, design strong first passes, then refine the design, content, responsiveness, and behavior until the site feels finished.
 
-I focus on the outcome, not pretending every line was typed manually. AI is the toolset; taste, direction, and execution are the service.`,
+I focus on the outcome — taste, direction, and execution are the service.`,
   skills: [
     'Full Website Builds',
-    'AI-Assisted Development',
-    'Prompt Direction',
-    'Frontend Polish',
+    'Frontend Engineering',
     'Backend Setup',
+    'Editorial Type & Layout',
+    'Motion & Interaction',
     'Responsive Design',
+    'Performance',
     'Launch & Deployment',
-    'Type & Layout',
   ],
   stack: [
     'React',
@@ -32,8 +32,6 @@ I focus on the outcome, not pretending every line was typed manually. AI is the 
     'Node',
     'Supabase',
     'Vite',
-    'AI Build Tools',
-    'Prompt Engineering',
     'GSAP',
     'Framer Motion',
   ],

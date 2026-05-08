@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
@@ -32,6 +32,8 @@ export function ProjectCard({
   flat = false,
 }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = Boolean(project.coverImage) && !imgFailed;
 
   const ratioClass = {
     portrait: 'aspect-[3/4]',
@@ -47,8 +49,19 @@ export function ProjectCard({
       className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
-        {/* Solid surface — image rendering reintroduced separately. */}
+        {/* Surface base — also acts as the fallback when an image fails. */}
         <div className="absolute inset-0 bg-surface-2" />
+
+        {showImage && (
+          <img
+            src={project.coverImage}
+            alt={`${project.label} — ${project.role}`}
+            loading="lazy"
+            decoding="async"
+            onError={() => setImgFailed(true)}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          />
+        )}
 
         {/* Bottom meta overlay — slides up with content on hover */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 md:p-8">
