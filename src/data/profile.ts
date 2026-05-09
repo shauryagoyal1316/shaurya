@@ -36,7 +36,7 @@ I focus on the outcome — taste, direction, and execution are the service.`,
     'Framer Motion',
   ],
   location: 'Available worldwide / Remote',
-  availability: 'Available for select work / 2026',
+  availability: 'Available for select work · 2026',
   socialLinks: {},
   portraitImage: '',
 };

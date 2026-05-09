@@ -10,6 +10,14 @@ interface SEOHeadProps {
 }
 
 /**
+ * Fallback OG image used on pages that don't pass one explicitly. Shared
+ * across Home / Work / About / 404 so social previews always render with
+ * an image rather than as bare text.
+ */
+const DEFAULT_OG_IMAGE =
+  'https://image.thum.io/get/width/1600/crop/1000/noanimate/https://shauryagoyal1316.github.io/shaurya/';
+
+/**
  * Imperative SEO updater — sets <title> and meta tags on each page change.
  */
 export function SEOHead({
@@ -50,17 +58,18 @@ export function SEOHead({
       el.setAttribute('content', content);
     };
 
+    const ogImage = image || DEFAULT_OG_IMAGE;
     set('description', fullDescription);
     set('og:title', fullTitle, true);
     set('og:description', fullDescription, true);
     set('og:type', type, true);
     set('og:url', fullUrl, true);
-    if (image) set('og:image', image, true);
+    set('og:image', ogImage, true);
     set('og:site_name', profile.name, true);
     set('twitter:card', 'summary_large_image');
     set('twitter:title', fullTitle);
     set('twitter:description', fullDescription);
-    if (image) set('twitter:image', image);
+    set('twitter:image', ogImage);
     set('author', profile.name);
   }, [fullTitle, fullDescription, fullUrl, image, type, location.pathname]);
 
