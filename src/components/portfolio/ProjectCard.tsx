@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '@/types';
@@ -44,11 +43,20 @@ export function ProjectCard({
     square: 'aspect-square',
   } satisfies Record<NonNullable<ProjectCardProps['aspectRatio']>, string>)[aspectRatio];
 
+  // Cards link straight to the live site in a new tab — no internal detail
+  // page (it added a chunk fetch + page-transition curtain that read as a
+  // blank screen for ~1s). The hidden URL is still on the anchor's href so
+  // the link works without JS; the visible label is controlled by the
+  // overlay below, never the URL.
+  const href = project.liveUrl ?? '#';
+
   const inner = (
-    <Link
-      to={`/work/${project.slug}`}
+    <a
+      href={href}
+      target={project.liveUrl ? '_blank' : undefined}
+      rel={project.liveUrl ? 'noopener noreferrer' : undefined}
       data-cursor="view"
-      aria-label={`${project.label} — ${project.role}, ${project.year}`}
+      aria-label={`${project.label} — ${project.role}, ${project.year} (opens in a new tab)`}
       className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
@@ -88,7 +96,7 @@ export function ProjectCard({
           </div>
         )}
       </div>
-    </Link>
+    </a>
   );
 
   if (flat) return inner;

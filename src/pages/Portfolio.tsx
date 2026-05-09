@@ -1,58 +1,21 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
-import { WorkFilter } from '@/components/work/WorkFilter';
-import type { ProjectCategory } from '@/types';
-
-const CATEGORIES: { id: 'all' | ProjectCategory; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'landing', label: 'Landing' },
-];
 
 /**
- * Only show categories that actually have at least one project (besides "All").
- * Avoids dead filter buttons that resolve to "Nothing here yet."
- */
-function getVisibleCategories(allProjects: { category: ProjectCategory }[]) {
-  return CATEGORIES.filter((c) => {
-    if (c.id === 'all') return true;
-    return allProjects.some((p) => p.category === c.id);
-  });
-}
-
-/**
- * Work / archive page. Top hero, mono filter row, asymmetric grid below.
- * Featured items occupy a wider column on desktop for visual rhythm.
+ * Work page. With only a handful of projects and no per-project detail
+ * route, every project gets its full case-study content laid out inline
+ * here: cover screenshot card, meta sidebar (year / role / stack +
+ * View live button), and the long-form description / approach paragraphs.
+ *
+ * The card itself opens the live site in a new tab — there is no internal
+ * /work/:slug route any more (it added a chunk fetch + page-transition
+ * curtain that read as a blank screen for a beat).
  */
 export default function Work() {
-  const [active, setActive] = useState<'all' | ProjectCategory>('all');
-
-  const filtered = useMemo(
-    () => (active === 'all' ? projects : projects.filter((p) => p.category === active)),
-    [active]
-  );
-
-  const categoriesWithCounts = useMemo(
-    () =>
-      getVisibleCategories(projects).map((c) => ({
-        ...c,
-        count:
-          c.id === 'all'
-            ? projects.length
-            : projects.filter((p) => p.category === c.id).length,
-      })),
-    []
-  );
-
-  // Hide the filter when there's only one real category in play — "All"
-  // and "Landing" pointing at the same set is dead UI.
-  const realCategories = categoriesWithCounts.filter((c) => c.id !== 'all');
-  const showFilter = realCategories.length > 1;
-
-  // Subtle parallax on the heading as the user scrolls into the grid.
   const headerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: headerRef,
@@ -64,7 +27,7 @@ export default function Work() {
     <>
       <SEOHead
         title="Work"
-        description="Two real website examples by Shaurya Goyal."
+        description="Real website examples — built end to end, front and back, with an editorial bar for craft."
       />
 
       {/* HERO */}
@@ -80,60 +43,97 @@ export default function Work() {
             <SplitTextReveal text="Work." stagger={0.06} />
           </h1>
           <p className="mt-10 max-w-xl text-balance text-base font-light leading-relaxed text-foreground/70 md:text-lg">
-            Two real website examples: one barbershop landing page and one
-            private chef portfolio.
+            Two real website examples — built end to end, designed with
+            editorial typography, and shipped to live URLs.
           </p>
         </motion.div>
       </section>
 
-      {/* FILTER — sticky just below the compressed header height (56px) so
-          the bar lands flush against the header instead of overlapping it. */}
-      {showFilter && (
-        <section className="sticky top-14 z-30 border-y border-border bg-background/85 px-6 py-5 backdrop-blur-md md:px-10">
+      {/* PROJECT SECTIONS */}
+      {projects.map((project, i) => (
+        <section
+          key={project.id}
+          aria-labelledby={`project-${project.id}-label`}
+          className="border-t border-border px-6 py-24 md:px-10 md:py-32"
+        >
           <div className="mx-auto max-w-[1440px]">
-            <WorkFilter
-              categories={categoriesWithCounts}
-              active={active}
-              onChange={(id) => setActive(id as 'all' | ProjectCategory)}
+            {/* Section number + project label */}
+            <div className="mb-10 flex items-baseline gap-6 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+              <span className="text-primary">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span id={`project-${project.id}-label`} className="text-foreground/70">
+                {project.role} · {project.year}
+              </span>
+            </div>
+
+            {/* Cover */}
+            <ProjectCard
+              project={project}
+              index={i}
+              aspectRatio="landscape"
+              showCategory={false}
             />
+
+            {/* Title under the cover, large editorial */}
+            <h2 className="mt-12 font-display text-5xl leading-[0.95] text-foreground md:text-7xl">
+              {project.label}
+            </h2>
+
+            {/* Meta + description grid */}
+            <div className="mt-12 grid grid-cols-1 gap-12 md:mt-16 md:grid-cols-12 md:gap-16">
+              <aside className="md:col-span-4 md:col-start-1">
+                <div className="space-y-10 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60">
+                  <div>
+                    <div className="mb-2 text-foreground/40">Year</div>
+                    <div className="text-foreground">{project.year}</div>
+                  </div>
+                  <div>
+                    <div className="mb-2 text-foreground/40">Role</div>
+                    <div className="text-foreground">{project.role}</div>
+                  </div>
+                  <div>
+                    <div className="mb-2 text-foreground/40">Stack</div>
+                    <ul className="space-y-1 text-foreground">
+                      {project.stack.map((s) => (
+                        <li key={s}>{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  {project.liveUrl && (
+                    <div className="pt-2">
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor="view"
+                        className="inline-flex items-center gap-3 rounded-sm bg-primary px-7 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      >
+                        View live ↗
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </aside>
+
+              <article className="md:col-span-7 md:col-start-6">
+                <p className="mb-8 font-display text-2xl leading-[1.2] text-foreground/95 md:text-3xl">
+                  {project.description}
+                </p>
+                {project.approach &&
+                  project.approach.split('\n\n').map((para, idx) => (
+                    <p
+                      key={idx}
+                      className="mb-5 text-base font-light leading-[1.7] text-foreground/70 md:text-lg"
+                    >
+                      {para}
+                    </p>
+                  ))}
+              </article>
+            </div>
           </div>
         </section>
-      )}
-
-      {/* GRID */}
-      <section className="px-6 py-20 md:px-10 md:py-32">
-        <div className="mx-auto max-w-[1440px]">
-          <motion.div
-            layout
-            className="grid grid-cols-1 gap-10 md:grid-cols-6 md:gap-12"
-          >
-            {filtered.map((project, i) => {
-              // Featured items take 4/6 columns; others take 3/6, creating
-              // an editorial rhythm rather than a uniform grid.
-              const span = project.featured ? 'md:col-span-4' : 'md:col-span-3';
-              const ratio = project.featured ? 'landscape' : 'portrait';
-              return (
-                <motion.div
-                  key={project.id}
-                  layout
-                  className={span}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <ProjectCard project={project} index={i} aspectRatio={ratio} />
-                </motion.div>
-              );
-            })}
-          </motion.div>
-
-          {filtered.length === 0 && (
-            <div className="py-32 text-center font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/40">
-              Nothing here yet.
-            </div>
-          )}
-        </div>
-      </section>
+      ))}
     </>
   );
 }

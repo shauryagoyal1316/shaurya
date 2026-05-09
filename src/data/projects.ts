@@ -47,23 +47,5 @@ The typography is the loudest thing in the room, and it never raises its voice.`
   },
 ];
 
-export const getProjectBySlug = (slug: string): Project | undefined =>
-  projects.find((p) => p.slug === slug);
-
-export const getProjectsByCategory = (category: string): Project[] => {
-  if (category === 'all') return projects;
-  return projects.filter((p) => p.category === category);
-};
-
 export const getFeaturedProjects = (): Project[] =>
   projects.filter((p) => p.featured);
-
-export const getAdjacentProjects = (
-  currentSlug: string,
-): { prev: Project | null; next: Project | null } => {
-  const i = projects.findIndex((p) => p.slug === currentSlug);
-  return {
-    prev: i > 0 ? projects[i - 1] : null,
-    next: i >= 0 && i < projects.length - 1 ? projects[i + 1] : null,
-  };
-};
