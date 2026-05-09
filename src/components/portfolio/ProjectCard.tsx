@@ -43,20 +43,24 @@ export function ProjectCard({
     square: 'aspect-square',
   } satisfies Record<NonNullable<ProjectCardProps['aspectRatio']>, string>)[aspectRatio];
 
-  // Cards link straight to the live site in a new tab — no internal detail
-  // page (it added a chunk fetch + page-transition curtain that read as a
-  // blank screen for ~1s). The hidden URL is still on the anchor's href so
-  // the link works without JS; the visible label is controlled by the
-  // overlay below, never the URL.
-  const href = project.liveUrl ?? '#';
+  // Cards open the live site in a new tab. If a project has no liveUrl
+  // (shouldn't happen with current data, but the type allows it), render
+  // a non-interactive wrapper instead of an anchor pointing at "#" — that
+  // would just yank the URL hash and look broken.
+  const Wrapper: 'a' | 'div' = project.liveUrl ? 'a' : 'div';
+  const wrapperProps = project.liveUrl
+    ? {
+        href: project.liveUrl,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        'data-cursor': 'view',
+        'aria-label': `${project.label} — ${project.role}, ${project.year} (opens in a new tab)`,
+      }
+    : { 'aria-label': `${project.label} — ${project.role}, ${project.year}` };
 
   const inner = (
-    <a
-      href={href}
-      target={project.liveUrl ? '_blank' : undefined}
-      rel={project.liveUrl ? 'noopener noreferrer' : undefined}
-      data-cursor="view"
-      aria-label={`${project.label} — ${project.role}, ${project.year} (opens in a new tab)`}
+    <Wrapper
+      {...(wrapperProps as Record<string, string>)}
       className="group relative block overflow-hidden bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <div className={cn('relative overflow-hidden', ratioClass)}>
@@ -74,8 +78,9 @@ export function ProjectCard({
           />
         )}
 
-        {/* Bottom meta overlay — slides up with content on hover */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 md:p-8">
+        {/* Bottom meta overlay — slides up on hover *or* keyboard focus so
+            keyboard-only users can see the title and metadata too. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0 md:p-8">
           <div className="space-y-1">
             <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/60">
               {project.year} · {project.role}
@@ -84,7 +89,7 @@ export function ProjectCard({
               {project.label}
             </div>
           </div>
-          <div className="flex size-10 items-center justify-center rounded-full border border-white/40 text-white transition-transform duration-500 group-hover:rotate-45">
+          <div className="flex size-10 items-center justify-center rounded-full border border-white/40 text-white transition-transform duration-500 group-hover:rotate-45 group-focus-visible:rotate-45">
             <ArrowUpRight className="size-4" />
           </div>
         </div>
@@ -96,7 +101,7 @@ export function ProjectCard({
           </div>
         )}
       </div>
-    </a>
+    </Wrapper>
   );
 
   if (flat) return inner;
