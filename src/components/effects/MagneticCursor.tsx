@@ -1,120 +1,110 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { hasFinePointer, prefersReducedMotion } from '@/lib/motion';
 
 /**
- * Custom magnetic cursor — a small dot plus a larger trailing ring that
- * grows when hovering interactive elements. Hides on touch devices and
- * when the user prefers reduced motion.
- *
- * Drives interactive growth by listening for `pointerover/out` on elements
- * matching `[data-cursor]` or `a, button` selectors.
+ * Custom cursor matching Portfolio.html exactly: a single difference-blend
+ * circle that lerps toward the pointer (factor 0.18 per frame) and grows
+ * to 60px on `[data-cursor="hover"]` or 96px on `[data-cursor="view"]`.
+ * Renders an optional label inside the circle (e.g. "View"). Hides on
+ * touch devices and when the user prefers reduced motion.
  */
 export function MagneticCursor() {
   const [enabled, setEnabled] = useState(false);
   const [variant, setVariant] = useState<'default' | 'hover' | 'view' | 'text'>(
     'default'
   );
-
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-
-  // Spring the ring; the inner dot tracks 1:1 for snappiness.
-  const ringX = useSpring(x, { stiffness: 350, damping: 30, mass: 0.6 });
-  const ringY = useSpring(y, { stiffness: 350, damping: 30, mass: 0.6 });
+  const [label, setLabel] = useState('');
+  const elRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!hasFinePointer() || prefersReducedMotion()) return;
-
     setEnabled(true);
     document.body.dataset.cursor = 'custom';
 
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    let tx = x;
+    let ty = y;
+    let raf = 0;
+
     const onMove = (e: PointerEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
+      tx = e.clientX;
+      ty = e.clientY;
     };
+
+    const frame = () => {
+      x += (tx - x) * 0.18;
+      y += (ty - y) * 0.18;
+      if (elRef.current) {
+        elRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
 
     const onOver = (e: PointerEvent) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
-      // Text inputs need the native I-beam, not the white dot — switch to
-      // a "text" variant which renders nothing so the OS cursor shows.
+      // Inputs need the native I-beam — render nothing over them.
       if (t.closest('input, textarea, select, [contenteditable="true"]')) {
         setVariant('text');
+        setLabel('');
         return;
       }
-      const cursorAttr = t.closest('[data-cursor]')?.getAttribute('data-cursor');
-      if (cursorAttr === 'view') {
+      const cursorEl = t.closest('[data-cursor]') as HTMLElement | null;
+      const mode = cursorEl?.getAttribute('data-cursor');
+      if (mode === 'view') {
         setVariant('view');
+        setLabel(cursorEl?.getAttribute('data-cursor-label') || 'View');
         return;
       }
-      if (t.closest('a, button, [role="button"], [data-cursor="hover"]')) {
+      if (
+        mode === 'hover' ||
+        t.closest('a, button, [role="button"]')
+      ) {
         setVariant('hover');
+        setLabel('');
+        return;
       }
+      setVariant('default');
+      setLabel('');
     };
-
-    const onOut = () => setVariant('default');
 
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerover', onOver, { passive: true });
-    window.addEventListener('pointerout', onOut, { passive: true });
 
     return () => {
+      cancelAnimationFrame(raf);
       delete document.body.dataset.cursor;
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerover', onOver);
-      window.removeEventListener('pointerout', onOut);
     };
-  }, [x, y]);
+  }, []);
 
-  if (!enabled) return null;
+  if (!enabled || variant === 'text') return null;
 
-  // Over text inputs, render nothing so the OS I-beam is the only cursor.
-  if (variant === 'text') return null;
-
-  const ringSize = variant === 'view' ? 96 : variant === 'hover' ? 56 : 28;
+  const size = variant === 'view' ? 96 : variant === 'hover' ? 60 : 14;
 
   return (
-    <>
-      {/* Inner dot — 1:1 with pointer */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[100] mix-blend-difference"
-        style={{ x, y }}
-      >
-        <div
-          className="rounded-full bg-white"
-          style={{
-            width: 6,
-            height: 6,
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      </motion.div>
-
-      {/* Trailing ring — springs to the pointer */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[100] mix-blend-difference"
-        style={{ x: ringX, y: ringY }}
-      >
-        <motion.div
-          className="rounded-full border border-white/80"
-          animate={{
-            width: ringSize,
-            height: ringSize,
-            opacity: variant === 'view' ? 1 : 0.7,
-          }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          style={{ transform: 'translate(-50%, -50%)' }}
+    <div
+      ref={elRef}
+      aria-hidden
+      className="pointer-events-none fixed left-0 top-0 z-[9999] flex items-center justify-center rounded-full bg-foreground mix-blend-difference"
+      style={{
+        width: size,
+        height: size,
+        transition:
+          'width 360ms cubic-bezier(0.16,1,0.3,1), height 360ms cubic-bezier(0.16,1,0.3,1)',
+      }}
+    >
+      {label && (
+        <span
+          className="font-mono text-[9px] uppercase tracking-[0.2em] text-background"
+          style={{ whiteSpace: 'nowrap' }}
         >
-          {variant === 'view' && (
-            <span className="flex h-full w-full items-center justify-center font-mono text-[10px] uppercase tracking-widest text-white">
-              View
-            </span>
-          )}
-        </motion.div>
-      </motion.div>
-    </>
+          {label}
+        </span>
+      )}
+    </div>
   );
 }

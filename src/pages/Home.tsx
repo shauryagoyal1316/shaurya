@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { getFeaturedProjects } from '@/data/projects';
@@ -27,19 +27,16 @@ export default function Home() {
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.4,
-  });
-  const heroScale = useTransform(smoothProgress, [0, 1], [1, 1.18]);
-  const heroOpacity = useTransform(smoothProgress, [0, 0.65, 1], [1, 0.4, 0]);
+  // Raw progress, no spring — matches Portfolio.html which computes
+  // `1 + p * 0.18`, `p * 14px`, `-p * 14%`, `1 - p * 1.2` from a plain rAF.
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.83], [1, 0]);
   const heroBlur = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0, 1],
     ['blur(0px)', 'blur(14px)']
   );
-  const heroY = useTransform(smoothProgress, [0, 1], ['0%', '-14%']);
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
 
   return (
     <>
@@ -100,29 +97,12 @@ export default function Home() {
           <div className="absolute inset-x-6 bottom-9 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:inset-x-10">
             <motion.button
               type="button"
-              onClick={() => {
-                // Use Lenis if it's running so this doesn't fight the
-                // smooth-scroll momentum; fall back to native otherwise.
-                try {
-                  const lenis = (
-                    window as unknown as {
-                      __lenis?: {
-                        scrollTo?: (t: number, o?: object) => void;
-                      };
-                    }
-                  ).__lenis;
-                  if (lenis && typeof lenis.scrollTo === 'function') {
-                    lenis.scrollTo(window.innerHeight);
-                    return;
-                  }
-                } catch {
-                  /* fall through to native */
-                }
+              onClick={() =>
                 window.scrollTo({
                   top: window.innerHeight,
                   behavior: 'smooth',
-                });
-              }}
+                })
+              }
               data-cursor="hover"
               aria-label="Scroll to next section"
               initial={{ opacity: 0, y: 8 }}

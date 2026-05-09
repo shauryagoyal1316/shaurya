@@ -4,20 +4,16 @@ import { Footer } from './Footer';
 import { MagneticCursor } from '@/components/effects/MagneticCursor';
 import { ScrollProgress } from '@/components/effects/ScrollProgress';
 import { NoiseOverlay } from '@/components/effects/NoiseOverlay';
-import { SmoothScroll } from '@/components/effects/SmoothScroll';
-
-interface LayoutProps {
-  children: ReactNode;
-}
 
 /**
- * Root layout: sticky header + main + footer, plus the global decorations
- * (Lenis smooth scroll, custom cursor, scroll progress rail, film-grain).
+ * Root layout: sticky header + main + footer. Global decorations live as
+ * siblings of <main>: noise grain, custom cursor, top scroll-progress rail.
+ * Native scrolling — Portfolio.html does not use Lenis or any smooth-scroll
+ * wrapper; the cursor lerp + page-transition curtain rely on raw scrollY.
  */
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="relative min-h-screen flex flex-col bg-background text-foreground">
-      <SmoothScroll />
       <NoiseOverlay />
       <MagneticCursor />
       <ScrollProgress />

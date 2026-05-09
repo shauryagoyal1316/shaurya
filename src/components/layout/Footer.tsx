@@ -98,7 +98,11 @@ export function Footer() {
               <div className="inline-flex items-center gap-2.5 font-mono text-[12px] text-foreground">
                 <span
                   aria-hidden
-                  className="size-1.5 animate-pulse rounded-full bg-primary"
+                  className="size-[7px] rounded-full bg-primary"
+                  style={{
+                    boxShadow:
+                      '0 0 0 4px color-mix(in oklch, var(--primary) 18%, transparent)',
+                  }}
                 />
                 {profile.availability}
               </div>
