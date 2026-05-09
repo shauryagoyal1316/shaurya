@@ -15,7 +15,7 @@ interface SEOHeadProps {
  * an image rather than as bare text.
  */
 const DEFAULT_OG_IMAGE =
-  'https://image.thum.io/get/width/1600/crop/1000/noanimate/https://shauryagoyal1316.github.io/shaurya/';
+  'https://api.microlink.io/?url=https%3A%2F%2Fshauryagoyal1316.github.io%2Fshaurya%2F&screenshot=true&embed=screenshot.url&waitFor=2000&meta=false';
 
 /**
  * Imperative SEO updater — sets <title> and meta tags on each page change.
