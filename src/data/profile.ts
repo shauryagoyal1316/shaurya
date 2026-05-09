@@ -6,29 +6,29 @@ export const profile: ProfileInfo = {
   lastName: 'Goyal',
   tagline: 'Full-Stack Website Builder',
   heroIntroduction:
-    'I build complete websites — front end and back end — that look expensive, work properly, and feel intentional in every detail.',
-  biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, and deployment all matter, because a website only works when the whole thing feels intentional.
+    'I build complete websites — front end, back end, motion, and deployment — for people who want something sharper than a template.',
+  biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, and deployment — a website only works when the whole thing feels intentional.
 
-I work fast, but the bar is craft: editorial typography, considered motion, responsive layouts that hold up everywhere, and code that's clean enough to keep building on.
+My job is taste, direction, and execution. I turn a business idea into a clear brief, choose the right stack, design the pages, and ship a site that feels custom rather than off-the-shelf.
 
-The result is simple: a site that looks expensive, works properly, and ships in a fraction of the time of a traditional build.`,
-  approach: `My process is direct: understand the business, map the pages, design strong first passes, then refine the design, content, responsiveness, and behavior until the site feels finished.
+Clients get a website that looks expensive, works properly across every device, and is built to last. From first sketch to live URL, the whole thing is handled.`,
+  approach: `Understand the business, map the pages, design the system, then refine the layout, content, responsiveness, and behavior until the site feels finished.
 
-I focus on the outcome — taste, direction, and execution are the service.`,
+Every detail earns its place — type, spacing, motion, colour. The goal is a site you would not change, not one you would tolerate.`,
   skills: [
     'Full Website Builds',
-    'Frontend Engineering',
+    'Frontend Development',
     'Backend Setup',
-    'Editorial Type & Layout',
-    'Motion & Interaction',
     'Responsive Design',
-    'Performance',
+    'Type & Layout',
+    'Motion Design',
     'Launch & Deployment',
+    'Brand Direction',
   ],
   stack: [
     'React',
     'TypeScript',
-    'Tailwind CSS',
+    'Tailwind',
     'Node',
     'Supabase',
     'Vite',
@@ -36,7 +36,7 @@ I focus on the outcome — taste, direction, and execution are the service.`,
     'Framer Motion',
   ],
   location: 'Available worldwide / Remote',
-  availability: 'Available for select work · 2026',
+  availability: 'Available · 2026',
   socialLinks: {},
   portraitImage: '',
 };

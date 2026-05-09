@@ -1,12 +1,5 @@
-import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
-
-const footerNav = [
-  { name: 'Index', path: '/' },
-  { name: 'Work', path: '/work' },
-  { name: 'About', path: '/about' },
-];
 
 /**
  * Editorial footer reskinned to match Portfolio.html:
@@ -113,27 +106,9 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Footer nav (desktop only) — repeats the header so the bottom of
-            any page is also navigable. */}
-        <nav
-          aria-label="Footer navigation"
-          className="mt-12 hidden flex-wrap gap-x-10 gap-y-3 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.22em] md:flex"
-        >
-          {footerNav.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              data-cursor="hover"
-              className="rounded-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-
         {/* Copyright row */}
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/50">
-          <div>© {year} Shaurya Goyal · All rights reserved</div>
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/50">
+          <div>© {year} Shaurya Goyal</div>
           <div>Built with care · {profile.location}</div>
         </div>
       </div>

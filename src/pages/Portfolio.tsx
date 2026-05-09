@@ -1,20 +1,15 @@
-import { useRef } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
+import { cn } from '@/lib/utils';
 
 /**
- * Work page. With only a handful of projects and no per-project detail
- * route, every project gets its full case-study content laid out inline:
- * cover card, meta sidebar (year / role / stack + Visit live button), and
- * long-form description / approach paragraphs.
- *
- * The cover card itself opens the live site in a new tab. There is no
- * /work/:slug route any more — it added a chunk fetch + page-transition
- * curtain that read as a blank screen for a beat.
+ * Work index — matches Portfolio.html: oversized "Work." hero, sticky pill
+ * filter (All / Landing), and a 12-column grid where every other card
+ * starts at column 6 to break the rhythm.
  */
 export default function Work() {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -23,6 +18,28 @@ export default function Work() {
     offset: ['start start', 'end start'],
   });
   const headingY = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
+
+  const [active, setActive] = useState<'all' | 'landing'>('all');
+
+  const cats = useMemo(
+    () => [
+      { id: 'all' as const, label: 'All', count: projects.length },
+      {
+        id: 'landing' as const,
+        label: 'Landing',
+        count: projects.filter((p) => p.category === 'landing').length,
+      },
+    ],
+    []
+  );
+
+  const filtered = useMemo(
+    () =>
+      active === 'all'
+        ? projects
+        : projects.filter((p) => p.category === active),
+    [active]
+  );
 
   return (
     <>
@@ -36,10 +53,7 @@ export default function Work() {
         ref={headerRef}
         className="relative px-6 pb-20 pt-40 md:px-10 md:pb-32 md:pt-48"
       >
-        <motion.div
-          style={{ y: headingY }}
-          className="mx-auto max-w-[1440px]"
-        >
+        <motion.div style={{ y: headingY }} className="mx-auto max-w-[1440px]">
           <div className="mb-7 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">02</span>Index of work
           </div>
@@ -47,111 +61,71 @@ export default function Work() {
             <SplitTextReveal text="Work." stagger={0.05} />
           </h1>
           <p className="mt-9 max-w-xl text-balance text-base font-light leading-relaxed text-foreground/70 md:text-lg">
-            Two real website examples — built end to end, designed with
-            editorial typography, and shipped to live URLs.
+            Two real website examples: an editorial barbershop landing page
+            and a cinematic private-chef portfolio. Both shipped, both live.
           </p>
         </motion.div>
       </section>
 
-      {/* PROJECT SECTIONS */}
-      {projects.map((project, i) => (
-        <section
-          key={project.id}
-          aria-labelledby={`project-${project.id}-label`}
-          className="border-t border-border px-6 py-24 md:px-10 md:py-32"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            {/* Section number + project label */}
-            <div className="mb-10 flex items-baseline gap-6 font-mono text-[11px] uppercase tracking-[0.28em]">
-              <span className="text-primary">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                id={`project-${project.id}-label`}
-                className="text-foreground/70"
-              >
-                {project.role} · {project.year}
-              </span>
-            </div>
-
-            {/* Cover */}
-            <ProjectCard
-              project={project}
-              index={i}
-              total={projects.length}
-              aspectRatio="landscape"
-              showBadges={false}
-            />
-
-            {/* Title under the cover, large editorial */}
-            <h2
-              className="mt-12 font-display text-[clamp(48px,8vw,128px)] leading-[0.95] tracking-[-0.025em] text-foreground"
-            >
-              {project.label.split(' ')[0]}
-              {project.label.split(' ').slice(1).join(' ') && (
-                <span className="italic text-foreground/55">
-                  {' '}
-                  {project.label.split(' ').slice(1).join(' ')}
-                </span>
-              )}
-            </h2>
-
-            {/* Meta + description grid */}
-            <div className="mt-12 grid grid-cols-1 gap-12 md:mt-16 md:grid-cols-12 md:gap-16">
-              <aside className="md:col-span-4 md:col-start-1">
-                <div className="space-y-10 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70">
-                  <div>
-                    <div className="mb-2 text-foreground/40">Year</div>
-                    <div className="text-foreground">{project.year}</div>
-                  </div>
-                  <div>
-                    <div className="mb-2 text-foreground/40">Role</div>
-                    <div className="text-foreground">{project.role}</div>
-                  </div>
-                  <div>
-                    <div className="mb-2 text-foreground/40">Stack</div>
-                    <ul className="space-y-1.5 text-foreground">
-                      {project.stack.map((s) => (
-                        <li key={s}>{s}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  {project.liveUrl && (
-                    <div className="pt-2">
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-cursor="view"
-                        data-cursor-label="Visit"
-                        className="group inline-flex items-center gap-3 rounded-full border border-foreground bg-foreground px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                      >
-                        Visit live
-                        <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </a>
-                    </div>
+      {/* Sticky filter strip */}
+      <section className="sticky top-[72px] z-30 border-y border-border bg-background/70 px-6 py-3.5 backdrop-blur-md md:px-10">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4">
+          <div className="inline-flex flex-wrap gap-2">
+            {cats.map((c) => {
+              const isActive = active === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  data-cursor="hover"
+                  onClick={() => setActive(c.id)}
+                  className={cn(
+                    'inline-flex items-baseline gap-2 rounded-full border px-[18px] py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                    isActive
+                      ? 'border-foreground bg-foreground text-background'
+                      : 'border-border text-foreground/70 hover:border-foreground/40 hover:text-foreground'
                   )}
-                </div>
-              </aside>
-
-              <article className="md:col-span-7 md:col-start-6">
-                <p className="mb-8 font-display text-[clamp(26px,3vw,38px)] leading-[1.18] text-foreground">
-                  {project.description}
-                </p>
-                {project.approach &&
-                  project.approach.split('\n\n').map((para, idx) => (
-                    <p
-                      key={idx}
-                      className="mb-5 max-w-2xl text-base font-light leading-[1.7] text-foreground/70 md:text-[17px]"
-                    >
-                      {para}
-                    </p>
-                  ))}
-              </article>
-            </div>
+                >
+                  {c.label}
+                  <span
+                    className={cn(
+                      'text-[9px]',
+                      isActive ? 'text-background/70' : 'text-foreground/40'
+                    )}
+                  >
+                    {String(c.count).padStart(2, '0')}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </section>
-      ))}
+          <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
+            {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
+          </div>
+        </div>
+      </section>
+
+      {/* Grid */}
+      <section className="px-6 py-20 md:px-10 md:py-32">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 md:grid-cols-12">
+          {filtered.map((project, i) => (
+            <div
+              key={project.id}
+              className={cn(
+                'md:col-span-7',
+                i % 2 === 0 ? 'md:col-start-1' : 'md:col-start-6'
+              )}
+            >
+              <ProjectCard
+                project={project}
+                index={i}
+                total={filtered.length}
+                aspectRatio={i % 2 === 0 ? 'landscape' : 'portrait'}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 }

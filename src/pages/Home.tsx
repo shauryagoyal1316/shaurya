@@ -280,7 +280,12 @@ export default function Home() {
               className="font-display text-[clamp(40px,7vw,112px)] italic leading-none text-foreground"
             >
               {tech}
-              <span className="mx-7 text-primary">✦</span>
+              <span
+                className="not-italic text-primary"
+                style={{ marginLeft: 28, marginRight: -28 }}
+              >
+                ✦
+              </span>
             </span>
           ))}
         </Marquee>
