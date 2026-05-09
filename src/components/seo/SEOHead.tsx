@@ -35,16 +35,11 @@ export function SEOHead({
   // Under HashRouter the visible browser URL is `${origin}${pathname}#${route}`,
   // so reading `window.location.href` is the only reliable way to share the
   // *actual* URL a visitor would see — `location.pathname` from React Router
-  // is the route inside the hash, not the page URL.
-  const fullUrl =
-    typeof window !== 'undefined' ? window.location.href : '';
-
-  // Use location.pathname (a real string that updates on every nav) as the
-  // dependency, not the derived `fullUrl` (which reads window.location at
-  // render time and can lag the route change).
-  void location.pathname;
-
+  // is the route inside the hash, not the page URL. We read it *inside* the
+  // effect so it's captured after React Router has applied the new path.
   useEffect(() => {
+    const fullUrl =
+      typeof window !== 'undefined' ? window.location.href : '';
     document.title = fullTitle;
 
     const set = (name: string, content: string, isProperty = false) => {
@@ -71,7 +66,7 @@ export function SEOHead({
     set('twitter:description', fullDescription);
     set('twitter:image', ogImage);
     set('author', profile.name);
-  }, [fullTitle, fullDescription, fullUrl, image, type, location.pathname]);
+  }, [fullTitle, fullDescription, image, type, location.pathname]);
 
   return null;
 }

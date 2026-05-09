@@ -64,8 +64,11 @@ export function Header() {
           </Link>
         </motion.div>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-10 md:flex">
+        {/* Right cluster: desktop nav + status badge as siblings (status is
+            kept *outside* <nav> so screen readers don't read "Available for
+            select work · 2026" as a navigation link). */}
+        <div className="hidden items-center gap-10 md:flex">
+        <nav aria-label="Primary" className="flex items-center gap-10">
           {navLinks.map((link) => {
             const active =
               link.path === '/'
@@ -106,11 +109,16 @@ export function Header() {
               </Link>
             );
           })}
-          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
-            <span className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary align-middle" />
-            {profile.availability}
-          </span>
         </nav>
+
+        <span
+          role="status"
+          className="inline-flex items-center font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50"
+        >
+          <span aria-hidden className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary" />
+          {profile.availability}
+        </span>
+        </div>
 
         {/* Mobile */}
         <div className="md:hidden">
