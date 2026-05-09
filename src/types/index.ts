@@ -35,6 +35,8 @@ export interface Project {
   /** Live URL — never displayed as text, only opened by the hidden ExternalLinkButton. */
   liveUrl?: string;
   featured?: boolean;
+  /** Short captions for the placeholder gallery on the project detail page. */
+  gallery?: string[];
 }
 
 export interface ProfileInfo {
