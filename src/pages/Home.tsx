@@ -72,14 +72,20 @@ export default function Home() {
               onClick={() => {
                 // Use Lenis if it's running so this doesn't fight the
                 // smooth-scroll momentum; fall back to native otherwise.
-                const lenis = (window as unknown as {
-                  __lenis?: { scrollTo: (t: number, o?: object) => void };
-                }).__lenis;
-                if (lenis) {
-                  lenis.scrollTo(window.innerHeight);
-                } else {
-                  window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+                // Wrapped defensively — a Lenis API change shouldn't crash
+                // the scroll button; we'd rather degrade to native scroll.
+                try {
+                  const lenis = (window as unknown as {
+                    __lenis?: { scrollTo?: (t: number, o?: object) => void };
+                  }).__lenis;
+                  if (lenis && typeof lenis.scrollTo === 'function') {
+                    lenis.scrollTo(window.innerHeight);
+                    return;
+                  }
+                } catch {
+                  /* fall through to native */
                 }
+                window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
               }}
               data-cursor="hover"
               aria-label="Scroll to next section"
