@@ -24,12 +24,12 @@ export default function About() {
       />
 
       {/* HERO */}
-      <section className="relative px-6 pb-24 pt-40 md:px-10 md:pb-32 md:pt-48">
+      <section className="relative px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-32">
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-7 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+          <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">03</span>About
           </div>
-          <h1 className="font-display text-[clamp(80px,14vw,224px)] leading-[0.85] tracking-[-0.03em] text-foreground">
+          <h1 className="font-display text-[clamp(64px,10vw,160px)] leading-[0.85] tracking-[-0.03em] text-foreground">
             <SplitTextReveal text="Hello." stagger={0.06} />
             <span className="block italic text-foreground/55">
               <SplitTextReveal
@@ -43,7 +43,7 @@ export default function About() {
       </section>
 
       {/* BIO */}
-      <section className="border-t border-border px-6 py-24 md:px-10 md:py-32">
+      <section className="border-t border-border px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
           {/* Sidebar */}
           <motion.aside
@@ -118,19 +118,19 @@ export default function About() {
       </section>
 
       {/* SKILLS / STACK */}
-      <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">
+      <section className="border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">/</span>What I do
           </div>
-          <h2 className="font-display text-[clamp(48px,8vw,128px)] leading-[0.95] tracking-[-0.025em] text-foreground">
+          <h2 className="font-display text-[clamp(40px,6vw,96px)] leading-[0.95] tracking-[-0.025em] text-foreground">
             <SplitTextReveal text="Skills" stagger={0.04} />{' '}
             <span className="italic text-foreground/55">
               <SplitTextReveal text="& tools." stagger={0.04} delay={0.12} />
             </span>
           </h2>
 
-          <div className="mt-16 grid grid-cols-1 gap-14 md:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-12 md:grid-cols-2">
             {/* Skills cloud */}
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
               {profile.skills.map((s, i) => (
@@ -185,13 +185,13 @@ export default function About() {
       </section>
 
       {/* OUTRO */}
-      <section className="border-t border-border bg-background px-6 py-24 md:px-10 md:py-32">
+      <section className="border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-[1440px]">
-          <h2 className="font-display text-[clamp(48px,9vw,144px)] leading-[0.95] tracking-[-0.025em] text-foreground">
+          <h2 className="font-display text-[clamp(40px,7vw,112px)] leading-[0.95] tracking-[-0.025em] text-foreground">
             Want to{' '}
             <span className="italic text-foreground/55">see the work?</span>
           </h2>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               to="/work"
               data-cursor="hover"

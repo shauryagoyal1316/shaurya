@@ -51,16 +51,16 @@ export default function Work() {
       {/* HERO */}
       <section
         ref={headerRef}
-        className="relative px-6 pb-20 pt-40 md:px-10 md:pb-32 md:pt-48"
+        className="relative px-6 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32"
       >
         <motion.div style={{ y: headingY }} className="mx-auto max-w-[1440px]">
-          <div className="mb-7 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+          <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">02</span>Index of work
           </div>
-          <h1 className="font-display text-[clamp(96px,18vw,280px)] leading-[0.85] tracking-[-0.03em] text-foreground">
+          <h1 className="font-display text-[clamp(72px,12vw,176px)] leading-[0.85] tracking-[-0.03em] text-foreground">
             <SplitTextReveal text="Work." stagger={0.05} />
           </h1>
-          <p className="mt-9 max-w-xl text-balance text-base font-light leading-relaxed text-foreground/70 md:text-lg">
+          <p className="mt-6 max-w-xl text-balance text-base font-light leading-relaxed text-foreground/70 md:text-lg">
             Two real website examples: an editorial barbershop landing page
             and a cinematic private-chef portfolio. Both shipped, both live.
           </p>
@@ -106,7 +106,7 @@ export default function Work() {
       </section>
 
       {/* Grid */}
-      <section className="px-6 py-20 md:px-10 md:py-32">
+      <section className="px-6 py-12 md:px-10 md:py-20">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 md:grid-cols-12">
           {filtered.map((project, i) => (
             <div

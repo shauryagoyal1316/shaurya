@@ -135,12 +135,12 @@ export default function Home() {
       </section>
 
       {/* INTRO / ABOUT TEASER */}
-      <section className="relative z-[3] border-t border-border bg-background px-6 py-32 md:px-10 md:py-48">
+      <section className="relative z-[3] border-t border-border bg-background px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-9 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+          <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">01</span>About
           </div>
-          <h2 className="font-display text-[clamp(36px,5.5vw,84px)] leading-[1.05] tracking-[-0.02em] text-foreground">
+          <h2 className="font-display text-[clamp(32px,4.5vw,64px)] leading-[1.05] tracking-[-0.02em] text-foreground">
             <SplitTextReveal
               text="I build websites end to end."
               stagger={0.022}
@@ -158,7 +158,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-10% 0px' }}
             transition={{ duration: 0.9, delay: 0.25, ease: EASE.snappy }}
-            className="mt-14 grid grid-cols-2 gap-y-8 border-t border-border pt-7 sm:grid-cols-4"
+            className="mt-10 grid grid-cols-2 gap-y-8 border-t border-border pt-7 sm:grid-cols-4"
           >
             <Stat
               value={
@@ -200,14 +200,14 @@ export default function Home() {
       </section>
 
       {/* FEATURED WORK */}
-      <section className="relative z-[3] border-t border-border bg-background px-6 py-32 md:px-10 md:py-48">
+      <section className="relative z-[3] border-t border-border bg-background px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-14 flex items-end justify-between gap-6">
+          <div className="mb-10 flex items-end justify-between gap-6">
             <div>
-              <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+              <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
                 <span className="text-primary">02</span>Selected work
               </div>
-              <h2 className="font-display text-[clamp(48px,9vw,144px)] leading-[0.92] tracking-[-0.025em] text-foreground">
+              <h2 className="font-display text-[clamp(44px,7vw,104px)] leading-[0.92] tracking-[-0.025em] text-foreground">
                 <SplitTextReveal text="Recent" stagger={0.04} />
                 <span className="block italic text-foreground/55">
                   <SplitTextReveal
@@ -272,9 +272,9 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="relative z-[3] bg-background px-6 py-32 md:px-10 md:py-48">
+      <section className="relative z-[3] bg-background px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-9 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+          <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">03</span>Index
           </div>
           <Link
@@ -283,7 +283,7 @@ export default function Home() {
             data-cursor-label="Open work"
             className="group block"
           >
-            <h2 className="font-display text-[clamp(80px,16vw,280px)] leading-[0.85] tracking-[-0.03em] text-foreground transition-colors group-hover:text-primary">
+            <h2 className="font-display text-[clamp(64px,11vw,180px)] leading-[0.9] tracking-[-0.03em] text-foreground transition-colors group-hover:text-primary">
               See the
               <span className="ml-6 italic">work →</span>
             </h2>
