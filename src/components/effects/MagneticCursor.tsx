@@ -89,7 +89,10 @@ export function MagneticCursor() {
     <div
       ref={elRef}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[9999] flex items-center justify-center rounded-full bg-foreground mix-blend-difference"
+      // White source + mix-blend-difference always inverts to high contrast
+      // (near-black on bone, near-white on ink). Using `bg-foreground` here
+      // came out near-bone on the light theme and read as invisible.
+      className="pointer-events-none fixed left-0 top-0 z-[9999] flex items-center justify-center rounded-full bg-white mix-blend-difference"
       style={{
         width: size,
         height: size,
