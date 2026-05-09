@@ -1,24 +1,15 @@
-import { useRef, useState, useMemo } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useMemo } from 'react';
 import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { cn } from '@/lib/utils';
 
 /**
- * Work index — matches Portfolio.html: oversized "Work." hero, sticky pill
- * filter (All / Landing), and a 12-column grid where every other card
- * starts at column 6 to break the rhythm.
+ * Work index. Hero stripped — when users land here they want the projects,
+ * not a giant "Work." headline. Sticky pill filter + alternating 12-column
+ * grid get straight to the content.
  */
 export default function Work() {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: headerRef,
-    offset: ['start start', 'end start'],
-  });
-  const headingY = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
-
   const [active, setActive] = useState<'all' | 'landing'>('all');
 
   const cats = useMemo(
@@ -48,27 +39,8 @@ export default function Work() {
         description="Real website examples — built end to end, front and back, with an editorial bar for craft."
       />
 
-      {/* HERO */}
-      <section
-        ref={headerRef}
-        className="relative px-6 pb-10 pt-28 md:px-10 md:pb-14 md:pt-32"
-      >
-        <motion.div style={{ y: headingY }} className="mx-auto max-w-[1440px]">
-          <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-            <span className="text-primary">02</span>Index of work
-          </div>
-          <h1 className="font-display text-[clamp(72px,12vw,176px)] leading-[0.85] tracking-[-0.03em] text-foreground">
-            <SplitTextReveal text="Work." stagger={0.05} />
-          </h1>
-          <p className="mt-6 max-w-xl text-balance text-base font-light leading-relaxed text-foreground/70 md:text-lg">
-            Two real website examples: an editorial barbershop landing page
-            and a cinematic private-chef portfolio. Both shipped, both live.
-          </p>
-        </motion.div>
-      </section>
-
-      {/* Sticky filter strip */}
-      <section className="sticky top-[72px] z-30 border-y border-border bg-background/70 px-6 py-3.5 backdrop-blur-md md:px-10">
+      {/* Sticky filter strip — sits just under the fixed header */}
+      <section className="sticky top-[72px] z-30 border-y border-border bg-background/70 px-6 pt-24 pb-3.5 backdrop-blur-md md:px-10 md:pt-28">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4">
           <div className="inline-flex flex-wrap gap-2">
             {cats.map((c) => {
@@ -106,7 +78,7 @@ export default function Work() {
       </section>
 
       {/* Grid */}
-      <section className="px-6 py-12 md:px-10 md:py-20">
+      <section className="px-6 py-10 md:px-10 md:py-16">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 md:grid-cols-12">
           {filtered.map((project, i) => (
             <div

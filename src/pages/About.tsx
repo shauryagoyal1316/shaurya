@@ -23,27 +23,8 @@ export default function About() {
         description={`About ${profile.name} — ${profile.tagline}.`}
       />
 
-      {/* HERO */}
-      <section className="relative px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-32">
-        <div className="mx-auto max-w-[1440px]">
-          <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-            <span className="text-primary">03</span>About
-          </div>
-          <h1 className="font-display text-[clamp(64px,10vw,160px)] leading-[0.85] tracking-[-0.03em] text-foreground">
-            <SplitTextReveal text="Hello." stagger={0.06} />
-            <span className="block italic text-foreground/55">
-              <SplitTextReveal
-                text="I'm Shaurya."
-                stagger={0.05}
-                delay={0.2}
-              />
-            </span>
-          </h1>
-        </div>
-      </section>
-
-      {/* BIO */}
-      <section className="border-t border-border px-6 py-16 md:px-10 md:py-20">
+      {/* BIO — leads the page; hero stripped to remove dead space */}
+      <section className="px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
           {/* Sidebar */}
           <motion.aside
