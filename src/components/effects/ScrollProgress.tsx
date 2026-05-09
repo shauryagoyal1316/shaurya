@@ -1,22 +1,16 @@
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 
 /**
- * Thin accent-coloured rail at the top of the viewport that fills as the user
- * scrolls. Uses Framer Motion's useScroll under the hood.
+ * Top 2px accent rail that fills as the user scrolls. Uses raw scroll
+ * progress (no spring) to match Portfolio.html's `scaleX(${p})`.
  */
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 24,
-    mass: 0.4,
-  });
-
   return (
     <motion.div
       aria-hidden
       className="fixed left-0 right-0 top-0 z-[60] h-[2px] origin-left bg-primary"
-      style={{ scaleX }}
+      style={{ scaleX: scrollYProgress }}
     />
   );
 }

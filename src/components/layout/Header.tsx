@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import {
   Sheet,
@@ -91,12 +90,9 @@ export function Header() {
   const showPill = pill.ready && Boolean(activeId || hoverId);
 
   return (
-    <motion.header
-      initial={{ y: -40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500',
+        'fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
         'flex items-center justify-between px-6 py-4 md:px-10',
         isScrolled
           ? 'border-b border-border bg-background/70 backdrop-blur-md'
@@ -165,18 +161,9 @@ export function Header() {
         </nav>
       </div>
 
-      {/* Right cluster — status + theme toggle on desktop, menu on mobile */}
+      {/* Right cluster — theme toggle on desktop, menu on mobile.
+          (Design keeps availability in the footer only, not the header.) */}
       <div className="flex items-center gap-3">
-        <span
-          role="status"
-          className="hidden font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60 lg:inline-flex lg:items-center"
-        >
-          <span
-            aria-hidden
-            className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary"
-          />
-          {profile.availability}
-        </span>
         <ThemeToggle className="hidden md:inline-flex" />
 
         {/* Mobile sheet */}
@@ -225,7 +212,11 @@ export function Header() {
                 <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/60">
                   <span
                     aria-hidden
-                    className="mr-2 inline-block size-1.5 animate-pulse rounded-full bg-primary align-middle"
+                    className="mr-2 inline-block size-1.5 rounded-full bg-primary align-middle"
+                    style={{
+                      boxShadow:
+                        '0 0 0 4px color-mix(in oklch, var(--primary) 18%, transparent)',
+                    }}
                   />
                   <span className="text-foreground/40">Status — </span>
                   {profile.availability}
@@ -235,7 +226,7 @@ export function Header() {
           </Sheet>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }
 

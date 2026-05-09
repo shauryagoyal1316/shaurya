@@ -1,55 +1,21 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
-import { EASE, PAGE_TRANSITION_REVEAL_DELAY } from '@/lib/motion';
-
-interface PageTransitionProps {
-  children: ReactNode;
-}
 
 /**
- * Layered curtain page transition. Two thin slabs sweep off-screen as the
- * new route mounts (one accent, one foreground, slightly delayed) while the
- * content cross-fades up with a blur falloff. The slabs use scaleX from a
- * fixed origin so transforms stay GPU-cheap and the layers never intercept
- * clicks. The exit phase fades content gracefully so the curtain on the
- * incoming page reads as the visual "cut".
+ * Page transition matching Portfolio.html's pageIn / pageOut keyframes:
+ *   in  — 700ms, ease-snappy: opacity 0→1, blur(10px→0), translateY(16px→0)
+ *   out — 360ms, ease-soft:   opacity 1→0, blur(0→8px),  translateY(0→-12px)
+ * No curtain layers — the design just fades the content directly.
  */
-export function PageTransition({ children }: PageTransitionProps) {
+export function PageTransition({ children }: { children: ReactNode }) {
   return (
-    <>
-      {/* Curtain layer 1 — primary accent slab sweeps off to the right */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-[80] origin-right bg-primary"
-        initial={{ scaleX: 1 }}
-        animate={{ scaleX: 0 }}
-        exit={{ scaleX: 0 }}
-        transition={{ duration: 0.65, ease: EASE.snappy }}
-      />
-      {/* Curtain layer 2 — foreground slab follows, slightly delayed for depth */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-[79] origin-right bg-foreground"
-        initial={{ scaleX: 1 }}
-        animate={{ scaleX: 0 }}
-        exit={{ scaleX: 0 }}
-        transition={{ duration: 0.7, ease: EASE.snappy, delay: 0.08 }}
-      />
-
-      <motion.div
-        initial={{ opacity: 0, y: 18, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
-        transition={{
-          duration: 0.6,
-          ease: EASE.snappy,
-          // Shared with SplitTextReveal so per-letter reveals start *after*
-          // the curtain clears, not under it.
-          delay: PAGE_TRANSITION_REVEAL_DELAY,
-        }}
-      >
-        {children}
-      </motion.div>
-    </>
+    <motion.div
+      initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      exit={{ opacity: 0, y: -12, filter: 'blur(8px)' }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
   );
 }
