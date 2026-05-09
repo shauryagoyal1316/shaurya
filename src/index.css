@@ -2,88 +2,139 @@
 @import "tw-animate-css";
 
 /*
-  Shaurya Goyal — editorial dark design system.
-  Dark only. True black canvas, layered surfaces, one electric-lime accent.
-  All colors HSL.
+  Shaurya Goyal — editorial design system (reskin).
+  Default: warm bone canvas + ink type, single warm-orange accent.
+  Dark theme available via [data-theme="dark"] toggle (persisted in localStorage).
+  All semantic Tailwind tokens (background, foreground, border, surface-*,
+  primary) point at CSS variables, so a token swap retheme the whole app.
 */
 
 :root,
-.dark {
-  /* Canvas + surfaces */
-  --background: hsl(0 0% 4%);          /* near-black canvas */
-  --foreground: hsl(0 0% 96%);
-  --surface-1: hsl(0 0% 7%);
-  --surface-2: hsl(0 0% 11%);
-  --surface-3: hsl(0 0% 16%);
+:root[data-theme="light"] {
+  /* Canvas + surfaces — bone over ink */
+  --background: hsl(36 25% 94%);          /* #F5F2EC bone */
+  --foreground: hsl(20 11% 4%);           /* #0A0908 ink */
+  --surface-1: hsl(36 18% 90%);
+  --surface-2: hsl(36 14% 86%);
+  --surface-3: hsl(36 10% 80%);
 
-  --card: hsl(0 0% 7%);
-  --card-foreground: hsl(0 0% 96%);
-  --popover: hsl(0 0% 7%);
-  --popover-foreground: hsl(0 0% 96%);
+  --card: var(--surface-1);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-1);
+  --popover-foreground: var(--foreground);
 
-  /* Type hierarchy */
-  --text-primary: hsl(0 0% 96%);
-  --text-secondary: hsl(0 0% 70%);
-  --text-tertiary: hsl(0 0% 46%);
+  /* Type hierarchy mirrors the design's fg-1 .. fg-4 alpha ramp */
+  --text-primary: var(--foreground);
+  --text-secondary: hsla(20 11% 4% / 0.62);
+  --text-tertiary: hsla(20 11% 4% / 0.42);
 
-  /* Brand */
-  --primary: hsl(75 100% 60%);          /* electric lime accent */
-  --primary-foreground: hsl(0 0% 6%);
-  --accent: hsl(75 100% 60%);
-  --accent-foreground: hsl(0 0% 6%);
+  /* Brand — warm sienna orange (oklch maps roughly to hsl 22 55% 53%) */
+  --primary: oklch(0.66 0.16 50);
+  --primary-foreground: hsl(36 25% 96%);
+  --accent: var(--primary);
+  --accent-foreground: var(--primary-foreground);
+  --accent-soft: oklch(0.66 0.16 50 / 0.12);
 
-  --secondary: hsl(0 0% 11%);
-  --secondary-foreground: hsl(0 0% 96%);
-  --muted: hsl(0 0% 11%);
-  --muted-foreground: hsl(0 0% 60%);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --muted-foreground: hsla(20 11% 4% / 0.60);
 
-  --destructive: hsl(0 84% 60%);
-  --destructive-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 70% 50%);
+  --destructive-foreground: hsl(36 25% 96%);
 
-  /* Opacity-based borders adapt to any surface */
-  --border: hsla(0 0% 100% / 0.08);
-  --border-strong: hsla(0 0% 100% / 0.16);
-  --input: hsla(0 0% 100% / 0.08);
-  --ring: hsl(75 100% 60%);
+  /* Hairlines that work on light or dark surfaces */
+  --border: hsla(20 11% 4% / 0.10);
+  --border-strong: hsla(20 11% 4% / 0.18);
+  --input: hsla(20 11% 4% / 0.10);
+  --ring: var(--primary);
 
   --radius: 0.25rem;
 
   /* Sidebar (kept for shadcn primitives that reference these) */
-  --sidebar-background: hsl(0 0% 4%);
-  --sidebar-foreground: hsl(0 0% 80%);
-  --sidebar-primary: hsl(75 100% 60%);
-  --sidebar-primary-foreground: hsl(0 0% 6%);
-  --sidebar-accent: hsl(0 0% 11%);
-  --sidebar-accent-foreground: hsl(0 0% 96%);
-  --sidebar-border: hsla(0 0% 100% / 0.08);
-  --sidebar-ring: hsl(75 100% 60%);
+  --sidebar-background: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--surface-2);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 
-  /* Easing tokens */
+  /* Easing tokens (shared across themes) */
   --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-pill:   cubic-bezier(0.34, 1.2, 0.64, 1);
 
-  /* Shadow scale — layered, subtle */
-  --shadow-sm: 0 1px 2px hsla(0 0% 0% / 0.4);
-  --shadow-md: 0 4px 12px hsla(0 0% 0% / 0.45), 0 1px 2px hsla(0 0% 0% / 0.3);
-  --shadow-lg: 0 24px 48px hsla(0 0% 0% / 0.55), 0 2px 6px hsla(0 0% 0% / 0.35);
-  --shadow-glow: 0 0 0 1px hsla(75 100% 60% / 0.5), 0 8px 32px hsla(75 100% 60% / 0.25);
+  /* Shadow scale */
+  --shadow-sm: 0 1px 2px hsla(20 11% 4% / 0.04);
+  --shadow-md: 0 1px 2px hsla(20 11% 4% / 0.04), 0 4px 12px hsla(20 11% 4% / 0.06);
+  --shadow-lg: 0 2px 4px hsla(20 11% 4% / 0.05), 0 12px 32px hsla(20 11% 4% / 0.10);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
 
-  /* Legacy shugar tokens left in so existing shadcn references don't break */
-  --context-card-border: hsla(0, 0%, 18%, 1);
-  --ds-gray-100: hsla(0, 0%, 10%, 1);
-  --ds-gray-400: hsla(0, 0%, 18%, 1);
-  --ds-gray-700: hsla(0, 0%, 56%, 1);
-  --ds-gray-1000: hsla(0, 0%, 93%, 1);
-  --ds-gray-1000-h: hsl(0, 0%, 80%);
-  --ds-gray-alpha-200: hsla(0, 0%, 100%, 0.09);
-  --ds-gray-alpha-400: hsla(0, 0%, 100%, 0.14);
-  --ds-background-100: hsla(0,0%,4%, 1);
-  --ds-shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.145);
-  --ds-shadow-small: 0px 1px 2px rgba(0, 0, 0, 0.16);
+  /* Legacy tokens kept so vendored shadcn pieces still resolve */
+  --context-card-border: var(--border-strong);
+  --ds-gray-100: var(--surface-1);
+  --ds-gray-400: var(--surface-3);
+  --ds-gray-700: hsla(20 11% 4% / 0.56);
+  --ds-gray-1000: var(--foreground);
+  --ds-gray-1000-h: hsla(20 11% 4% / 0.80);
+  --ds-gray-alpha-200: hsla(20 11% 4% / 0.09);
+  --ds-gray-alpha-400: hsla(20 11% 4% / 0.14);
+  --ds-background-100: var(--background);
+  --ds-shadow-border: 0 0 0 1px hsla(20 11% 4% / 0.145);
+  --ds-shadow-small: 0px 1px 2px hsla(20 11% 4% / 0.16);
   --ds-shadow-border-small: var(--ds-shadow-border), var(--ds-shadow-small);
   --ds-focus-color: var(--ring);
   --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+}
+
+:root[data-theme="dark"],
+.dark {
+  --background: hsl(20 11% 4%);           /* #0A0908 ink */
+  --foreground: hsl(36 25% 94%);          /* #F5F2EC bone */
+  --surface-1: hsl(20 8% 8%);
+  --surface-2: hsl(20 6% 12%);
+  --surface-3: hsl(20 5% 18%);
+
+  --card: var(--surface-1);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-1);
+  --popover-foreground: var(--foreground);
+
+  --text-primary: var(--foreground);
+  --text-secondary: hsla(36 25% 94% / 0.66);
+  --text-tertiary: hsla(36 25% 94% / 0.42);
+
+  --primary: oklch(0.78 0.14 60);
+  --primary-foreground: hsl(20 11% 4%);
+  --accent: var(--primary);
+  --accent-foreground: var(--primary-foreground);
+  --accent-soft: oklch(0.78 0.14 60 / 0.16);
+
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --muted-foreground: hsla(36 25% 94% / 0.60);
+
+  --border: hsla(36 25% 94% / 0.10);
+  --border-strong: hsla(36 25% 94% / 0.18);
+  --input: hsla(36 25% 94% / 0.10);
+
+  --shadow-sm: 0 1px 2px hsla(0 0% 0% / 0.4);
+  --shadow-md: 0 1px 2px hsla(0 0% 0% / 0.4), 0 4px 12px hsla(0 0% 0% / 0.5);
+  --shadow-lg: 0 2px 4px hsla(0 0% 0% / 0.4), 0 12px 32px hsla(0 0% 0% / 0.6);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
+
+  --ds-gray-100: var(--surface-1);
+  --ds-gray-400: var(--surface-3);
+  --ds-gray-700: hsla(36 25% 94% / 0.56);
+  --ds-gray-1000: var(--foreground);
+  --ds-gray-1000-h: hsla(36 25% 94% / 0.80);
+  --ds-gray-alpha-200: hsla(36 25% 94% / 0.09);
+  --ds-gray-alpha-400: hsla(36 25% 94% / 0.14);
+  --ds-background-100: var(--background);
 }
 
 @theme {
@@ -119,7 +170,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Legacy shugar tokens */
   --color-context-card-border: var(--context-card-border);
   --color-gray-100: var(--ds-gray-100);
   --color-gray-400: var(--ds-gray-400);
@@ -165,7 +215,7 @@
 }
 @keyframes drift {
   0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(0, -8px, 0); }
+  50%      { transform: translate3d(0, -6px, 0); }
 }
 
 @layer base {
@@ -175,6 +225,12 @@
 
   html {
     background: var(--background);
+    /* color-scheme drives form-control native theming + scrollbar color
+       and is the simplest knob to flip alongside data-theme. */
+    color-scheme: light;
+    transition: background-color 600ms var(--ease-smooth), color 600ms var(--ease-smooth);
+  }
+  :root[data-theme="dark"] {
     color-scheme: dark;
   }
 
@@ -219,17 +275,9 @@
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
 
-  /*
-   * Grain is rendered exclusively by the <NoiseOverlay /> component now.
-   * The duplicate `.grain::after` utility was removed to eliminate the
-   * stacked-overlay washout (mix-blend-overlay over near-black + a second
-   * fixed grain layer caused a faint sepia tint and cursor flicker).
-   */
-
   .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
   .hide-scrollbar::-webkit-scrollbar { display: none; }
 
-  /* Mask reveal helper */
   .mask-reveal {
     clip-path: inset(0 100% 0 0);
     animation: mask-reveal 0.9s var(--ease-snappy) forwards;
@@ -238,7 +286,7 @@
     to { clip-path: inset(0 0 0 0); }
   }
 
-  /* Reduced motion override */
+  /* Reduced motion override — kills loops + tightens transitions */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

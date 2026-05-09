@@ -3,7 +3,7 @@ import type { Project } from '@/types';
 export const projects: Project[] = [
   {
     id: 'barbershop',
-    label: 'Barbershop example',
+    label: 'Fade & Co.',
     role: 'Editorial landing page',
     category: 'landing',
     year: '2025',
@@ -27,7 +27,7 @@ Type is doing most of the work. The rest is restraint.`,
   },
   {
     id: 'private-chef',
-    label: 'Private chef example',
+    label: 'Maison Lyon',
     role: 'Cinematic single-page portfolio',
     category: 'landing',
     year: '2025',
