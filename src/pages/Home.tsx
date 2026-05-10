@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { getFeaturedProjects } from '@/data/projects';
@@ -19,6 +19,7 @@ import { EASE } from '@/lib/motion';
  */
 export default function Home() {
   const featured = getFeaturedProjects();
+  const reducedMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
   const workRef = useRef<HTMLElement>(null);
 
@@ -31,14 +32,14 @@ export default function Home() {
     offset: ['start end', 'start center'],
   });
   // Raw scroll progress drives the period portal into the About teaser.
-  const heroScale = useTransform(scrollYProgress, [0, 0.38, 0.7], [1, 1.08, 0.92]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 0.78], [1, 0.9, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.38, 0.7], [1, 1.06, 0.96]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.58, 0.82], [1, 1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 0.8], ['0%', '-10%']);
   const heroRotateX = useTransform(scrollYProgress, [0, 0.75], [0, -7]);
   const supportOpacity = useTransform(scrollYProgress, [0, 0.28, 0.52], [1, 0.58, 0]);
-  const periodScale = useTransform(scrollYProgress, [0, 0.32, 0.74, 1], [1, 1.4, 96, 120]);
-  const periodOpacity = useTransform(scrollYProgress, [0, 0.28, 0.86, 1], [1, 1, 0.92, 0]);
-  const periodRadius = useTransform(scrollYProgress, [0.42, 0.82], ['48%', '36%']);
+  const portalScale = useTransform(scrollYProgress, [0, 0.2, 0.42, 0.76, 1], [0, 0, 0.14, 2.65, 3.2]);
+  const portalY = useTransform(scrollYProgress, [0, 0.58], ['0vh', '-8vh']);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.18, 0.28, 0.82, 0.98], [0, 0, 1, 1, 0]);
   const portalGlowOpacity = useTransform(scrollYProgress, [0.18, 0.48, 0.9], [0, 1, 0]);
   const aboutLift = useTransform(scrollYProgress, [0.62, 1], [72, 0]);
   const aboutOpacity = useTransform(scrollYProgress, [0.58, 0.92], [0, 1]);
@@ -62,6 +63,17 @@ export default function Home() {
             className="pointer-events-none absolute left-1/2 top-1/2 h-[72vmin] w-[72vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--water)_24%,transparent),transparent_64%)]"
           />
           <motion.div
+            aria-hidden
+            style={{
+              scale: reducedMotion ? 0 : portalScale,
+              y: portalY,
+              opacity: reducedMotion ? 0 : portalOpacity,
+              boxShadow:
+                '0 0 0 1px color-mix(in oklch, var(--water) 28%, transparent), 0 0 96px var(--water-glow)',
+            }}
+            className="pointer-events-none absolute left-[calc(50%+5.1rem)] top-[calc(50%+1.1rem)] z-[4] h-[34vmax] w-[34vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--portal-solid)] md:left-[calc(50%+8.5rem)] md:top-[calc(50%+1.4rem)]"
+          />
+          <motion.div
             style={{
               scale: heroScale,
               opacity: heroOpacity,
@@ -81,7 +93,7 @@ export default function Home() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.4, ease: EASE.snappy }}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/80 backdrop-blur-md"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-[var(--surface-premium)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/80 backdrop-blur-md"
             >
               <span aria-hidden className="size-1.5 rounded-full bg-primary" />
               Portfolio · 2026
@@ -90,7 +102,7 @@ export default function Home() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.55, ease: EASE.snappy }}
-              className="inline-flex items-center rounded-full border border-border bg-background/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/70 backdrop-blur-md"
+              className="inline-flex items-center rounded-full border border-border bg-[var(--surface-premium)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/70 backdrop-blur-md"
             >
               {profile.tagline}
             </motion.span>
@@ -140,17 +152,7 @@ export default function Home() {
                 {line.text}
               </motion.span>
             ))}
-            <motion.span
-              aria-hidden
-              style={{
-                scale: periodScale,
-                opacity: periodOpacity,
-                borderRadius: periodRadius,
-                boxShadow:
-                  '0 0 80px var(--water-glow), 0 0 160px color-mix(in oklch, var(--primary) 18%, transparent)',
-              }}
-              className="relative z-[3] ml-[0.02em] inline-block h-[0.16em] w-[0.16em] origin-center translate-y-[0.08em] bg-[var(--water-deep)]"
-            />
+            <span className="inline italic text-[var(--water-deep)]">.</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -410,7 +412,7 @@ function StatCard({
   detail: string;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-lg border border-border bg-background/55 p-5 backdrop-blur-md transition-colors hover:border-[color:var(--water-soft)]">
+    <div className="group relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-md)] backdrop-blur-md transition-colors hover:border-[color:var(--water-soft)]">
       <div
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--primary),var(--water),transparent)] opacity-70"

@@ -12,11 +12,12 @@
 :root,
 :root[data-theme="light"] {
   /* Canvas + surfaces — bone over ink */
-  --background: hsl(36 25% 94%);          /* #F5F2EC bone */
-  --foreground: hsl(20 11% 4%);           /* #0A0908 ink */
-  --surface-1: hsl(36 18% 90%);
-  --surface-2: hsl(36 14% 86%);
-  --surface-3: hsl(36 10% 80%);
+  --background: hsl(38 34% 95%);          /* soft ivory */
+  --foreground: hsl(22 15% 5%);           /* warm ink */
+  --surface-1: hsl(38 24% 91%);
+  --surface-2: hsl(38 18% 87%);
+  --surface-3: hsl(38 12% 80%);
+  --surface-premium: hsl(38 30% 93% / 0.72);
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
@@ -29,15 +30,16 @@
   --text-tertiary: hsla(20 11% 4% / 0.42);
 
   /* Brand — warm sienna orange (oklch maps roughly to hsl 22 55% 53%) */
-  --primary: oklch(0.66 0.16 50);
+  --primary: oklch(0.64 0.15 48);
   --primary-foreground: hsl(36 25% 96%);
   --accent: var(--primary);
   --accent-foreground: var(--primary-foreground);
   --accent-soft: oklch(0.66 0.16 50 / 0.12);
-  --water: oklch(0.54 0.11 224);
-  --water-deep: oklch(0.34 0.09 238);
-  --water-soft: oklch(0.54 0.11 224 / 0.16);
-  --water-glow: oklch(0.66 0.10 205 / 0.24);
+  --water: oklch(0.52 0.10 218);
+  --water-deep: oklch(0.36 0.09 232);
+  --water-soft: oklch(0.52 0.10 218 / 0.18);
+  --water-glow: oklch(0.66 0.10 205 / 0.22);
+  --portal-solid: oklch(0.36 0.09 232);
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -101,6 +103,7 @@
   --surface-1: hsl(20 8% 8%);
   --surface-2: hsl(20 6% 12%);
   --surface-3: hsl(20 5% 18%);
+  --surface-premium: hsl(20 8% 8% / 0.78);
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
@@ -120,6 +123,7 @@
   --water-deep: oklch(0.48 0.10 232);
   --water-soft: oklch(0.70 0.10 218 / 0.18);
   --water-glow: oklch(0.74 0.11 205 / 0.26);
+  --portal-solid: oklch(0.48 0.10 232);
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -151,6 +155,7 @@
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
+  --color-surface-premium: var(--surface-premium);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);

@@ -76,7 +76,7 @@ export default function About() {
                   delay: i * 0.08,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="relative overflow-hidden rounded-lg border border-border bg-background/55 p-5 backdrop-blur-md"
+                className="relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-md)] backdrop-blur-md"
               >
                 <div className="mb-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/45">
                   <span>{panel.label}</span>
@@ -219,7 +219,7 @@ export default function About() {
             </div>
 
             {/* Stack */}
-            <div className="rounded-lg border border-[color:var(--water-soft)] bg-background/50 p-5">
+            <div className="rounded-lg border border-[color:var(--water-soft)] bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-sm)]">
               <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
                 Stack
               </div>
