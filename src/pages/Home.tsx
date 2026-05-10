@@ -297,12 +297,12 @@ export default function Home() {
           {profile.stack.map((tech, i) => (
             <span
               key={i}
-              className="font-display text-[clamp(40px,7vw,112px)] italic leading-none text-foreground"
+              className="inline-flex items-center gap-[0.38em] whitespace-nowrap font-display text-[clamp(40px,7vw,112px)] italic leading-none text-foreground"
             >
               {tech}
               <span
+                aria-hidden
                 className="not-italic text-primary"
-                style={{ marginLeft: 28, marginRight: -28 }}
               >
                 ✦
               </span>

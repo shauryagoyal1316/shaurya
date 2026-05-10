@@ -35,8 +35,8 @@ export function Marquee({ children, className = '' }: MarqueeProps) {
         {[...items, ...items, ...items, ...items].map((c, i) => (
           <div
             key={i}
-            className="inline-flex shrink-0 items-center"
-            style={{ gap: 56, marginRight: 56 }}
+            className="inline-flex shrink-0 items-center whitespace-nowrap"
+            style={{ marginRight: 72 }}
           >
             {c}
           </div>

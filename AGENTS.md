@@ -58,10 +58,11 @@ Expected dev server port is `8080`.
 - Footer currently includes email contact, GitHub, and the two live project links.
 - The visual style is editorial, dark, cinematic, type-heavy, and restrained. Avoid generic startup/landing-page sections.
 - Keep navigation simple and test button/link changes in the browser because routing bugs previously caused white screens.
+- The tech marquee should keep each stack item and its star on one line using no-wrap inline flex. Do not use manual negative margins around the star.
+- After meaningful code/content changes or commits, update this file when the project context, contacts, deployment notes, or UI rules change.
 
 ## Known Quality Notes
 
 - `npm run build` is the main required verification before deploy.
 - Lint may include pre-existing issues, especially in copied/reference UI material. Do not treat unrelated lint churn as part of small content fixes.
 - The `tailwind-plus/` folder is design/reference material and should not be deleted without an explicit request.
-
