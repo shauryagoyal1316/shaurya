@@ -32,17 +32,18 @@ export default function Home() {
     offset: ['start end', 'start center'],
   });
   // Raw scroll progress drives the period portal into the About teaser.
-  const heroScale = useTransform(scrollYProgress, [0, 0.38, 0.7], [1, 1.06, 0.96]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.58, 0.82], [1, 1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.8], ['0%', '-10%']);
-  const heroRotateX = useTransform(scrollYProgress, [0, 0.75], [0, -7]);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.28, 0.52], [1, 0.58, 0]);
-  const portalScale = useTransform(scrollYProgress, [0, 0.2, 0.42, 0.76, 1], [0, 0, 0.14, 2.65, 3.2]);
-  const portalY = useTransform(scrollYProgress, [0, 0.58], ['0vh', '-8vh']);
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.18, 0.28, 0.82, 0.98], [0, 0, 1, 1, 0]);
-  const portalGlowOpacity = useTransform(scrollYProgress, [0.18, 0.48, 0.9], [0, 1, 0]);
-  const aboutLift = useTransform(scrollYProgress, [0.62, 1], [72, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.58, 0.92], [0, 1]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.34, 0.66], [1, 1.035, 0.98]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.42, 0.66], [1, 0.92, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.72], ['0%', '-6%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 0.64], [0, -4]);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.26, 0.46], [1, 0.6, 0]);
+  const periodGlyphOpacity = useTransform(scrollYProgress, [0, 0.22, 0.34], [1, 1, 0]);
+  const portalScale = useTransform(scrollYProgress, [0, 0.22, 0.34, 0.5, 0.68, 1], [0, 0, 1, 88, 132, 140]);
+  const portalY = useTransform(scrollYProgress, [0, 0.7], ['0vh', '-3vh']);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.22, 0.3, 0.58, 0.78], [0, 0, 1, 1, 0]);
+  const portalGlowOpacity = useTransform(scrollYProgress, [0.18, 0.46, 0.86], [0, 0.85, 0]);
+  const aboutLift = useTransform(scrollYProgress, [0.64, 0.86], [48, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.64, 0.86], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
   const workAccentScale = useTransform(workScrollYProgress, [0.15, 0.85], [0, 1]);
   const workGlowOpacity = useTransform(workScrollYProgress, [0, 0.55, 1], [0, 1, 0.35]);
@@ -54,25 +55,25 @@ export default function Home() {
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative h-[155svh] w-full bg-background"
+        className="relative h-[185svh] w-full bg-background"
       >
+        <motion.div
+          aria-hidden
+          style={{ opacity: portalGlowOpacity }}
+          className="pointer-events-none fixed left-1/2 top-1/2 z-40 h-[72vmin] w-[72vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--water)_24%,transparent),transparent_64%)]"
+        />
+        <motion.div
+          aria-hidden
+          style={{
+            scale: reducedMotion ? 0 : portalScale,
+            y: portalY,
+            opacity: reducedMotion ? 0 : portalOpacity,
+            boxShadow:
+              '0 0 0 1px color-mix(in oklch, var(--water) 32%, transparent), 0 0 72px var(--water-glow)',
+          }}
+          className="pointer-events-none fixed left-[calc(50%+5.35rem)] top-[calc(50%+0.9rem)] z-40 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--portal-solid)] will-change-transform md:left-[calc(50%+8.75rem)] md:top-[calc(50%+1.45rem)] md:h-7 md:w-7"
+        />
         <div className="sticky top-0 h-[100svh] overflow-hidden [perspective:1200px]">
-          <motion.div
-            aria-hidden
-            style={{ opacity: portalGlowOpacity }}
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[72vmin] w-[72vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--water)_24%,transparent),transparent_64%)]"
-          />
-          <motion.div
-            aria-hidden
-            style={{
-              scale: reducedMotion ? 0 : portalScale,
-              y: portalY,
-              opacity: reducedMotion ? 0 : portalOpacity,
-              boxShadow:
-                '0 0 0 1px color-mix(in oklch, var(--water) 28%, transparent), 0 0 96px var(--water-glow)',
-            }}
-            className="pointer-events-none absolute left-[calc(50%+5.1rem)] top-[calc(50%+1.1rem)] z-[4] h-[34vmax] w-[34vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--portal-solid)] md:left-[calc(50%+8.5rem)] md:top-[calc(50%+1.4rem)]"
-          />
           <motion.div
             style={{
               scale: heroScale,
@@ -152,7 +153,12 @@ export default function Home() {
                 {line.text}
               </motion.span>
             ))}
-            <span className="inline italic text-[var(--water-deep)]">.</span>
+            <motion.span
+              style={{ opacity: periodGlyphOpacity }}
+              className="inline italic text-[var(--water-deep)]"
+            >
+              .
+            </motion.span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -228,15 +234,9 @@ export default function Home() {
             <span>About</span>
           </div>
           <h2 className="font-display text-[clamp(32px,4.5vw,64px)] leading-[1.05] tracking-[-0.02em] text-foreground">
-            <SplitTextReveal
-              text="I build websites end to end."
-              stagger={0.022}
-            />
+            I build websites end to end.
             <span className="mt-3 block italic text-foreground/55">
-              <SplitTextReveal
-                text="Type, motion, and the obsession with details no one notices."
-                stagger={0.018}
-              />
+              Type, motion, and the obsession with details no one notices.
             </span>
           </h2>
 

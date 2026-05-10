@@ -17,7 +17,8 @@ export function MagneticCursor() {
   const elRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!hasFinePointer() || prefersReducedMotion()) return;
+    const desktopPointer = window.matchMedia('(min-width: 768px)');
+    if (!hasFinePointer() || prefersReducedMotion() || !desktopPointer.matches) return;
     setEnabled(true);
     document.body.dataset.cursor = 'custom';
 
