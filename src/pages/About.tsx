@@ -15,6 +15,23 @@ import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
  */
 export default function About() {
   const reducedMotion = useReducedMotion();
+  const capabilityPanels = [
+    {
+      label: 'Direction',
+      title: 'Clear page strategy before pixels.',
+      body: 'The offer, sections, hierarchy, and user path get mapped before the design gets dressed up.',
+    },
+    {
+      label: 'Build',
+      title: 'Front end, back end, and launch flow.',
+      body: 'The site is shaped as a complete system, not a disconnected visual mockup.',
+    },
+    {
+      label: 'AI workflow',
+      title: 'AI-assisted execution with taste.',
+      body: 'AI tools speed up production while decisions stay focused on quality, clarity, and polish.',
+    },
+  ];
 
   return (
     <>
@@ -24,7 +41,60 @@ export default function About() {
       />
 
       {/* BIO — leads the page; hero stripped to remove dead space */}
-      <section className="px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32">
+      <section className="relative overflow-hidden px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-36">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(ellipse_at_50%_0%,var(--water-glow),transparent_62%)]"
+        />
+        <div className="relative mx-auto max-w-[1440px]">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-5xl"
+          >
+            <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+              <span className="text-primary">/</span> About
+            </div>
+            <h1 className="font-display text-[clamp(64px,12vw,180px)] leading-[0.86] tracking-[-0.03em] text-foreground">
+              Full websites,
+              <span className="block italic text-foreground/55">
+                fluid execution.
+              </span>
+            </h1>
+          </motion.div>
+
+          <div className="mt-10 grid gap-3 md:grid-cols-3">
+            {capabilityPanels.map((panel, i) => (
+              <motion.article
+                key={panel.label}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{
+                  duration: 0.75,
+                  delay: i * 0.08,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="relative overflow-hidden rounded-lg border border-border bg-background/55 p-5 backdrop-blur-md"
+              >
+                <div className="mb-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/45">
+                  <span>{panel.label}</span>
+                  <span className="text-[var(--water)]">0{i + 1}</span>
+                </div>
+                <h2 className="font-display text-3xl leading-[1.05] text-foreground">
+                  {panel.title}
+                </h2>
+                <p className="mt-5 text-sm leading-relaxed text-foreground/62">
+                  {panel.body}
+                </p>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 pb-16 pt-8 md:px-10 md:pb-20 md:pt-12">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
           {/* Sidebar */}
           <motion.aside
@@ -43,7 +113,7 @@ export default function About() {
                 websites that ship.
               </span>
             </div>
-            <dl className="flex flex-col gap-4 border-t border-border pt-6 font-mono text-[11px] uppercase tracking-[0.22em]">
+            <dl className="flex flex-col gap-4 border-t border-[color:var(--water-soft)] pt-6 font-mono text-[11px] uppercase tracking-[0.22em]">
               <MetaRow label="Based" value={profile.location} />
               <MetaRow label="Status" value={profile.availability} />
               <MetaRow label="Email">
@@ -84,7 +154,7 @@ export default function About() {
                 ))}
             </div>
 
-            <div className="mt-10 border-t border-border pt-7">
+            <div className="mt-10 border-t border-[color:var(--water-soft)] pt-7">
               <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
                 Approach
               </div>
@@ -99,8 +169,12 @@ export default function About() {
       </section>
 
       {/* SKILLS / STACK */}
-      <section className="border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-[1440px]">
+      <section className="relative overflow-hidden border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-[-20vw] top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,var(--water-glow),transparent_65%)]"
+        />
+        <div className="relative mx-auto max-w-[1440px]">
           <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
             <span className="text-primary">/</span>What I do
           </div>
@@ -145,7 +219,7 @@ export default function About() {
             </div>
 
             {/* Stack */}
-            <div>
+            <div className="rounded-lg border border-[color:var(--water-soft)] bg-background/50 p-5">
               <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
                 Stack
               </div>

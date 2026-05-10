@@ -14,31 +14,37 @@ import { EASE } from '@/lib/motion';
 /**
  * Home — cinematic entry, reskinned to match Portfolio.html.
  *
- * The hero uses a sticky Framer Motion handoff: content recedes in 3D while
- * a premium wipe with a restrained liquid edge carries the page into About.
+ * The hero uses a sticky Framer Motion period portal: the final dot in
+ * "Goyal." expands into a fluid mask that carries the page into About.
  */
 export default function Home() {
   const featured = getFeaturedProjects();
   const heroRef = useRef<HTMLElement>(null);
+  const workRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  // Raw scroll progress drives the full hero-to-About handoff.
-  const heroScale = useTransform(scrollYProgress, [0, 0.72, 1], [1, 0.94, 0.86]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7, 0.98], [1, 0.9, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
-  const heroRotateX = useTransform(scrollYProgress, [0, 1], [0, -8]);
-  const wipeY = useTransform(scrollYProgress, [0.28, 0.88], ['150%', '0%']);
-  const wipeGlowOpacity = useTransform(
-    scrollYProgress,
-    [0.35, 0.62, 0.9],
-    [0, 1, 0.55]
-  );
-  const accentScale = useTransform(scrollYProgress, [0.38, 0.68], [0, 1]);
-  const labelOpacity = useTransform(scrollYProgress, [0.36, 0.55, 0.8], [0, 1, 0]);
-  const labelY = useTransform(scrollYProgress, [0.36, 0.72], [18, -10]);
+  const { scrollYProgress: workScrollYProgress } = useScroll({
+    target: workRef,
+    offset: ['start end', 'start center'],
+  });
+  // Raw scroll progress drives the period portal into the About teaser.
+  const heroScale = useTransform(scrollYProgress, [0, 0.38, 0.7], [1, 1.08, 0.92]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 0.78], [1, 0.9, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.8], ['0%', '-10%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 0.75], [0, -7]);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.28, 0.52], [1, 0.58, 0]);
+  const periodScale = useTransform(scrollYProgress, [0, 0.32, 0.74, 1], [1, 1.4, 96, 120]);
+  const periodOpacity = useTransform(scrollYProgress, [0, 0.28, 0.86, 1], [1, 1, 0.92, 0]);
+  const periodRadius = useTransform(scrollYProgress, [0.42, 0.82], ['48%', '36%']);
+  const portalGlowOpacity = useTransform(scrollYProgress, [0.18, 0.48, 0.9], [0, 1, 0]);
+  const aboutLift = useTransform(scrollYProgress, [0.62, 1], [72, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.58, 0.92], [0, 1]);
+  const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
+  const workAccentScale = useTransform(workScrollYProgress, [0.15, 0.85], [0, 1]);
+  const workGlowOpacity = useTransform(workScrollYProgress, [0, 0.55, 1], [0, 1, 0.35]);
 
   return (
     <>
@@ -51,18 +57,26 @@ export default function Home() {
       >
         <div className="sticky top-0 h-[100svh] overflow-hidden [perspective:1200px]">
           <motion.div
-          style={{
-            scale: heroScale,
-            opacity: heroOpacity,
-            y: heroY,
-            rotateX: heroRotateX,
-            transformPerspective: 1200,
-            transformOrigin: 'center 58%',
-          }}
-          className="relative z-[2] flex h-full flex-col items-center justify-center px-6"
-        >
+            aria-hidden
+            style={{ opacity: portalGlowOpacity }}
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[72vmin] w-[72vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--water)_24%,transparent),transparent_64%)]"
+          />
+          <motion.div
+            style={{
+              scale: heroScale,
+              opacity: heroOpacity,
+              y: heroY,
+              rotateX: heroRotateX,
+              transformPerspective: 1200,
+              transformOrigin: 'center 58%',
+            }}
+            className="relative z-[2] flex h-full flex-col items-center justify-center px-6"
+          >
           {/* Top tag row */}
-          <div className="absolute inset-x-6 top-24 flex flex-wrap items-center justify-between gap-3 md:inset-x-10">
+          <motion.div
+            style={{ opacity: supportOpacity }}
+            className="absolute inset-x-6 top-24 flex flex-wrap items-center justify-between gap-3 md:inset-x-10"
+          >
             <motion.span
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -80,7 +94,7 @@ export default function Home() {
             >
               {profile.tagline}
             </motion.span>
-          </div>
+          </motion.div>
 
           {/* Headline */}
           <motion.h1
@@ -99,7 +113,7 @@ export default function Home() {
           >
             {[
               { text: 'Shaurya', className: 'block' },
-              { text: 'Goyal.', className: 'block italic text-foreground/55' },
+              { text: 'Goyal', className: 'inline italic text-foreground/55' },
             ].map((line) => (
               <motion.span
                 key={line.text}
@@ -126,12 +140,24 @@ export default function Home() {
                 {line.text}
               </motion.span>
             ))}
+            <motion.span
+              aria-hidden
+              style={{
+                scale: periodScale,
+                opacity: periodOpacity,
+                borderRadius: periodRadius,
+                boxShadow:
+                  '0 0 80px var(--water-glow), 0 0 160px color-mix(in oklch, var(--primary) 18%, transparent)',
+              }}
+              className="relative z-[3] ml-[0.02em] inline-block h-[0.16em] w-[0.16em] origin-center translate-y-[0.08em] bg-[var(--water-deep)]"
+            />
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 22, filter: 'blur(8px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            style={{ opacity: supportOpacity }}
             transition={{ duration: 1, delay: 1.3, ease: EASE.snappy }}
             className="mt-9 max-w-xl text-balance text-center text-base font-light leading-relaxed text-foreground/70 md:text-lg"
           >
@@ -139,7 +165,10 @@ export default function Home() {
           </motion.p>
 
           {/* Bottom row */}
-          <div className="absolute inset-x-6 bottom-9 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:inset-x-10">
+          <motion.div
+            style={{ opacity: supportOpacity }}
+            className="absolute inset-x-6 bottom-9 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50 md:inset-x-10"
+          >
             <motion.button
               type="button"
               onClick={() =>
@@ -177,39 +206,24 @@ export default function Home() {
             >
               {profile.location}
             </motion.div>
-          </div>
+          </motion.div>
         </motion.div>
-
-          <motion.div
-            aria-hidden
-            style={{ y: wipeY }}
-            className="pointer-events-none absolute inset-x-0 bottom-[-1px] z-[3] h-[64svh] bg-background shadow-[0_-36px_120px_rgba(0,0,0,0.55)]"
-          >
-            <div className="absolute -top-24 left-1/2 h-48 w-[140vw] -translate-x-1/2 rounded-[50%] bg-background" />
-            <motion.div
-              style={{ opacity: wipeGlowOpacity }}
-              className="absolute -top-24 left-1/2 h-40 w-[118vw] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_62%)]"
-            />
-            <motion.div
-              style={{ scaleX: accentScale, transformOrigin: 'center' }}
-              className="absolute left-6 right-6 top-0 h-px bg-primary md:left-10 md:right-10"
-            />
-          </motion.div>
-
-          <motion.div
-            style={{ opacity: labelOpacity, y: labelY }}
-            className="pointer-events-none absolute bottom-[18svh] left-6 z-[4] font-mono text-[11px] uppercase tracking-[0.3em] text-foreground/70 md:left-10"
-          >
-            <span className="text-primary">/</span> 01 About
-          </motion.div>
         </div>
       </section>
 
       {/* INTRO / ABOUT TEASER */}
-      <section className="relative z-[3] border-t border-border bg-background px-6 py-20 md:px-10 md:py-28">
+      <motion.section
+        style={{ opacity: aboutOpacity, y: aboutLift }}
+        className="relative z-[3] overflow-hidden border-t border-border bg-background px-6 py-20 md:px-10 md:py-28"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--water)_16%,transparent),transparent_68%)]"
+        />
         <div className="mx-auto max-w-5xl">
           <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-            <span className="text-primary">01</span>About
+            <span className="text-primary">01</span>
+            <span>About</span>
           </div>
           <h2 className="font-display text-[clamp(32px,4.5vw,64px)] leading-[1.05] tracking-[-0.02em] text-foreground">
             <SplitTextReveal
@@ -229,38 +243,41 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-10% 0px' }}
             transition={{ duration: 0.9, delay: 0.25, ease: EASE.snappy }}
-            className="mt-10 grid grid-cols-2 gap-y-8 border-t border-border pt-7 sm:grid-cols-4"
+            className="mt-10 grid gap-3 border-t border-border pt-5 sm:grid-cols-3"
           >
-            <Stat
+            <StatCard
               value={
                 <CountUp
                   to={featured.length}
-                  className="font-display text-[clamp(40px,4vw,56px)] leading-none tracking-[-0.02em] text-foreground"
+                  className="font-display text-[clamp(44px,5vw,72px)] leading-none tracking-[-0.02em] text-foreground"
                 />
               }
               label="Projects shipped"
+              detail="Two real live builds, kept intentional instead of padded."
             />
-            <Stat
+            <StatCard
               value={
-                <span className="font-display text-[clamp(40px,4vw,56px)] leading-none tracking-[-0.02em] text-foreground">
+                <span className="font-display text-[clamp(44px,5vw,72px)] leading-none tracking-[-0.02em] text-foreground">
                   2y+
                 </span>
               }
               label="Building for the web"
+              detail="Taste, layout, motion, stack choice, and launch flow."
             />
-            <Stat
+            <StatCard
               value={
-                <span className="font-display text-[clamp(40px,4vw,56px)] leading-none tracking-[-0.02em] text-foreground">
+                <span className="font-display text-[clamp(44px,5vw,72px)] leading-none tracking-[-0.02em] text-foreground">
                   100%
                 </span>
               }
               label="Hands-on direction"
+              detail="No template dump: each section is shaped around the business."
             />
-            <div className="flex items-baseline justify-end">
+            <div className="flex items-baseline justify-start sm:col-span-3 sm:justify-end">
               <Link
                 to="/about"
                 data-cursor="hover"
-                className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 transition-colors hover:text-foreground"
+                className="group inline-flex items-center gap-3 rounded-full border border-[color:var(--water-soft)] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 transition-colors hover:border-[color:var(--water)] hover:text-foreground"
               >
                 More about me
                 <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
@@ -268,11 +285,29 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* FEATURED WORK */}
-      <section className="relative z-[3] border-t border-border bg-background px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-[1440px]">
+      <section
+        ref={workRef}
+        className="relative z-[3] overflow-hidden border-t border-border bg-background px-6 py-20 md:px-10 md:py-28"
+      >
+        <motion.div
+          aria-hidden
+          style={{ y: workWipeY }}
+          className="pointer-events-none absolute inset-x-0 top-0 z-0 h-48 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--water)_10%,transparent),transparent)]"
+        >
+          <div className="absolute -top-20 left-1/2 h-40 w-[130vw] -translate-x-1/2 rounded-[50%] bg-background" />
+          <motion.div
+            style={{ opacity: workGlowOpacity }}
+            className="absolute -top-16 left-1/2 h-32 w-[110vw] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,var(--water-glow),transparent_62%)]"
+          />
+          <motion.div
+            style={{ scaleX: workAccentScale, transformOrigin: 'center' }}
+            className="absolute left-6 right-6 top-0 h-px bg-[linear-gradient(90deg,var(--primary),var(--water))] md:left-10 md:right-10"
+          />
+        </motion.div>
+        <div className="relative z-[1] mx-auto max-w-[1440px]">
           <div className="mb-10 flex items-end justify-between gap-6">
             <div>
               <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
@@ -365,19 +400,28 @@ export default function Home() {
   );
 }
 
-function Stat({
+function StatCard({
   value,
   label,
+  detail,
 }: {
   value: React.ReactNode;
   label: string;
+  detail: string;
 }) {
   return (
-    <div>
+    <div className="group relative overflow-hidden rounded-lg border border-border bg-background/55 p-5 backdrop-blur-md transition-colors hover:border-[color:var(--water-soft)]">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--primary),var(--water),transparent)] opacity-70"
+      />
       <div>{value}</div>
       <div className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
         {label}
       </div>
+      <p className="mt-5 max-w-xs text-sm leading-relaxed text-foreground/58">
+        {detail}
+      </p>
     </div>
   );
 }
