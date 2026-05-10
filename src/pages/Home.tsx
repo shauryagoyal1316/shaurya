@@ -14,10 +14,8 @@ import { EASE } from '@/lib/motion';
 /**
  * Home — cinematic entry, reskinned to match Portfolio.html.
  *
- * The hero scales up + blurs out + lifts on first scroll (Apple-style),
- * driven through a spring so the transition has weight rather than feeling
- * mechanical. Tags drift in from the corners; the subtitle eases up beneath
- * the headline; the bottom-row scroll cue + location fade in last.
+ * The hero uses a sticky Framer Motion handoff: content recedes in 3D while
+ * a premium wipe with a restrained liquid edge carries the page into About.
  */
 export default function Home() {
   const featured = getFeaturedProjects();
@@ -27,16 +25,20 @@ export default function Home() {
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  // Raw progress, no spring — matches Portfolio.html which computes
-  // `1 + p * 0.18`, `p * 14px`, `-p * 14%`, `1 - p * 1.2` from a plain rAF.
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.83], [1, 0]);
-  const heroBlur = useTransform(
+  // Raw scroll progress drives the full hero-to-About handoff.
+  const heroScale = useTransform(scrollYProgress, [0, 0.72, 1], [1, 0.94, 0.86]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7, 0.98], [1, 0.9, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 1], [0, -8]);
+  const wipeY = useTransform(scrollYProgress, [0.28, 0.88], ['150%', '0%']);
+  const wipeGlowOpacity = useTransform(
     scrollYProgress,
-    [0, 1],
-    ['blur(0px)', 'blur(14px)']
+    [0.35, 0.62, 0.9],
+    [0, 1, 0.55]
   );
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
+  const accentScale = useTransform(scrollYProgress, [0.38, 0.68], [0, 1]);
+  const labelOpacity = useTransform(scrollYProgress, [0.36, 0.55, 0.8], [0, 1, 0]);
+  const labelY = useTransform(scrollYProgress, [0.36, 0.72], [18, -10]);
 
   return (
     <>
@@ -45,14 +47,17 @@ export default function Home() {
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative h-[100svh] w-full overflow-hidden bg-background"
+        className="relative h-[155svh] w-full bg-background"
       >
-        <motion.div
+        <div className="sticky top-0 h-[100svh] overflow-hidden [perspective:1200px]">
+          <motion.div
           style={{
             scale: heroScale,
             opacity: heroOpacity,
-            filter: heroBlur,
             y: heroY,
+            rotateX: heroRotateX,
+            transformPerspective: 1200,
+            transformOrigin: 'center 58%',
           }}
           className="relative z-[2] flex h-full flex-col items-center justify-center px-6"
         >
@@ -139,7 +144,9 @@ export default function Home() {
               type="button"
               onClick={() =>
                 window.scrollTo({
-                  top: window.innerHeight,
+                  top:
+                    (heroRef.current?.offsetTop ?? 0) +
+                    (heroRef.current?.offsetHeight ?? window.innerHeight),
                   behavior: 'smooth',
                 })
               }
@@ -172,6 +179,30 @@ export default function Home() {
             </motion.div>
           </div>
         </motion.div>
+
+          <motion.div
+            aria-hidden
+            style={{ y: wipeY }}
+            className="pointer-events-none absolute inset-x-0 bottom-[-1px] z-[3] h-[64svh] bg-background shadow-[0_-36px_120px_rgba(0,0,0,0.55)]"
+          >
+            <div className="absolute -top-24 left-1/2 h-48 w-[140vw] -translate-x-1/2 rounded-[50%] bg-background" />
+            <motion.div
+              style={{ opacity: wipeGlowOpacity }}
+              className="absolute -top-24 left-1/2 h-40 w-[118vw] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_62%)]"
+            />
+            <motion.div
+              style={{ scaleX: accentScale, transformOrigin: 'center' }}
+              className="absolute left-6 right-6 top-0 h-px bg-primary md:left-10 md:right-10"
+            />
+          </motion.div>
+
+          <motion.div
+            style={{ opacity: labelOpacity, y: labelY }}
+            className="pointer-events-none absolute bottom-[18svh] left-6 z-[4] font-mono text-[11px] uppercase tracking-[0.3em] text-foreground/70 md:left-10"
+          >
+            <span className="text-primary">/</span> 01 About
+          </motion.div>
+        </div>
       </section>
 
       {/* INTRO / ABOUT TEASER */}
