@@ -24,7 +24,7 @@ Only the real portfolio examples should be shown:
 
 - Fade & Co. / barbershop example
   - Live URL: https://shauryagoyal1316.github.io/fade-co-showcase/
-- Maison Lyon / private chef example
+- Private Chef / private chef landing page example
   - Live URL: https://shauryagoyal1316.github.io/privatechefportfolio/
 
 Keep project data in `src/data/projects.ts`. Do not add fake examples unless Shaurya explicitly asks for placeholders.
@@ -59,7 +59,7 @@ Expected dev server port is `8080`.
 - The visual style is editorial, dark, cinematic, type-heavy, and restrained. Avoid generic startup/landing-page sections.
 - Keep navigation simple and test button/link changes in the browser because routing bugs previously caused white screens.
 - The tech marquee should keep each stack item and its star on one line using no-wrap inline flex. Do not use manual negative margins around the star.
-- After meaningful code/content changes or commits, update this file when the project context, contacts, deployment notes, or UI rules change.
+- After any completed change, commit and push to GitHub unless Shaurya explicitly says not to. Update this file whenever project context, contacts, deployment notes, or UI rules change.
 
 ## Known Quality Notes
 
