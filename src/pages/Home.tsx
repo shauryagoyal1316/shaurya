@@ -78,10 +78,50 @@ export default function Home() {
           </div>
 
           {/* Headline */}
-          <h1 className="select-none text-center font-display text-[clamp(80px,16vw,280px)] leading-[0.85] tracking-[-0.03em] text-foreground">
-            <span className="block">Shaurya</span>
-            <span className="block italic text-foreground/55">Goyal.</span>
-          </h1>
+          <motion.h1
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: {},
+              show: {
+                transition: {
+                  staggerChildren: 0.16,
+                  delayChildren: 0.65,
+                },
+              },
+            }}
+            className="select-none text-center font-display text-[clamp(80px,16vw,280px)] leading-[0.85] tracking-[-0.03em] text-foreground"
+          >
+            {[
+              { text: 'Shaurya', className: 'block' },
+              { text: 'Goyal.', className: 'block italic text-foreground/55' },
+            ].map((line) => (
+              <motion.span
+                key={line.text}
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: 42,
+                    scale: 0.97,
+                    filter: 'blur(14px)',
+                  },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    filter: 'blur(0px)',
+                    transition: {
+                      duration: 1.1,
+                      ease: EASE.snappy,
+                    },
+                  },
+                }}
+                className={line.className}
+              >
+                {line.text}
+              </motion.span>
+            ))}
+          </motion.h1>
 
           {/* Subtitle */}
           <motion.p

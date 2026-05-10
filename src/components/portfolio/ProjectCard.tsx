@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '@/types';
 import { cn } from '@/lib/utils';
@@ -26,6 +32,17 @@ export function ProjectCard({
   total = 2,
 }: ProjectCardProps) {
   const [imgFailed, setImgFailed] = useState(false);
+  const reducedMotion = useReducedMotion();
+  const pointerX = useMotionValue(0.5);
+  const pointerY = useMotionValue(0.5);
+  const springX = useSpring(pointerX, { stiffness: 140, damping: 24, mass: 0.45 });
+  const springY = useSpring(pointerY, { stiffness: 140, damping: 24, mass: 0.45 });
+  const rotateX = useTransform(springY, [0, 1], [5, -5]);
+  const rotateY = useTransform(springX, [0, 1], [-6, 6]);
+  const imageX = useTransform(springX, [0, 1], ['-1.8%', '1.8%']);
+  const imageY = useTransform(springY, [0, 1], ['-1.8%', '1.8%']);
+  const sheenX = useTransform(springX, [0, 1], ['-45%', '45%']);
+  const sheenY = useTransform(springY, [0, 1], ['-45%', '45%']);
   const showImage = Boolean(project.coverImage) && !imgFailed;
 
   const ratioClass = (
@@ -41,12 +58,27 @@ export function ProjectCard({
   const categoryDisplay =
     project.category.charAt(0).toUpperCase() + project.category.slice(1);
 
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (reducedMotion) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    pointerX.set((event.clientX - rect.left) / rect.width);
+    pointerY.set((event.clientY - rect.top) / rect.height);
+  };
+
+  const handlePointerLeave = () => {
+    pointerX.set(0.5);
+    pointerY.set(0.5);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 28, filter: 'blur(8px)' }}
       whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      whileHover={reducedMotion ? undefined : { y: -8 }}
       viewport={{ once: true, margin: '-8% 0px' }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
     >
       <Link
         to={`/work/${project.slug}`}
@@ -55,9 +87,23 @@ export function ProjectCard({
         aria-label={`${project.label} — ${project.role}, ${project.year}`}
         className="group block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       >
-        <div className={cn('relative isolate overflow-hidden rounded-lg bg-surface-2', ratioClass)}>
+        <motion.div
+          className={cn('relative isolate overflow-hidden rounded-lg bg-surface-2', ratioClass)}
+          style={
+            reducedMotion
+              ? undefined
+              : {
+                  rotateX,
+                  rotateY,
+                  transformPerspective: 1000,
+                }
+          }
+        >
           <div className="absolute inset-0 bg-surface-2" />
-          <div className="absolute inset-0 scale-[1.04] transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-hover:scale-[1.08] group-focus-visible:scale-[1.08]">
+          <motion.div
+            className="absolute inset-0 scale-[1.06] transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-hover:scale-[1.1] group-focus-visible:scale-[1.1]"
+            style={reducedMotion ? undefined : { x: imageX, y: imageY }}
+          >
             {showImage && (
               <img
                 src={project.coverImage}
@@ -68,10 +114,20 @@ export function ProjectCard({
                 className="absolute inset-0 h-full w-full object-cover"
               />
             )}
-          </div>
+          </motion.div>
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_40%,color-mix(in_oklch,var(--foreground)_6%,transparent))]"
+          />
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-500 group-hover:opacity-100"
+            style={{
+              x: reducedMotion ? undefined : sheenX,
+              y: reducedMotion ? undefined : sheenY,
+              background:
+                'radial-gradient(circle at center, color-mix(in oklch, var(--foreground) 24%, transparent), transparent 34%)',
+            }}
           />
           {showBadges && (
             <>
@@ -89,7 +145,7 @@ export function ProjectCard({
               </div>
             </>
           )}
-        </div>
+        </motion.div>
 
         <div className="mt-5 flex items-end justify-between gap-6">
           <div>
