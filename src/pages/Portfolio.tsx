@@ -52,7 +52,7 @@ export default function Work() {
                   data-cursor="hover"
                   onClick={() => setActive(c.id)}
                   className={cn(
-                    'inline-flex items-baseline gap-2 rounded-full border px-[18px] py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                    'inline-flex cursor-pointer items-baseline gap-2 rounded-full border px-[18px] py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                     isActive
                       ? 'border-foreground bg-foreground text-background'
                       : 'border-border text-foreground/70 hover:border-foreground/40 hover:text-foreground'
@@ -78,7 +78,7 @@ export default function Work() {
       </section>
 
       {/* Grid */}
-      <section className="px-6 py-10 md:px-10 md:py-16">
+      <section className="px-6 pb-10 pt-20 md:px-10 md:py-16">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 md:grid-cols-12">
           {filtered.map((project, i) => (
             <div
