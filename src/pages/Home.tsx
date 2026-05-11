@@ -101,14 +101,13 @@ export default function Home() {
     target: workRef,
     offset: ['start end', 'start center'],
   });
-  // One body-level transform portal handles the full handoff:
-  // hero dot -> full water field -> About headline period.
-  const heroScale = useTransform(scrollYProgress, [0, 0.38], [1, 1.025]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.24, 0.46], [1, 1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.44], ['0%', '-4%']);
-  const heroRotateX = useTransform(scrollYProgress, [0, 0.44], [0, -3]);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.16, 0.34], [1, 0.55, 0]);
-  const heroDotOpacity = useTransform(scrollYProgress, [0, 0.015, 0.045], [1, 0.25, 0]);
+  // Keep the portal as a short opaque handoff, not a dot hovering over About.
+  const heroScale = useTransform(scrollYProgress, [0, 0.24, 0.4], [1, 1.08, 1.14]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.18, 0.34], [1, 0.92, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.34], ['0%', '-3%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 0.34], [0, -2]);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.12, 0.26], [1, 0.55, 0]);
+  const heroDotOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.35, 0]);
   const portalMaxRadius =
     Math.ceil(
       Math.hypot(
@@ -118,12 +117,12 @@ export default function Home() {
     ) + 80;
   const portalRadius = useTransform(
     scrollYProgress,
-    [0, 0.09, 0.2, 0.48],
-    [3, 42, portalMaxRadius, portalMaxRadius]
+    [0, 0.07, 0.18, 0.42],
+    [2, 34, portalMaxRadius, portalMaxRadius]
   );
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.015, 0.42, 0.5], [0, 1, 1, 0]);
-  const aboutLift = useTransform(scrollYProgress, [0.32, 0.55], [44, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.025, 0.42, 0.52], [0, 1, 1, 0]);
+  const aboutLift = useTransform(scrollYProgress, [0.52, 0.66], [38, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.52, 0.62], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
   const workAccentScale = useTransform(workScrollYProgress, [0.15, 0.85], [0, 1]);
   const workGlowOpacity = useTransform(workScrollYProgress, [0, 0.55, 1], [0, 1, 0.35]);
