@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 /**
  * Work index. Hero stripped — when users land here they want the projects,
- * not a giant "Work." headline. Sticky pill filter + alternating 12-column
+ * not a giant "Work." headline. The static pill filter + alternating 12-column
  * grid get straight to the content.
  */
 export default function Work() {
