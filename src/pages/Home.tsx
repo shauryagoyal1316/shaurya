@@ -37,10 +37,12 @@ export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const workRef = useRef<HTMLElement>(null);
   const heroDotRef = useRef<HTMLSpanElement>(null);
+  const aboutDotRef = useRef<HTMLSpanElement>(null);
   const [portalMetrics, setPortalMetrics] = useState({
     width: 1,
     height: 1,
     hero: { x: 0, y: 0 },
+    about: { x: 0, y: 0 },
   });
 
   const measurePortalAnchors = useCallback(() => {
@@ -63,6 +65,7 @@ export default function Home() {
       width,
       height,
       hero: readAnchor(heroDotRef.current, { x: width * 0.66, y: height * 0.5 }),
+      about: readAnchor(aboutDotRef.current, { x: width * 0.75, y: height * 0.18 }, -38),
     };
 
     setPortalMetrics((current) => {
@@ -70,7 +73,9 @@ export default function Home() {
         Math.abs(current.width - next.width) > 0.5 ||
         Math.abs(current.height - next.height) > 0.5 ||
         Math.abs(current.hero.x - next.hero.x) > 0.5 ||
-        Math.abs(current.hero.y - next.hero.y) > 0.5;
+        Math.abs(current.hero.y - next.hero.y) > 0.5 ||
+        Math.abs(current.about.x - next.about.x) > 0.5 ||
+        Math.abs(current.about.y - next.about.y) > 0.5;
 
       return changed ? next : current;
     });
@@ -101,28 +106,40 @@ export default function Home() {
     target: workRef,
     offset: ['start end', 'start center'],
   });
-  // Keep the portal as a short opaque handoff, not a dot hovering over About.
-  const heroScale = useTransform(scrollYProgress, [0, 0.24, 0.4], [1, 1.08, 1.14]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.18, 0.34], [1, 0.92, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.34], ['0%', '-3%']);
-  const heroRotateX = useTransform(scrollYProgress, [0, 0.34], [0, -2]);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.12, 0.26], [1, 0.55, 0]);
+  // Exact-anchor portal: expand from hero period, move while full-screen,
+  // then shrink into the About period without drifting through the layout.
+  const heroScale = useTransform(scrollYProgress, [0, 0.2, 0.34], [1, 1.06, 1.1]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.18, 0.32], [1, 0.9, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.32], ['0%', '-3%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 0.32], [0, -2]);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.12, 0.25], [1, 0.55, 0]);
   const heroDotOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.35, 0]);
+  const aboutDotOpacity = useTransform(scrollYProgress, [0, 0.58, 0.64], [0, 0, 1]);
+  const farthestRadius = (point: { x: number; y: number }) =>
+    Math.hypot(
+      Math.max(point.x, portalMetrics.width - point.x),
+      Math.max(point.y, portalMetrics.height - point.y)
+    );
   const portalMaxRadius =
-    Math.ceil(
-      Math.hypot(
-        Math.max(portalMetrics.hero.x, portalMetrics.width - portalMetrics.hero.x),
-        Math.max(portalMetrics.hero.y, portalMetrics.height - portalMetrics.hero.y)
-      )
-    ) + 80;
+    Math.ceil(Math.max(farthestRadius(portalMetrics.hero), farthestRadius(portalMetrics.about))) + 80;
+  const portalCx = useTransform(
+    scrollYProgress,
+    [0, 0.18, 0.36, 0.56],
+    [portalMetrics.hero.x, portalMetrics.hero.x, portalMetrics.about.x, portalMetrics.about.x]
+  );
+  const portalCy = useTransform(
+    scrollYProgress,
+    [0, 0.18, 0.36, 0.56],
+    [portalMetrics.hero.y, portalMetrics.hero.y, portalMetrics.about.y, portalMetrics.about.y]
+  );
   const portalRadius = useTransform(
     scrollYProgress,
-    [0, 0.07, 0.18, 0.42],
-    [2, 34, portalMaxRadius, portalMaxRadius]
+    [0, 0.07, 0.18, 0.36, 0.56],
+    [2, 34, portalMaxRadius, portalMaxRadius, 2]
   );
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.025, 0.42, 0.52], [0, 1, 1, 0]);
-  const aboutLift = useTransform(scrollYProgress, [0.52, 0.66], [38, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.52, 0.62], [0, 1]);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.025, 0.58, 0.64], [0, 1, 1, 0]);
+  const aboutLift = useTransform(scrollYProgress, [0.34, 0.52], [38, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.3, 0.42], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
   const workAccentScale = useTransform(workScrollYProgress, [0.15, 0.85], [0, 1]);
   const workGlowOpacity = useTransform(workScrollYProgress, [0, 0.55, 1], [0, 1, 0.35]);
@@ -134,8 +151,8 @@ export default function Home() {
         reducedMotion={Boolean(reducedMotion)}
         width={portalMetrics.width}
         height={portalMetrics.height}
-        cx={portalMetrics.hero.x}
-        cy={portalMetrics.hero.y}
+        cx={portalCx}
+        cy={portalCy}
         radius={portalRadius}
         opacity={portalOpacity}
       />
@@ -302,6 +319,8 @@ export default function Home() {
               <h2 className="mx-auto max-w-4xl font-display text-[clamp(32px,5vw,72px)] leading-[1.02] tracking-[-0.02em] text-foreground">
                 I build websites end-to-end
                 <motion.span
+                  ref={aboutDotRef}
+                  style={{ opacity: reducedMotion ? 1 : aboutDotOpacity }}
                   className="-ml-[0.02em] text-[0.82em] text-primary"
                 >
                   .
@@ -487,8 +506,8 @@ function BodyPortalLayer({
   reducedMotion: boolean;
   width: number;
   height: number;
-  cx: number;
-  cy: number;
+  cx: MotionValue<number>;
+  cy: MotionValue<number>;
   radius: MotionValue<number>;
   opacity: MotionValue<number>;
 }) {
