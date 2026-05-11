@@ -55,7 +55,7 @@ Expected dev server port is `8080`.
 
 - The landing page hero should show the large "Shaurya Goyal." name immediately on load.
 - Header nav routes are Index, Work, and About.
-- The global header should stay at the top of the document and scroll away with the page. Do not make it fixed/sticky again unless Shaurya explicitly asks for persistent navigation.
+- The global header/nav should stay fixed while scrolling so Index, Work, About, and the theme toggle remain reachable. The Work page filter row (`All`, `Landing`, project count) must stay non-sticky and scroll away with the project list.
 - Footer currently includes email contact, GitHub, and the two live project links.
 - The visual style is editorial, dark, cinematic, type-heavy, and restrained. Avoid generic startup/landing-page sections.
 - Keep navigation simple and test button/link changes in the browser because routing bugs previously caused white screens.
