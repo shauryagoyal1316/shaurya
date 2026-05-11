@@ -38,6 +38,7 @@ export default function Home() {
   const workRef = useRef<HTMLElement>(null);
   const heroDotRef = useRef<HTMLSpanElement>(null);
   const aboutDotRef = useRef<HTMLSpanElement>(null);
+  const measureFrameRef = useRef<number | null>(null);
   const [portalMetrics, setPortalMetrics] = useState({
     width: 1,
     height: 1,
@@ -48,16 +49,12 @@ export default function Home() {
   const measurePortalAnchors = useCallback(() => {
     const width = window.innerWidth || 1;
     const height = window.innerHeight || 1;
-    const readAnchor = (
-      node: HTMLSpanElement | null,
-      fallback: { x: number; y: number },
-      yOffset = 0
-    ) => {
+    const readAnchor = (node: HTMLSpanElement | null, fallback: { x: number; y: number }) => {
       if (!node) return fallback;
       const rect = node.getBoundingClientRect();
       return {
         x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2 + yOffset,
+        y: rect.top + rect.height / 2,
       };
     };
 
@@ -65,7 +62,7 @@ export default function Home() {
       width,
       height,
       hero: readAnchor(heroDotRef.current, { x: width * 0.66, y: height * 0.5 }),
-      about: readAnchor(aboutDotRef.current, { x: width * 0.75, y: height * 0.18 }, -38),
+      about: readAnchor(aboutDotRef.current, { x: width * 0.75, y: height * 0.18 }),
     };
 
     setPortalMetrics((current) => {
@@ -81,6 +78,14 @@ export default function Home() {
     });
   }, []);
 
+  const schedulePortalMeasure = useCallback(() => {
+    if (measureFrameRef.current !== null) return;
+    measureFrameRef.current = window.requestAnimationFrame(() => {
+      measureFrameRef.current = null;
+      measurePortalAnchors();
+    });
+  }, [measurePortalAnchors]);
+
   useLayoutEffect(() => {
     measurePortalAnchors();
     const timers = [
@@ -91,12 +96,15 @@ export default function Home() {
       window.setTimeout(measurePortalAnchors, 2300),
     ];
 
-    window.addEventListener('resize', measurePortalAnchors);
+    window.addEventListener('resize', schedulePortalMeasure);
     return () => {
       timers.forEach(window.clearTimeout);
-      window.removeEventListener('resize', measurePortalAnchors);
+      window.removeEventListener('resize', schedulePortalMeasure);
+      if (measureFrameRef.current !== null) {
+        window.cancelAnimationFrame(measureFrameRef.current);
+      }
     };
-  }, [measurePortalAnchors]);
+  }, [measurePortalAnchors, schedulePortalMeasure]);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -106,15 +114,20 @@ export default function Home() {
     target: workRef,
     offset: ['start end', 'start center'],
   });
+
+  useEffect(() => {
+    return scrollYProgress.on('change', schedulePortalMeasure);
+  }, [scrollYProgress, schedulePortalMeasure]);
+
   // Exact-anchor portal: expand from hero period, move while full-screen,
   // then shrink into the About period without drifting through the layout.
-  const heroScale = useTransform(scrollYProgress, [0, 0.2, 0.34], [1, 1.06, 1.1]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.05, 0.2, 0.34], [1, 1, 1.06, 1.1]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18, 0.32], [1, 0.9, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.32], ['0%', '-3%']);
-  const heroRotateX = useTransform(scrollYProgress, [0, 0.32], [0, -2]);
+  const heroY = useTransform(scrollYProgress, [0, 0.05, 0.32], ['0%', '0%', '-3%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 0.05, 0.32], [0, 0, -2]);
   const supportOpacity = useTransform(scrollYProgress, [0, 0.12, 0.25], [1, 0.55, 0]);
-  const heroDotOpacity = useTransform(scrollYProgress, [0, 0.02, 0.05], [1, 0.35, 0]);
-  const aboutDotOpacity = useTransform(scrollYProgress, [0, 0.58, 0.64], [0, 0, 1]);
+  const heroDotOpacity = useTransform(scrollYProgress, [0, 0.03, 0.05], [1, 0.75, 0]);
+  const aboutDotOpacity = useTransform(scrollYProgress, [0, 0.5, 0.56], [0, 0, 1]);
   const farthestRadius = (point: { x: number; y: number }) =>
     Math.hypot(
       Math.max(point.x, portalMetrics.width - point.x),
@@ -124,22 +137,22 @@ export default function Home() {
     Math.ceil(Math.max(farthestRadius(portalMetrics.hero), farthestRadius(portalMetrics.about))) + 80;
   const portalCx = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.36, 0.56],
+    [0, 0.17, 0.27, 0.5],
     [portalMetrics.hero.x, portalMetrics.hero.x, portalMetrics.about.x, portalMetrics.about.x]
   );
   const portalCy = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.36, 0.56],
+    [0, 0.17, 0.27, 0.5],
     [portalMetrics.hero.y, portalMetrics.hero.y, portalMetrics.about.y, portalMetrics.about.y]
   );
   const portalRadius = useTransform(
     scrollYProgress,
-    [0, 0.07, 0.18, 0.36, 0.56],
-    [2, 34, portalMaxRadius, portalMaxRadius, 2]
+    [0, 0.05, 0.17, 0.27, 0.5],
+    [2, 22, portalMaxRadius, portalMaxRadius, 2]
   );
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.025, 0.58, 0.64], [0, 1, 1, 0]);
-  const aboutLift = useTransform(scrollYProgress, [0.34, 0.52], [38, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.3, 0.42], [0, 1]);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.02, 0.5, 0.56], [0, 1, 1, 0]);
+  const aboutLift = useTransform(scrollYProgress, [0.48, 0.58], [24, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.46, 0.56], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
   const workAccentScale = useTransform(workScrollYProgress, [0.15, 0.85], [0, 1]);
   const workGlowOpacity = useTransform(workScrollYProgress, [0, 0.55, 1], [0, 1, 0.35]);
@@ -245,10 +258,9 @@ export default function Home() {
             <motion.span
               ref={heroDotRef}
               style={{ opacity: reducedMotion ? 1 : heroDotOpacity }}
-              className="-ml-[0.035em] inline-block translate-y-[0.02em] text-[0.68em] leading-none text-primary"
-            >
-              .
-            </motion.span>
+              aria-hidden
+              className="ml-[0.018em] inline-block size-[0.062em] translate-y-[0.035em] rounded-full bg-primary align-baseline"
+            />
           </motion.h1>
 
           {/* Subtitle */}
@@ -321,10 +333,9 @@ export default function Home() {
                 <motion.span
                   ref={aboutDotRef}
                   style={{ opacity: reducedMotion ? 1 : aboutDotOpacity }}
-                  className="-ml-[0.02em] text-[0.82em] text-primary"
-                >
-                  .
-                </motion.span>
+                  aria-hidden
+                  className="ml-[0.035em] inline-block size-[0.09em] translate-y-[0.015em] rounded-full bg-primary align-baseline"
+                />
                 <span className="mt-3 block italic text-foreground/55">
                   Type, motion, and the obsession with details no one notices.
                 </span>
@@ -527,7 +538,7 @@ function BodyPortalLayer({
       style={{
         opacity,
       }}
-      className="pointer-events-none fixed inset-0 z-[80] h-screen w-screen"
+      className="pointer-events-none fixed inset-0 z-[10000] h-screen w-screen"
     >
       <motion.circle
         cx={cx}
