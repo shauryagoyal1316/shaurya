@@ -39,8 +39,8 @@ export default function Work() {
         description="Real website examples — built end to end, front and back, with an editorial bar for craft."
       />
 
-      {/* Sticky filter strip — sits just under the fixed header */}
-      <section className="sticky top-[72px] z-30 border-y border-border bg-background/70 px-6 pt-24 pb-3.5 backdrop-blur-md md:px-10 md:pt-28">
+      {/* Filter strip stays in the page flow so it does not cover work while scrolling. */}
+      <section className="relative z-30 border-y border-border bg-background/70 px-6 pt-24 pb-3.5 backdrop-blur-md md:px-10 md:pt-28">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4">
           <div className="inline-flex flex-wrap gap-2">
             {cats.map((c) => {

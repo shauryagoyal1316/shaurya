@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import { useScrollPosition } from '@/hooks/useScrollPosition';
 import {
   Sheet,
   SheetContent,
@@ -25,7 +24,7 @@ const navLinks = [
  *  - Pill-shaped nav with a sliding active/hover indicator (transform + width
  *    spring out of the active link's measured box)
  *  - Theme toggle on the right
- *  - Frosted backdrop + hairline border once the page scrolls
+ *  - Positioned at the page top, then scrolls away with the document
  *
  * The sliding pill is measured per-render with `getBoundingClientRect` and
  * re-syncs on resize and after fonts settle (two delayed re-syncs) so it
@@ -33,7 +32,6 @@ const navLinks = [
  */
 export function Header() {
   const location = useLocation();
-  const { isScrolled } = useScrollPosition();
   const [open, setOpen] = useState(false);
 
   // Active id derived from the current pathname so it survives both
@@ -92,11 +90,8 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        'absolute inset-x-0 top-0 z-50 border-b border-transparent bg-transparent',
         'flex items-center justify-between px-6 py-4 md:px-10',
-        isScrolled
-          ? 'border-b border-border bg-background/70 backdrop-blur-md'
-          : 'border-b border-transparent bg-transparent'
       )}
     >
       {/* Brand */}
