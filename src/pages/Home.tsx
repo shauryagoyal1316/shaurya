@@ -1,6 +1,20 @@
-import { useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import {
+  type MotionValue,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { getFeaturedProjects } from '@/data/projects';
@@ -22,6 +36,61 @@ export default function Home() {
   const reducedMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
   const workRef = useRef<HTMLElement>(null);
+  const heroDotRef = useRef<HTMLSpanElement>(null);
+  const aboutDotRef = useRef<HTMLSpanElement>(null);
+  const [portalAnchors, setPortalAnchors] = useState({
+    hero: { x: 66, y: 50 },
+    about: { x: 79, y: 14 },
+  });
+
+  const measurePortalAnchors = useCallback(() => {
+    const width = window.innerWidth || 1;
+    const height = window.innerHeight || 1;
+    const readAnchor = (
+      node: HTMLSpanElement | null,
+      fallback: { x: number; y: number },
+      yOffset = 0
+    ) => {
+      if (!node) return fallback;
+      const rect = node.getBoundingClientRect();
+      return {
+        x: ((rect.left + rect.width / 2) / width) * 100,
+        y: ((rect.top + rect.height / 2 + yOffset) / height) * 100,
+      };
+    };
+
+    const next = {
+      hero: readAnchor(heroDotRef.current, { x: 66, y: 50 }),
+      about: readAnchor(aboutDotRef.current, { x: 79, y: 14 }, -44),
+    };
+
+    setPortalAnchors((current) => {
+      const changed =
+        Math.abs(current.hero.x - next.hero.x) > 0.15 ||
+        Math.abs(current.hero.y - next.hero.y) > 0.15 ||
+        Math.abs(current.about.x - next.about.x) > 0.15 ||
+        Math.abs(current.about.y - next.about.y) > 0.15;
+
+      return changed ? next : current;
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    measurePortalAnchors();
+    const timers = [
+      window.setTimeout(measurePortalAnchors, 90),
+      window.setTimeout(measurePortalAnchors, 450),
+      window.setTimeout(measurePortalAnchors, 1000),
+      window.setTimeout(measurePortalAnchors, 1700),
+      window.setTimeout(measurePortalAnchors, 2300),
+    ];
+
+    window.addEventListener('resize', measurePortalAnchors);
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.removeEventListener('resize', measurePortalAnchors);
+    };
+  }, [measurePortalAnchors]);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -31,19 +100,33 @@ export default function Home() {
     target: workRef,
     offset: ['start end', 'start center'],
   });
-  // Raw scroll progress drives the period portal into the About teaser.
-  const heroScale = useTransform(scrollYProgress, [0, 0.34, 0.66], [1, 1.035, 0.98]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.42, 0.66], [1, 0.92, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.72], ['0%', '-6%']);
-  const heroRotateX = useTransform(scrollYProgress, [0, 0.64], [0, -4]);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.26, 0.46], [1, 0.6, 0]);
-  const periodGlyphOpacity = useTransform(scrollYProgress, [0, 0.22, 0.34], [1, 1, 0]);
-  const portalScale = useTransform(scrollYProgress, [0, 0.22, 0.34, 0.5, 0.68, 1], [0, 0, 1, 88, 132, 140]);
-  const portalY = useTransform(scrollYProgress, [0, 0.7], ['0vh', '-3vh']);
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.22, 0.3, 0.58, 0.78], [0, 0, 1, 1, 0]);
-  const portalGlowOpacity = useTransform(scrollYProgress, [0.18, 0.46, 0.86], [0, 0.85, 0]);
-  const aboutLift = useTransform(scrollYProgress, [0.64, 0.86], [48, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.64, 0.86], [0, 1]);
+  // One body-level transform portal handles the full handoff:
+  // hero dot -> full water field -> About headline period.
+  const heroScale = useTransform(scrollYProgress, [0, 0.38], [1, 1.025]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.24, 0.46], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.44], ['0%', '-4%']);
+  const heroRotateX = useTransform(scrollYProgress, [0, 0.44], [0, -3]);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.16, 0.34], [1, 0.55, 0]);
+  const inlineDotOpacity = useTransform(scrollYProgress, [0, 0.02, 0.055], [1, 0.12, 0]);
+  const aboutDotOpacity = useTransform(scrollYProgress, [0.5, 0.58], [0, 1]);
+  const portalScale = useTransform(
+    scrollYProgress,
+    [0, 0.09, 0.2, 0.3, 0.52, 0.6],
+    [1, 4.8, 128, 128, 1.12, 1.12]
+  );
+  const portalX = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.3, 0.52],
+    [`${portalAnchors.hero.x}%`, '50%', '50%', `${portalAnchors.about.x}%`]
+  );
+  const portalY = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.3, 0.52],
+    [`${portalAnchors.hero.y}%`, '50%', '50%', `${portalAnchors.about.y}%`]
+  );
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.025, 0.52, 0.6], [0, 1, 1, 0]);
+  const aboutLift = useTransform(scrollYProgress, [0.32, 0.55], [44, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
   const workAccentScale = useTransform(workScrollYProgress, [0.15, 0.85], [0, 1]);
   const workGlowOpacity = useTransform(workScrollYProgress, [0, 0.55, 1], [0, 1, 0.35]);
@@ -51,28 +134,19 @@ export default function Home() {
   return (
     <>
       <SEOHead />
+      <BodyPortalLayer
+        reducedMotion={Boolean(reducedMotion)}
+        x={portalX}
+        y={portalY}
+        scale={portalScale}
+        opacity={portalOpacity}
+      />
 
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative h-[185svh] w-full bg-background"
+        className="relative h-[265svh] w-full bg-background"
       >
-        <motion.div
-          aria-hidden
-          style={{ opacity: portalGlowOpacity }}
-          className="pointer-events-none fixed left-1/2 top-1/2 z-40 h-[72vmin] w-[72vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--water)_24%,transparent),transparent_64%)]"
-        />
-        <motion.div
-          aria-hidden
-          style={{
-            scale: reducedMotion ? 0 : portalScale,
-            y: portalY,
-            opacity: reducedMotion ? 0 : portalOpacity,
-            boxShadow:
-              '0 0 0 1px color-mix(in oklch, var(--water) 32%, transparent), 0 0 72px var(--water-glow)',
-          }}
-          className="pointer-events-none fixed left-[calc(50%+5.35rem)] top-[calc(50%+0.9rem)] z-40 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--portal-solid)] will-change-transform md:left-[calc(50%+8.75rem)] md:top-[calc(50%+1.45rem)] md:h-7 md:w-7"
-        />
         <div className="sticky top-0 h-[100svh] overflow-hidden [perspective:1200px]">
           <motion.div
             style={{
@@ -154,11 +228,10 @@ export default function Home() {
               </motion.span>
             ))}
             <motion.span
-              style={{ opacity: periodGlyphOpacity }}
-              className="inline italic text-[var(--water-deep)]"
-            >
-              .
-            </motion.span>
+              ref={heroDotRef}
+              style={{ opacity: inlineDotOpacity }}
+              className="mb-[0.13em] ml-[0.02em] inline-block size-[0.105em] rounded-full bg-[var(--water-deep)] align-baseline"
+            />
           </motion.h1>
 
           {/* Subtitle */}
@@ -215,79 +288,79 @@ export default function Home() {
               {profile.location}
             </motion.div>
           </motion.div>
-        </motion.div>
-        </div>
-      </section>
-
-      {/* INTRO / ABOUT TEASER */}
-      <motion.section
-        style={{ opacity: aboutOpacity, y: aboutLift }}
-        className="relative z-[3] overflow-hidden border-t border-border bg-background px-6 py-20 md:px-10 md:py-28"
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--water)_16%,transparent),transparent_68%)]"
-        />
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-            <span className="text-primary">01</span>
-            <span>About</span>
-          </div>
-          <h2 className="font-display text-[clamp(32px,4.5vw,64px)] leading-[1.05] tracking-[-0.02em] text-foreground">
-            I build websites end to end.
-            <span className="mt-3 block italic text-foreground/55">
-              Type, motion, and the obsession with details no one notices.
-            </span>
-          </h2>
+          </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-10% 0px' }}
-            transition={{ duration: 0.9, delay: 0.25, ease: EASE.snappy }}
-            className="mt-10 grid gap-3 border-t border-border pt-5 sm:grid-cols-3"
+            style={{ opacity: aboutOpacity, y: aboutLift }}
+            className="absolute inset-0 z-[2] flex items-center px-6 py-24 md:px-10"
           >
-            <StatCard
-              value={
-                <CountUp
-                  to={featured.length}
-                  className="font-display text-[clamp(44px,5vw,72px)] leading-none tracking-[-0.02em] text-foreground"
+            <div className="mx-auto w-full max-w-5xl text-center">
+              <div className="mb-6 inline-flex items-center justify-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+                <span className="text-primary">01</span>
+                <span>About</span>
+              </div>
+              <h2 className="mx-auto max-w-4xl font-display text-[clamp(32px,5vw,72px)] leading-[1.02] tracking-[-0.02em] text-foreground">
+                I build websites end-to-end
+                <motion.span
+                  ref={aboutDotRef}
+                  style={{ opacity: aboutDotOpacity }}
+                  className="mb-[0.12em] ml-[0.08em] inline-block size-[0.15em] rounded-full bg-[var(--water-deep)] align-baseline"
                 />
-              }
-              label="Projects shipped"
-              detail="Two real live builds, kept intentional instead of padded."
-            />
-            <StatCard
-              value={
-                <span className="font-display text-[clamp(44px,5vw,72px)] leading-none tracking-[-0.02em] text-foreground">
-                  2y+
+                <span className="mt-3 block italic text-foreground/55">
+                  Type, motion, and the obsession with details no one notices.
                 </span>
-              }
-              label="Building for the web"
-              detail="Taste, layout, motion, stack choice, and launch flow."
-            />
-            <StatCard
-              value={
-                <span className="font-display text-[clamp(44px,5vw,72px)] leading-none tracking-[-0.02em] text-foreground">
-                  100%
-                </span>
-              }
-              label="Hands-on direction"
-              detail="No template dump: each section is shaped around the business."
-            />
-            <div className="flex items-baseline justify-start sm:col-span-3 sm:justify-end">
-              <Link
-                to="/about"
-                data-cursor="hover"
-                className="group inline-flex items-center gap-3 rounded-full border border-[color:var(--water-soft)] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 transition-colors hover:border-[color:var(--water)] hover:text-foreground"
+              </h2>
+
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.8, delay: 0.15, ease: EASE.snappy }}
+                className="mx-auto mt-9 grid max-w-4xl gap-3 border-t border-border pt-5 text-left sm:grid-cols-3"
               >
-                More about me
-                <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
+                <StatCard
+                  value={
+                    <CountUp
+                      to={featured.length}
+                      className="font-display text-[clamp(40px,5vw,68px)] leading-none tracking-[-0.02em] text-foreground"
+                    />
+                  }
+                  label="Projects shipped"
+                  detail="Two real live builds, kept intentional instead of padded."
+                />
+                <StatCard
+                  value={
+                    <span className="font-display text-[clamp(40px,5vw,68px)] leading-none tracking-[-0.02em] text-foreground">
+                      2y+
+                    </span>
+                  }
+                  label="Building for the web"
+                  detail="Taste, layout, motion, stack choice, and launch flow."
+                />
+                <StatCard
+                  value={
+                    <span className="font-display text-[clamp(40px,5vw,68px)] leading-none tracking-[-0.02em] text-foreground">
+                      100%
+                    </span>
+                  }
+                  label="Hands-on direction"
+                  detail="No template dump: each section is shaped around the business."
+                />
+                <div className="flex items-baseline justify-center sm:col-span-3">
+                  <Link
+                    to="/about"
+                    data-cursor="hover"
+                    className="group inline-flex items-center gap-3 rounded-full border border-[color:var(--water-soft)] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 transition-colors hover:border-[color:var(--water)] hover:text-foreground"
+                  >
+                    More about me
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
       {/* FEATURED WORK */}
       <section
@@ -402,12 +475,50 @@ export default function Home() {
   );
 }
 
+function BodyPortalLayer({
+  reducedMotion,
+  x,
+  y,
+  scale,
+  opacity,
+}: {
+  reducedMotion: boolean;
+  x: MotionValue<string>;
+  y: MotionValue<string>;
+  scale: MotionValue<number>;
+  opacity: MotionValue<number>;
+}) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (reducedMotion || !mounted) return null;
+
+  return createPortal(
+    <motion.div
+      aria-hidden
+      style={{
+        left: x,
+        top: y,
+        x: '-50%',
+        y: '-50%',
+        scale,
+        opacity,
+      }}
+      className="pointer-events-none fixed z-[80] size-[clamp(14px,1.35vmax,26px)] rounded-full bg-[var(--portal-solid)] will-change-transform"
+    />,
+    document.body
+  );
+}
+
 function StatCard({
   value,
   label,
   detail,
 }: {
-  value: React.ReactNode;
+  value: ReactNode;
   label: string;
   detail: string;
 }) {
