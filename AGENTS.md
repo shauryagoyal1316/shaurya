@@ -59,7 +59,7 @@ Expected dev server port is `8080`.
 - The visual style is editorial, dark, cinematic, type-heavy, and restrained. Avoid generic startup/landing-page sections.
 - Keep navigation simple and test button/link changes in the browser because routing bugs previously caused white screens.
 - The tech marquee should keep each stack item and its star on one line using no-wrap inline flex. Do not use manual negative margins around the star.
-- The home hero should not use a scroll-driven blur. Use the sticky Framer Motion period portal pattern: measure the visible `Goyal.` dot, render the portal as a body-level fixed motion circle so it can cover the header, and scale it continuously into the home About period. Do not use clip-path masks or mixed-unit radius transforms for this handoff.
+- The home hero should not use a scroll-driven blur. Use the sticky Framer Motion period portal pattern as a short opaque handoff: measure the visible `Goyal.` period, render a crisp body-level SVG circle in the orange primary color, let it cover the viewport briefly, then fade it before the About content appears. Do not leave a portal dot/blob sitting over the About heading.
 - Disable the custom cursor on narrow/mobile-width viewports; it can read as a stray dot during hero and portal animations.
 - Use the warm background and orange primary as the base palette. Water blue/aqua accents should stay restrained and secondary, mainly for portal glow, About accents, Work reveal atmosphere, and selected highlights.
 - Premium wipe/liquid animation belongs in Work or section reveals, not the hero.
