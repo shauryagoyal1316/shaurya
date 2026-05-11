@@ -101,7 +101,7 @@ export function ProjectCard({
         >
           <div className="absolute inset-0 bg-surface-2" />
           <motion.div
-            className="absolute inset-0 scale-[1.06] transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-hover:scale-[1.1] group-focus-visible:scale-[1.1]"
+            className="absolute inset-0 scale-[1.06] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-hover:scale-[1.1] group-focus-visible:scale-[1.1]"
             style={reducedMotion ? undefined : { x: imageX, y: imageY }}
           >
             {showImage && (
@@ -121,7 +121,7 @@ export function ProjectCard({
           />
           <motion.div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-500 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-300 group-hover:opacity-100"
             style={{
               x: reducedMotion ? undefined : sheenX,
               y: reducedMotion ? undefined : sheenY,
