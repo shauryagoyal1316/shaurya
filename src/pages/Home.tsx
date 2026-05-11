@@ -37,10 +37,10 @@ export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const workRef = useRef<HTMLElement>(null);
   const heroDotRef = useRef<HTMLSpanElement>(null);
-  const aboutDotRef = useRef<HTMLSpanElement>(null);
-  const [portalAnchors, setPortalAnchors] = useState({
-    hero: { x: 66, y: 50 },
-    about: { x: 79, y: 14 },
+  const [portalMetrics, setPortalMetrics] = useState({
+    width: 1,
+    height: 1,
+    hero: { x: 0, y: 0 },
   });
 
   const measurePortalAnchors = useCallback(() => {
@@ -54,22 +54,23 @@ export default function Home() {
       if (!node) return fallback;
       const rect = node.getBoundingClientRect();
       return {
-        x: ((rect.left + rect.width / 2) / width) * 100,
-        y: ((rect.top + rect.height / 2 + yOffset) / height) * 100,
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2 + yOffset,
       };
     };
 
     const next = {
-      hero: readAnchor(heroDotRef.current, { x: 66, y: 50 }),
-      about: readAnchor(aboutDotRef.current, { x: 79, y: 14 }, -44),
+      width,
+      height,
+      hero: readAnchor(heroDotRef.current, { x: width * 0.66, y: height * 0.5 }),
     };
 
-    setPortalAnchors((current) => {
+    setPortalMetrics((current) => {
       const changed =
-        Math.abs(current.hero.x - next.hero.x) > 0.15 ||
-        Math.abs(current.hero.y - next.hero.y) > 0.15 ||
-        Math.abs(current.about.x - next.about.x) > 0.15 ||
-        Math.abs(current.about.y - next.about.y) > 0.15;
+        Math.abs(current.width - next.width) > 0.5 ||
+        Math.abs(current.height - next.height) > 0.5 ||
+        Math.abs(current.hero.x - next.hero.x) > 0.5 ||
+        Math.abs(current.hero.y - next.hero.y) > 0.5;
 
       return changed ? next : current;
     });
@@ -107,23 +108,20 @@ export default function Home() {
   const heroY = useTransform(scrollYProgress, [0, 0.44], ['0%', '-4%']);
   const heroRotateX = useTransform(scrollYProgress, [0, 0.44], [0, -3]);
   const supportOpacity = useTransform(scrollYProgress, [0, 0.16, 0.34], [1, 0.55, 0]);
-  const aboutDotOpacity = useTransform(scrollYProgress, [0.54, 0.6], [0, 1]);
-  const portalScale = useTransform(
+  const heroDotOpacity = useTransform(scrollYProgress, [0, 0.015, 0.045], [1, 0.25, 0]);
+  const portalMaxRadius =
+    Math.ceil(
+      Math.hypot(
+        Math.max(portalMetrics.hero.x, portalMetrics.width - portalMetrics.hero.x),
+        Math.max(portalMetrics.hero.y, portalMetrics.height - portalMetrics.hero.y)
+      )
+    ) + 80;
+  const portalRadius = useTransform(
     scrollYProgress,
-    [0, 0.09, 0.2, 0.3, 0.52, 0.6],
-    [1, 5.8, 150, 150, 1, 1]
+    [0, 0.09, 0.2, 0.48],
+    [3, 42, portalMaxRadius, portalMaxRadius]
   );
-  const portalX = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.3, 0.52],
-    [`${portalAnchors.hero.x}%`, '50%', '50%', `${portalAnchors.about.x}%`]
-  );
-  const portalY = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.3, 0.52],
-    [`${portalAnchors.hero.y}%`, '50%', '50%', `${portalAnchors.about.y}%`]
-  );
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.52, 0.6], [1, 1, 0]);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.015, 0.42, 0.5], [0, 1, 1, 0]);
   const aboutLift = useTransform(scrollYProgress, [0.32, 0.55], [44, 0]);
   const aboutOpacity = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
@@ -135,9 +133,11 @@ export default function Home() {
       <SEOHead />
       <BodyPortalLayer
         reducedMotion={Boolean(reducedMotion)}
-        x={portalX}
-        y={portalY}
-        scale={portalScale}
+        width={portalMetrics.width}
+        height={portalMetrics.height}
+        cx={portalMetrics.hero.x}
+        cy={portalMetrics.hero.y}
+        radius={portalRadius}
         opacity={portalOpacity}
       />
 
@@ -228,8 +228,8 @@ export default function Home() {
             ))}
             <motion.span
               ref={heroDotRef}
-              style={{ opacity: reducedMotion ? 1 : 0 }}
-              className="ml-[0.01em] inline text-primary"
+              style={{ opacity: reducedMotion ? 1 : heroDotOpacity }}
+              className="-ml-[0.035em] inline-block translate-y-[0.02em] text-[0.68em] leading-none text-primary"
             >
               .
             </motion.span>
@@ -303,9 +303,7 @@ export default function Home() {
               <h2 className="mx-auto max-w-4xl font-display text-[clamp(32px,5vw,72px)] leading-[1.02] tracking-[-0.02em] text-foreground">
                 I build websites end-to-end
                 <motion.span
-                  ref={aboutDotRef}
-                  style={{ opacity: aboutDotOpacity }}
-                  className="ml-[0.01em] text-primary"
+                  className="-ml-[0.02em] text-[0.82em] text-primary"
                 >
                   .
                 </motion.span>
@@ -480,15 +478,19 @@ export default function Home() {
 
 function BodyPortalLayer({
   reducedMotion,
-  x,
-  y,
-  scale,
+  width,
+  height,
+  cx,
+  cy,
+  radius,
   opacity,
 }: {
   reducedMotion: boolean;
-  x: MotionValue<string>;
-  y: MotionValue<string>;
-  scale: MotionValue<number>;
+  width: number;
+  height: number;
+  cx: number;
+  cy: number;
+  radius: MotionValue<number>;
   opacity: MotionValue<number>;
 }) {
   const [mounted, setMounted] = useState(false);
@@ -500,18 +502,23 @@ function BodyPortalLayer({
   if (reducedMotion || !mounted) return null;
 
   return createPortal(
-    <motion.div
+    <motion.svg
       aria-hidden
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
       style={{
-        left: x,
-        top: y,
-        x: '-50%',
-        y: '-50%',
-        scale,
         opacity,
       }}
-      className="pointer-events-none fixed z-[80] size-[clamp(9px,0.9vmax,16px)] rounded-full bg-primary will-change-transform"
-    />,
+      className="pointer-events-none fixed inset-0 z-[80] h-screen w-screen"
+    >
+      <motion.circle
+        cx={cx}
+        cy={cy}
+        r={radius}
+        fill="var(--primary)"
+        shapeRendering="geometricPrecision"
+      />
+    </motion.svg>,
     document.body
   );
 }
