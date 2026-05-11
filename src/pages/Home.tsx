@@ -107,12 +107,11 @@ export default function Home() {
   const heroY = useTransform(scrollYProgress, [0, 0.44], ['0%', '-4%']);
   const heroRotateX = useTransform(scrollYProgress, [0, 0.44], [0, -3]);
   const supportOpacity = useTransform(scrollYProgress, [0, 0.16, 0.34], [1, 0.55, 0]);
-  const inlineDotOpacity = useTransform(scrollYProgress, [0, 0.02, 0.055], [1, 0.12, 0]);
-  const aboutDotOpacity = useTransform(scrollYProgress, [0.5, 0.58], [0, 1]);
+  const aboutDotOpacity = useTransform(scrollYProgress, [0.54, 0.6], [0, 1]);
   const portalScale = useTransform(
     scrollYProgress,
     [0, 0.09, 0.2, 0.3, 0.52, 0.6],
-    [1, 4.8, 128, 128, 1.12, 1.12]
+    [1, 5.8, 150, 150, 1, 1]
   );
   const portalX = useTransform(
     scrollYProgress,
@@ -124,7 +123,7 @@ export default function Home() {
     [0, 0.2, 0.3, 0.52],
     [`${portalAnchors.hero.y}%`, '50%', '50%', `${portalAnchors.about.y}%`]
   );
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.025, 0.52, 0.6], [0, 1, 1, 0]);
+  const portalOpacity = useTransform(scrollYProgress, [0, 0.52, 0.6], [1, 1, 0]);
   const aboutLift = useTransform(scrollYProgress, [0.32, 0.55], [44, 0]);
   const aboutOpacity = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
   const workWipeY = useTransform(workScrollYProgress, [0, 1], ['115%', '0%']);
@@ -229,9 +228,11 @@ export default function Home() {
             ))}
             <motion.span
               ref={heroDotRef}
-              style={{ opacity: inlineDotOpacity }}
-              className="mb-[0.13em] ml-[0.02em] inline-block size-[0.105em] rounded-full bg-[var(--water-deep)] align-baseline"
-            />
+              style={{ opacity: reducedMotion ? 1 : 0 }}
+              className="ml-[0.01em] inline text-primary"
+            >
+              .
+            </motion.span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -304,8 +305,10 @@ export default function Home() {
                 <motion.span
                   ref={aboutDotRef}
                   style={{ opacity: aboutDotOpacity }}
-                  className="mb-[0.12em] ml-[0.08em] inline-block size-[0.15em] rounded-full bg-[var(--water-deep)] align-baseline"
-                />
+                  className="ml-[0.01em] text-primary"
+                >
+                  .
+                </motion.span>
                 <span className="mt-3 block italic text-foreground/55">
                   Type, motion, and the obsession with details no one notices.
                 </span>
@@ -507,7 +510,7 @@ function BodyPortalLayer({
         scale,
         opacity,
       }}
-      className="pointer-events-none fixed z-[80] size-[clamp(14px,1.35vmax,26px)] rounded-full bg-[var(--portal-solid)] will-change-transform"
+      className="pointer-events-none fixed z-[80] size-[clamp(9px,0.9vmax,16px)] rounded-full bg-primary will-change-transform"
     />,
     document.body
   );
