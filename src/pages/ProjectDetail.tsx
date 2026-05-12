@@ -1,14 +1,11 @@
-import { useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 
 /**
  * Project detail page matching Portfolio.html:
- *  - Hero with parallax cover (image scales + lifts on scroll)
  *  - Meta sidebar (Year / Role / Stack + Visit live button)
  *  - Long-form description + approach paragraphs
  *  - Placeholder gallery captioned per project
@@ -17,14 +14,6 @@ import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
   const project = projects.find((p) => p.slug === slug);
-
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const imgY = useTransform(scrollYProgress, [0, 1], ['0%', '-22%']);
 
   if (!project) {
     return (
@@ -52,11 +41,6 @@ export default function ProjectDetail() {
   const idx = projects.findIndex((p) => p.slug === slug);
   const prev = idx > 0 ? projects[idx - 1] : null;
   const next = idx < projects.length - 1 ? projects[idx + 1] : null;
-  const [labelHead, ...labelTailParts] = project.label.split(' ');
-  const labelTail = labelTailParts.join(' ');
-  const categoryDisplay =
-    project.category.charAt(0).toUpperCase() + project.category.slice(1);
-
   return (
     <>
       <SEOHead
@@ -66,62 +50,8 @@ export default function ProjectDetail() {
         type="article"
       />
 
-      {/* HERO with parallax cover */}
-      <section
-        ref={heroRef}
-        className="relative min-h-[100svh] overflow-hidden"
-      >
-        <motion.div
-          aria-hidden
-          style={{ scale: imgScale, y: imgY }}
-          className="absolute inset-0 will-change-transform"
-        >
-          {project.coverImage && (
-            <img
-              src={project.coverImage}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-          )}
-        </motion.div>
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background)_20%,transparent)_0%,transparent_30%,color-mix(in_oklch,var(--background)_92%,transparent)_100%)]"
-        />
-        <div className="relative z-[2] flex min-h-[100svh] flex-col px-6 pb-14 pt-32 md:px-10">
-          <Link
-            to="/work"
-            data-cursor="hover"
-            className="self-start rounded-sm font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            ← Back to work
-          </Link>
-          <div className="mt-auto max-w-[1440px]">
-            <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/60">
-              {project.year} · {project.role} · {categoryDisplay}
-            </div>
-            <h1 className="font-display text-[clamp(60px,11vw,192px)] leading-[0.9] tracking-[-0.025em] text-foreground">
-              <SplitTextReveal text={labelHead} stagger={0.04} />
-              {labelTail && (
-                <span className="block italic text-foreground/55">
-                  <SplitTextReveal text={labelTail} stagger={0.04} delay={0.1} />
-                </span>
-              )}
-            </h1>
-            <motion.p
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-7 max-w-3xl text-[clamp(17px,1.4vw,22px)] font-light leading-[1.45] text-foreground/70"
-            >
-              {project.tagline}
-            </motion.p>
-          </div>
-        </div>
-      </section>
-
       {/* META + DESCRIPTION */}
-      <section className="border-t border-border px-6 py-24 md:px-10 md:py-32">
+      <section className="min-h-[100svh] border-t border-border px-6 pb-24 pt-32 md:px-10 md:pb-32 md:pt-40">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-14 md:grid-cols-12">
           <aside className="md:col-span-4">
             <dl className="flex flex-col gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/70">
