@@ -97,9 +97,11 @@ export default function Home() {
     ];
 
     window.addEventListener('resize', schedulePortalMeasure);
+    window.addEventListener('orientationchange', schedulePortalMeasure);
     return () => {
       timers.forEach(window.clearTimeout);
       window.removeEventListener('resize', schedulePortalMeasure);
+      window.removeEventListener('orientationchange', schedulePortalMeasure);
       if (measureFrameRef.current !== null) {
         window.cancelAnimationFrame(measureFrameRef.current);
       }
