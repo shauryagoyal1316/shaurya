@@ -60,6 +60,7 @@ export function ProjectCard({
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (reducedMotion) return;
+    if (event.pointerType !== 'mouse') return;
     const rect = event.currentTarget.getBoundingClientRect();
     pointerX.set((event.clientX - rect.left) / rect.width);
     pointerY.set((event.clientY - rect.top) / rect.height);
