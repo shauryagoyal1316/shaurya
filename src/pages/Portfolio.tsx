@@ -79,7 +79,7 @@ export default function Work() {
 
       {/* Grid */}
       <section className="px-6 pb-10 pt-20 md:px-10 md:py-16">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 md:grid-cols-12">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
           {filtered.map((project, i) => (
             <div
               key={project.id}

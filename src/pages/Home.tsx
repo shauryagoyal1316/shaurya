@@ -438,7 +438,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10">
             {featured.map((project, i) => (
               <ProjectCard
                 key={project.id}
