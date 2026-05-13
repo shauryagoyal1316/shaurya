@@ -58,11 +58,18 @@ export default function Home() {
       };
     };
 
+    const isPortrait = height > width;
     const next = {
       width,
       height,
-      hero: readAnchor(heroDotRef.current, { x: width * 0.66, y: height * 0.5 }),
-      about: readAnchor(aboutDotRef.current, { x: width * 0.75, y: height * 0.18 }),
+      hero: readAnchor(heroDotRef.current, {
+        x: isPortrait ? width * 0.5  : width  * 0.66,
+        y: isPortrait ? height * 0.45 : height * 0.5,
+      }),
+      about: readAnchor(aboutDotRef.current, {
+        x: isPortrait ? width * 0.5  : width  * 0.75,
+        y: isPortrait ? height * 0.22 : height * 0.18,
+      }),
     };
 
     setPortalMetrics((current) => {
