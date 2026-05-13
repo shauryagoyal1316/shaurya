@@ -1,5 +1,4 @@
 import { Link, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -106,38 +105,6 @@ export default function ProjectDetail() {
           </article>
         </div>
       </section>
-
-      {/* GALLERY (placeholder slots — design uses image-slot custom element) */}
-      {project.gallery && project.gallery.length > 0 && (
-        <section className="px-6 pb-24 md:px-10 md:pb-32">
-          <div className="mx-auto flex max-w-[1440px] flex-col gap-14">
-            {project.gallery.map((cap, i) => {
-              const ratio =
-                i === 0 ? 'aspect-[16/9]' : i === 1 ? 'aspect-[4/3]' : 'aspect-[21/9]';
-              return (
-                <motion.figure
-                  key={i}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-8% 0px' }}
-                  transition={{ duration: 0.85, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div
-                    className={`relative isolate overflow-hidden rounded-lg bg-surface-2 ${ratio} flex items-center justify-center`}
-                  >
-                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/40">
-                      {project.label} · {cap}
-                    </span>
-                  </div>
-                  <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
-                    {String(i + 1).padStart(2, '0')} — {cap}
-                  </figcaption>
-                </motion.figure>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* SEE IT RUNNING CTA */}
       {project.liveUrl && (

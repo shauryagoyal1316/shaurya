@@ -24,7 +24,6 @@ Type is doing most of the work. The rest is restraint.`,
     coverImage:
       'https://api.microlink.io/?url=https%3A%2F%2Fshauryagoyal1316.github.io%2Ffade-co-showcase%2F&screenshot=true&embed=screenshot.url&waitFor=2000&meta=false',
     images: [],
-    gallery: ['Hero portrait', 'Booking section', 'Editorial pull-quote'],
   },
   {
     id: 'private-chef',
@@ -47,7 +46,6 @@ The typography is the loudest thing in the room, and it never raises its voice.`
     coverImage:
       'https://api.microlink.io/?url=https%3A%2F%2Fshauryagoyal1316.github.io%2Fprivatechefportfolio%2F&screenshot=true&embed=screenshot.url&waitFor=2000&meta=false',
     images: [],
-    gallery: ['Candlelit table', 'Menu card', 'Detail: copper'],
   },
 ];
 
