@@ -314,3 +314,9 @@
     }
   }
 }
+
+@media (hover: hover) {
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
