@@ -1,0 +1,300 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+  Shaurya Goyal — editorial design system (reskin).
+  Default: warm bone canvas + ink type, single warm-orange accent.
+  Dark theme available via [data-theme="dark"] toggle (persisted in localStorage).
+  All semantic Tailwind tokens (background, foreground, border, surface-*,
+  primary) point at CSS variables, so a token swap retheme the whole app.
+*/
+
+:root,
+:root[data-theme="light"] {
+  /* Canvas + surfaces — bone over ink */
+  --background: hsl(36 25% 94%);          /* #F5F2EC bone */
+  --foreground: hsl(20 11% 4%);           /* #0A0908 ink */
+  --surface-1: hsl(36 18% 90%);
+  --surface-2: hsl(36 14% 86%);
+  --surface-3: hsl(36 10% 80%);
+
+  --card: var(--surface-1);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-1);
+  --popover-foreground: var(--foreground);
+
+  /* Type hierarchy mirrors the design's fg-1 .. fg-4 alpha ramp */
+  --text-primary: var(--foreground);
+  --text-secondary: hsla(20 11% 4% / 0.62);
+  --text-tertiary: hsla(20 11% 4% / 0.42);
+
+  /* Brand — warm sienna orange (oklch maps roughly to hsl 22 55% 53%) */
+  --primary: oklch(0.66 0.16 50);
+  --primary-foreground: hsl(36 25% 96%);
+  --accent: var(--primary);
+  --accent-foreground: var(--primary-foreground);
+  --accent-soft: oklch(0.66 0.16 50 / 0.12);
+
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --muted-foreground: hsla(20 11% 4% / 0.60);
+
+  --destructive: hsl(0 70% 50%);
+  --destructive-foreground: hsl(36 25% 96%);
+
+  /* Hairlines that work on light or dark surfaces */
+  --border: hsla(20 11% 4% / 0.10);
+  --border-strong: hsla(20 11% 4% / 0.18);
+  --input: hsla(20 11% 4% / 0.10);
+  --ring: var(--primary);
+
+  --radius: 0.25rem;
+
+  /* Sidebar (kept for shadcn primitives that reference these) */
+  --sidebar-background: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--surface-2);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  /* Easing tokens (shared across themes) */
+  --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-pill:   cubic-bezier(0.34, 1.2, 0.64, 1);
+
+  /* Shadow scale */
+  --shadow-sm: 0 1px 2px hsla(20 11% 4% / 0.04);
+  --shadow-md: 0 1px 2px hsla(20 11% 4% / 0.04), 0 4px 12px hsla(20 11% 4% / 0.06);
+  --shadow-lg: 0 2px 4px hsla(20 11% 4% / 0.05), 0 12px 32px hsla(20 11% 4% / 0.10);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
+
+  /* Legacy tokens kept so vendored shadcn pieces still resolve */
+  --context-card-border: var(--border-strong);
+  --ds-gray-100: var(--surface-1);
+  --ds-gray-400: var(--surface-3);
+  --ds-gray-700: hsla(20 11% 4% / 0.56);
+  --ds-gray-1000: var(--foreground);
+  --ds-gray-1000-h: hsla(20 11% 4% / 0.80);
+  --ds-gray-alpha-200: hsla(20 11% 4% / 0.09);
+  --ds-gray-alpha-400: hsla(20 11% 4% / 0.14);
+  --ds-background-100: var(--background);
+  --ds-shadow-border: 0 0 0 1px hsla(20 11% 4% / 0.145);
+  --ds-shadow-small: 0px 1px 2px hsla(20 11% 4% / 0.16);
+  --ds-shadow-border-small: var(--ds-shadow-border), var(--ds-shadow-small);
+  --ds-focus-color: var(--ring);
+  --ds-focus-ring: 0 0 0 2px var(--ds-background-100), 0 0 0 4px var(--ds-focus-color);
+}
+
+:root[data-theme="dark"],
+.dark {
+  --background: hsl(20 11% 4%);           /* #0A0908 ink */
+  --foreground: hsl(36 25% 94%);          /* #F5F2EC bone */
+  --surface-1: hsl(20 8% 8%);
+  --surface-2: hsl(20 6% 12%);
+  --surface-3: hsl(20 5% 18%);
+
+  --card: var(--surface-1);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-1);
+  --popover-foreground: var(--foreground);
+
+  --text-primary: var(--foreground);
+  --text-secondary: hsla(36 25% 94% / 0.66);
+  --text-tertiary: hsla(36 25% 94% / 0.42);
+
+  --primary: oklch(0.78 0.14 60);
+  --primary-foreground: hsl(20 11% 4%);
+  --accent: var(--primary);
+  --accent-foreground: var(--primary-foreground);
+  --accent-soft: oklch(0.78 0.14 60 / 0.16);
+
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --muted-foreground: hsla(36 25% 94% / 0.60);
+
+  --border: hsla(36 25% 94% / 0.10);
+  --border-strong: hsla(36 25% 94% / 0.18);
+  --input: hsla(36 25% 94% / 0.10);
+
+  --shadow-sm: 0 1px 2px hsla(0 0% 0% / 0.4);
+  --shadow-md: 0 1px 2px hsla(0 0% 0% / 0.4), 0 4px 12px hsla(0 0% 0% / 0.5);
+  --shadow-lg: 0 2px 4px hsla(0 0% 0% / 0.4), 0 12px 32px hsla(0 0% 0% / 0.6);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
+
+  --ds-gray-100: var(--surface-1);
+  --ds-gray-400: var(--surface-3);
+  --ds-gray-700: hsla(36 25% 94% / 0.56);
+  --ds-gray-1000: var(--foreground);
+  --ds-gray-1000-h: hsla(36 25% 94% / 0.80);
+  --ds-gray-alpha-200: hsla(36 25% 94% / 0.09);
+  --ds-gray-alpha-400: hsla(36 25% 94% / 0.14);
+  --ds-background-100: var(--background);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-context-card-border: var(--context-card-border);
+  --color-gray-100: var(--ds-gray-100);
+  --color-gray-400: var(--ds-gray-400);
+  --color-gray-700: var(--ds-gray-700);
+  --color-gray-1000: var(--ds-gray-1000);
+  --color-gray-1000-h: var(--ds-gray-1000-h);
+  --color-gray-alpha-200: var(--ds-gray-alpha-200);
+  --color-gray-alpha-400: var(--ds-gray-alpha-400);
+  --color-background-100: var(--ds-background-100);
+  --shadow-focus-ring: var(--ds-focus-ring);
+  --shadow-border-small: var(--ds-shadow-border-small);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --font-display: 'Instrument Serif', 'Times New Roman', serif;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-drift: drift 8s ease-in-out infinite;
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to   { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to   { height: 0; }
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -6px, 0); }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    background: var(--background);
+    /* color-scheme drives form-control native theming + scrollbar color
+       and is the simplest knob to flip alongside data-theme. */
+    color-scheme: light;
+    transition: background-color 600ms var(--ease-smooth), color 600ms var(--ease-smooth);
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  /* Hide native cursor when custom cursor is active (desktop only).
+     Inputs / textareas / contenteditable still need a real I-beam, so they
+     are explicitly excluded — otherwise typing into a form is disorienting. */
+  @media (hover: hover) and (pointer: fine) {
+    body[data-cursor='custom'],
+    body[data-cursor='custom'] * {
+      cursor: none !important;
+    }
+    body[data-cursor='custom'] input,
+    body[data-cursor='custom'] textarea,
+    body[data-cursor='custom'] select,
+    body[data-cursor='custom'] [contenteditable='true'] {
+      cursor: text !important;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .font-mono    { font-family: var(--font-mono); }
+  .font-sans    { font-family: var(--font-sans); }
+
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+
+  .mask-reveal {
+    clip-path: inset(0 100% 0 0);
+    animation: mask-reveal 0.9s var(--ease-snappy) forwards;
+  }
+  @keyframes mask-reveal {
+    to { clip-path: inset(0 0 0 0); }
+  }
+
+  /* Reduced motion override — kills loops + tightens transitions */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
