@@ -400,12 +400,12 @@ export default function Home() {
         <motion.div
           aria-hidden
           style={{ y: workWipeY }}
-          className="pointer-events-none absolute inset-x-0 top-0 z-0 h-48 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--water)_10%,transparent),transparent)]"
+          className="pointer-events-none absolute inset-x-0 top-0 z-0 h-48 overflow-hidden bg-[linear-gradient(180deg,color-mix(in_oklch,var(--water)_10%,transparent),transparent)]"
         >
-          <div className="absolute -top-20 left-1/2 h-40 w-[130vw] -translate-x-1/2 rounded-[50%] bg-background" />
+          <div className="absolute -top-20 left-1/2 h-40 w-full -translate-x-1/2 rounded-[50%] bg-background md:w-[130vw]" />
           <motion.div
             style={{ opacity: workGlowOpacity }}
-            className="absolute -top-16 left-1/2 h-32 w-[110vw] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,var(--water-glow),transparent_62%)]"
+            className="absolute -top-16 left-1/2 h-32 w-full -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,var(--water-glow),transparent_62%)] md:w-[110vw]"
           />
           <motion.div
             style={{ scaleX: workAccentScale, transformOrigin: 'center' }}
