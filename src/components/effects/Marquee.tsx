@@ -29,7 +29,7 @@ export function Marquee({ children, className = '' }: MarqueeProps) {
       }}
     >
       <div
-        className="flex animate-marquee will-change-transform [&:hover]:[animation-play-state:paused]"
+        className="flex animate-marquee will-change-transform [@media(hover:hover){&:hover}]:[animation-play-state:paused]"
         style={{ animationDuration: '38s' }}
       >
         {[...items, ...items, ...items, ...items].map((c, i) => (
