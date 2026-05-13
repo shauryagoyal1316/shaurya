@@ -104,7 +104,7 @@ export function Header() {
         to="/"
         data-cursor="hover"
         aria-label={`${profile.name} — home`}
-        className="inline-flex items-baseline gap-1.5 rounded-sm font-display text-[22px] leading-none tracking-[-0.01em] text-foreground transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="inline-flex items-baseline gap-1.5 rounded-sm font-display text-[clamp(18px,5vw,22px)] leading-none tracking-[-0.01em] text-foreground transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <span
           aria-hidden
@@ -177,7 +177,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-full border-l-border bg-background p-0 sm:w-96"
+              className="w-full border-l-border bg-background p-0 sm:w-[min(90vw,400px)]"
             >
               <SheetTitle className="sr-only">Navigation menu</SheetTitle>
               <SheetDescription className="sr-only">
