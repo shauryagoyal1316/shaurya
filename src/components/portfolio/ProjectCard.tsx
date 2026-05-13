@@ -10,6 +10,7 @@ import {
 import { ArrowUpRight } from 'lucide-react';
 import type { Project } from '@/types';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 interface ProjectCardProps {
   project: Project;
@@ -33,6 +34,7 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const [imgFailed, setImgFailed] = useState(false);
   const reducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
   const pointerX = useMotionValue(0.5);
   const pointerY = useMotionValue(0.5);
   const springX = useSpring(pointerX, { stiffness: 140, damping: 24, mass: 0.45 });
@@ -120,16 +122,18 @@ export function ProjectCard({
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_40%,color-mix(in_oklch,var(--foreground)_6%,transparent))]"
           />
-          <motion.div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-300 group-hover:opacity-100"
-            style={{
-              x: reducedMotion ? undefined : sheenX,
-              y: reducedMotion ? undefined : sheenY,
-              background:
-                'radial-gradient(circle at center, color-mix(in oklch, var(--foreground) 24%, transparent), transparent 34%)',
-            }}
-          />
+          {!isMobile && (
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-300 group-hover:opacity-100"
+              style={{
+                x: reducedMotion ? undefined : sheenX,
+                y: reducedMotion ? undefined : sheenY,
+                background:
+                  'radial-gradient(circle at center, color-mix(in oklch, var(--foreground) 24%, transparent), transparent 34%)',
+              }}
+            />
+          )}
           {showBadges && (
             <>
               <div className="pointer-events-none absolute left-4 top-4 z-[2] inline-flex gap-2">
