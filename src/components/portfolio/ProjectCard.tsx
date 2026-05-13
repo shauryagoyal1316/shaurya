@@ -78,6 +78,7 @@ export function ProjectCard({
       initial={{ opacity: 0, y: 28, filter: 'blur(8px)' }}
       whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       whileHover={reducedMotion ? undefined : { y: -8 }}
+      whileTap={reducedMotion ? undefined : { y: -4, scale: 0.98 }}
       viewport={{ once: true, margin: '-8% 0px' }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
       onPointerMove={handlePointerMove}
