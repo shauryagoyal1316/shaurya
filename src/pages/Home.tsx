@@ -173,7 +173,7 @@ export default function Home() {
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative h-[265svh] w-full bg-background"
+        className="relative h-[180svh] md:h-[265svh] w-full bg-background"
       >
         <div className="sticky top-0 h-[100svh] overflow-hidden [perspective:1200px]">
           <motion.div
