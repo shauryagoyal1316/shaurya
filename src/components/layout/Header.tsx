@@ -137,6 +137,7 @@ export function Header() {
         <nav aria-label="Primary" className="relative z-[1] inline-flex items-center gap-1">
           {navLinks.map((link) => {
             const active = activeId === link.id;
+            const highlighted = (hoverId ?? activeId) === link.id;
             return (
               <Link
                 key={link.id}
@@ -149,7 +150,7 @@ export function Header() {
                 onMouseEnter={() => setHoverId(link.id)}
                 className={cn(
                   'rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-                  active
+                  highlighted
                     ? 'text-background'
                     : 'text-foreground/70 hover:text-foreground'
                 )}
