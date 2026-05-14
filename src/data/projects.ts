@@ -1,4 +1,6 @@
 import type { Project } from '@/types';
+import fadeCoCoverUrl from '@/assets/images/fade-co-cover.jpg';
+import privateChefCoverUrl from '@/assets/images/private-chef-cover.jpg';
 
 export const projects: Project[] = [
   {
@@ -19,10 +21,7 @@ The hero pairs a slow zoom on a portrait crop with a serif and italic headline s
 
 Type is doing most of the work. The rest is restraint.`,
     stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
-    // Microlink renders SPAs after JS hydrates (`waitFor=2000`). thum.io's
-    // free tier captures before hydration, so SPA targets came back blank.
-    coverImage:
-      'https://api.microlink.io/?url=https%3A%2F%2Fshauryagoyal1316.github.io%2Ffade-co-showcase%2F&screenshot=true&embed=screenshot.url&waitFor=2000&meta=false',
+    coverImage: fadeCoCoverUrl,
     images: [],
   },
   {
@@ -43,8 +42,7 @@ Below, the layout reads like an editorial: generous margins, narrow body column,
 
 The typography is the loudest thing in the room, and it never raises its voice.`,
     stack: ['React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Vite'],
-    coverImage:
-      'https://api.microlink.io/?url=https%3A%2F%2Fshauryagoyal1316.github.io%2Fprivatechefportfolio%2F&screenshot=true&embed=screenshot.url&waitFor=2000&meta=false',
+    coverImage: privateChefCoverUrl,
     images: [],
   },
 ];
