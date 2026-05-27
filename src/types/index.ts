@@ -37,6 +37,8 @@ export interface Project {
   featured?: boolean;
   /** Short captions for the placeholder gallery on the project detail page. */
   gallery?: string[];
+  /** Key things learned building this project — rendered as a card grid on the detail page. */
+  learned?: { label: string; detail: string }[];
 }
 
 export interface ProfileInfo {
