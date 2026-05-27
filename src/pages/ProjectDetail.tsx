@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
 
@@ -105,6 +106,40 @@ export default function ProjectDetail() {
           </article>
         </div>
       </section>
+
+      {/* WHAT I LEARNED */}
+      {project.learned && project.learned.length > 0 && (
+        <section className="border-t border-border px-6 py-16 md:px-10 md:py-20">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="mb-8 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
+              <span className="text-primary">/</span> What I learned
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {project.learned.map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-8% 0px' }}
+                  transition={{ duration: 0.65, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-5 backdrop-blur-md"
+                >
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--primary),transparent_60%)] opacity-60"
+                  />
+                  <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+                    {item.label}
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground/65">
+                    {item.detail}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* SEE IT RUNNING CTA */}
       {project.liveUrl && (

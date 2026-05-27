@@ -10,11 +10,16 @@ import { cn } from '@/lib/utils';
  * grid get straight to the content.
  */
 export default function Work() {
-  const [active, setActive] = useState<'all' | 'landing'>('all');
+  const [active, setActive] = useState<'all' | 'web-app' | 'landing'>('all');
 
   const cats = useMemo(
     () => [
       { id: 'all' as const, label: 'All', count: projects.length },
+      {
+        id: 'web-app' as const,
+        label: 'Web App',
+        count: projects.filter((p) => p.category === 'web-app').length,
+      },
       {
         id: 'landing' as const,
         label: 'Landing',
