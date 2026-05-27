@@ -58,6 +58,7 @@ The serverless function handles the entire pipeline: validate the request, call 
     year: '2025',
     slug: 'ghosted',
     featured: true,
+    liveUrl: 'https://seekr.vercel.app',
     tagline: 'A real-time GPS hide-and-seek game for friend groups, playable entirely in the browser.',
     description:
       'Ghosted is a multiplayer location-based game built on Supabase Realtime. Players join a room via a six-character code, a host draws a GPS boundary on a live map, and the round plays out across four phases — all synced in real time across every device in the room.',
