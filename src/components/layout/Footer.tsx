@@ -89,6 +89,28 @@ export function Footer() {
                     Private Chef Landing Page (Live)
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="https://bookskyward.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="hover"
+                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    Skyward (Live)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://ghosted.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="hover"
+                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    Ghosted (Live)
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
