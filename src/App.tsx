@@ -12,12 +12,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense } from "react";
 
-// Code-split route components. ProjectDetail is intentionally eager — when
-// it was lazy, the chunk fetch + page-transition curtain stacked into a
-// noticeable blank flash on slow connections.
-import ProjectDetail from "./pages/ProjectDetail";
 const Home = lazy(() => import("./pages/Home"));
-const Work = lazy(() => import("./pages/Portfolio"));
 const Services = lazy(() => import("./pages/Services"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -31,13 +26,13 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/work" element={<PageTransition><Work /></PageTransition>} />
         <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
-        <Route path="/work/:slug" element={<PageTransition><ProjectDetail /></PageTransition>} />
-        {/* Legacy redirects */}
-        <Route path="/portfolio" element={<Navigate to="/work" replace />} />
-        <Route path="/project/:slug" element={<Navigate to="/work" replace />} />
+        {/* Legacy redirects — work/project pages removed until client permissions exist */}
+        <Route path="/work" element={<Navigate to="/" replace />} />
+        <Route path="/work/:slug" element={<Navigate to="/" replace />} />
+        <Route path="/portfolio" element={<Navigate to="/" replace />} />
+        <Route path="/project/:slug" element={<Navigate to="/" replace />} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>

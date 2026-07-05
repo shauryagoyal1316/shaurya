@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { projects } from '@/data/projects';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { EASE } from '@/lib/motion';
 
 const CONTACT_HREF =
@@ -68,8 +66,6 @@ const steps = [
  * bordered cards on the premium surface.
  */
 export default function Services() {
-  const clientWork = projects.filter((p) => p.category === 'landing');
-
   return (
     <>
       <SEOHead
@@ -185,13 +181,13 @@ export default function Services() {
           </div>
           <div className="border-t border-border">
             {steps.map((step) => (
+              <div key={step.num} className="overflow-hidden border-b border-border">
               <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: '45%' }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-8% 0px' }}
-                transition={{ duration: 0.7, ease: EASE.snappy }}
-                className="grid gap-4 border-b border-border py-10 md:grid-cols-12 md:gap-8"
+                transition={{ duration: 0.8, ease: EASE.snappy }}
+                className="grid gap-4 py-10 md:grid-cols-12 md:gap-8"
               >
                 <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-primary md:col-span-1">
                   {step.num}
@@ -203,6 +199,7 @@ export default function Services() {
                   {step.detail}
                 </p>
               </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -216,25 +213,61 @@ export default function Services() {
               <span className="text-primary">03</span>Proof
             </div>
             <h2 className="font-display text-[clamp(36px,5vw,72px)] leading-[0.95] tracking-[-0.02em] text-foreground">
-              Built, shipped,
-              <span className="ml-4 italic text-foreground/55">live.</span>
+              You're looking
+              <span className="ml-4 italic text-foreground/55">at it.</span>
             </h2>
             <p className="mt-6 max-w-xl text-sm leading-relaxed text-foreground/65 md:text-base">
-              Fade &amp; Co. and Private Chef are complete builds — open either
-              on your phone right now and judge the standard yourself.
+              No borrowed logos, no stock case studies. The site you're reading
+              right now is the demo — this is the standard your site gets built
+              to. Judge it the way your customers will:
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10">
-            {clientWork.map((project, i) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                index={i}
-                total={clientWork.length}
-                aspectRatio="portrait"
-              />
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              {
+                label: 'The type & layout',
+                detail:
+                  'Editorial pacing, a real typographic system, and space that lets every section breathe.',
+              },
+              {
+                label: 'The motion',
+                detail:
+                  'Scroll through any page — everything moves with intent, nothing lags, nothing jitters.',
+              },
+              {
+                label: 'The speed',
+                detail:
+                  'Loads fast on a phone with one bar of signal. Your customers never wait on a spinner.',
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-8% 0px' }}
+                transition={{ duration: 0.7, delay: i * 0.08, ease: EASE.snappy }}
+                className="relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-md)] backdrop-blur-md"
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--primary),var(--water),transparent)] opacity-70"
+                />
+                <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <div className="mt-4 font-display text-xl leading-snug text-foreground md:text-2xl">
+                  {item.label}
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-foreground/58">
+                  {item.detail}
+                </p>
+              </motion.div>
             ))}
           </div>
+          <p className="mt-10 max-w-xl text-sm leading-relaxed text-foreground/65 md:text-base">
+            And if your build doesn't clear this bar for you — that's what the
+            20% deposit is for. You walk away, no balance owed.
+          </p>
         </div>
       </section>
 
@@ -251,10 +284,20 @@ export default function Services() {
                 <span className="ml-3 italic text-foreground/55">alive.</span>
               </h2>
             </div>
-            <div className="relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-8 shadow-[var(--shadow-md)] backdrop-blur-md">
-              <div
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-8% 0px' }}
+              transition={{ duration: 0.8, ease: EASE.snappy }}
+              className="relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-8 shadow-[var(--shadow-md)] backdrop-blur-md"
+            >
+              <motion.div
                 aria-hidden
-                className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,var(--primary),var(--water),transparent)] opacity-70"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, margin: '-8% 0px' }}
+                transition={{ duration: 1.1, delay: 0.25, ease: EASE.snappy }}
+                className="absolute inset-x-0 top-0 h-px origin-left bg-[linear-gradient(90deg,var(--primary),var(--water),transparent)] opacity-70"
               />
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
                 Care plan — from $75/month
@@ -264,7 +307,7 @@ export default function Services() {
                 answers when something needs doing. Your site never quietly
                 goes stale — optional, cancel any time.
               </p>
-            </div>
+            </motion.div>
           </div>
 
           <a href={CONTACT_HREF} data-cursor="view" data-cursor-label="Email me" className="group block">

@@ -3,20 +3,24 @@ import { ReactNode, Children } from 'react';
 interface MarqueeProps {
   children: ReactNode;
   className?: string;
-  /** Kept for compatibility with old call sites; ignored otherwise. */
-  speed?: number;
-  reverse?: boolean;
+  /** Seconds per loop — lower is faster. */
   duration?: number;
+  reverse?: boolean;
 }
 
 /**
- * Plain CSS marquee matching Portfolio.html exactly:
- *   - `animation: marquee 38s linear infinite` (-50% wrap)
+ * Plain CSS marquee:
+ *   - `animation: marquee <duration>s linear infinite` (-50% wrap)
  *   - hover pauses the track
  *   - edge mask fades both sides
  * Children are duplicated 4× so the loop reads seamless across viewports.
  */
-export function Marquee({ children, className = '' }: MarqueeProps) {
+export function Marquee({
+  children,
+  className = '',
+  duration = 38,
+  reverse = false,
+}: MarqueeProps) {
   const items = Children.toArray(children);
   return (
     <div
@@ -30,7 +34,10 @@ export function Marquee({ children, className = '' }: MarqueeProps) {
     >
       <div
         className="flex animate-marquee will-change-transform"
-        style={{ animationDuration: '38s' }}
+        style={{
+          animationDuration: `${duration}s`,
+          animationDirection: reverse ? 'reverse' : undefined,
+        }}
       >
         {[...items, ...items, ...items, ...items].map((c, i) => (
           <div
