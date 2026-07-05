@@ -18,6 +18,7 @@ import { lazy, Suspense } from "react";
 import ProjectDetail from "./pages/ProjectDetail";
 const Home = lazy(() => import("./pages/Home"));
 const Work = lazy(() => import("./pages/Portfolio"));
+const Services = lazy(() => import("./pages/Services"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -31,6 +32,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Home /></PageTransition>} />
         <Route path="/work" element={<PageTransition><Work /></PageTransition>} />
+        <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
         <Route path="/work/:slug" element={<PageTransition><ProjectDetail /></PageTransition>} />
         {/* Legacy redirects */}

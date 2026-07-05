@@ -365,7 +365,7 @@ export default function Home() {
                     />
                   }
                   label="Projects shipped"
-                  detail="Two real live builds, kept intentional instead of padded."
+                  detail="Four live builds, kept intentional instead of padded."
                 />
                 <StatCard
                   value={

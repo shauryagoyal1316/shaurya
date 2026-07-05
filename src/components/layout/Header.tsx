@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { id: 'home', name: 'Index', path: '/' },
   { id: 'work', name: 'Work', path: '/work' },
+  { id: 'services', name: 'Services', path: '/services' },
   { id: 'about', name: 'About', path: '/about' },
 ];
 
@@ -43,9 +44,11 @@ export function Header() {
       ? 'home'
       : location.pathname.startsWith('/work')
         ? 'work'
-        : location.pathname.startsWith('/about')
-          ? 'about'
-          : '';
+        : location.pathname.startsWith('/services')
+          ? 'services'
+          : location.pathname.startsWith('/about')
+            ? 'about'
+            : '';
 
   // Measured pill state — driven by getBoundingClientRect so it stays
   // pixel-accurate even when fonts swap or the viewport resizes.
