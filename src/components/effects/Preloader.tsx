@@ -67,36 +67,45 @@ export function Preloader() {
           aria-hidden
           exit={{ y: '-102%' }}
           transition={{ duration: 0.75, ease: EASE.snappy }}
-          className="fixed inset-0 z-[10001] flex flex-col justify-between bg-background px-6 py-8 md:px-10"
+          className="paper fixed inset-0 z-[10001] flex flex-col justify-between px-6 py-8 md:px-10"
         >
           {/* Top rail */}
-          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
+          <div className="flex items-center justify-between text-[13px] text-foreground/50">
             <span>Shaurya Goyal</span>
-            <span>Portfolio · 2026</span>
+            <span>2026</span>
           </div>
 
           {/* Center name reveal */}
-          <div className="flex items-baseline justify-center overflow-hidden">
-            <motion.h1
-              initial={{ y: '110%' }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: EASE.snappy }}
-              className="select-none font-display text-[clamp(48px,9vw,140px)] leading-[0.9] tracking-[-0.03em] text-foreground"
-            >
-              Shaurya
-              <span className="italic text-foreground/55"> Goyal</span>
-              <span className="ml-[0.03em] inline-block size-[0.08em] rounded-full bg-primary align-baseline" />
-            </motion.h1>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex items-baseline justify-center overflow-hidden">
+              <motion.h1
+                initial={{ y: '110%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, delay: 0.15, ease: EASE.snappy }}
+                className="select-none font-display text-[clamp(44px,8.5vw,130px)] leading-[0.9] text-foreground"
+              >
+                Shaurya
+                <span className="text-[color:var(--text-tertiary)]"> Goyal</span>
+                <span className="ml-[0.05em] inline-block size-[0.09em] bg-[var(--water)] align-baseline" />
+              </motion.h1>
+            </div>
+            {/* Plotter line — draws with the counter */}
+            <div className="h-px w-[min(70vw,720px)] bg-[var(--border)]">
+              <div
+                className="h-px bg-primary"
+                style={{ width: `${display}%`, transition: 'width 80ms linear' }}
+              />
+            </div>
           </div>
 
           {/* Bottom counter */}
           <div className="flex items-end justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/40">
-              Loading the good part
+            <span className="font-note text-base text-foreground/50" style={{ rotate: '-1.5deg' }}>
+              printing…
             </span>
-            <span className="font-display text-[clamp(40px,6vw,88px)] leading-none tabular-nums tracking-[-0.02em] text-foreground">
+            <span className="font-display text-[clamp(40px,6vw,88px)] leading-none tabular-nums text-foreground">
               {String(display).padStart(2, '0')}
-              <span className="text-primary">%</span>
+              <span className="text-[color:var(--water)]">%</span>
             </span>
           </div>
         </motion.div>

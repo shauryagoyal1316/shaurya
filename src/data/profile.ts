@@ -6,7 +6,7 @@ export const profile: ProfileInfo = {
   lastName: 'Goyal',
   tagline: 'Full-Stack Website Builder',
   heroIntroduction:
-    'I build complete websites — front end, back end, motion, and deployment — for people who want something sharper than a template.',
+    'I build complete websites for people who want something sharper than a template. Front end, back end, motion, deployment: handled.',
   biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, and deployment — a website only works when the whole thing feels intentional.
 
 My job is taste, direction, and execution. I turn a business idea into a clear brief, choose the right stack, design the pages, and ship a site that feels custom rather than off-the-shelf.

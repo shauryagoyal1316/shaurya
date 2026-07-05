@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 
-/** Live local-time readout — a small editorial signal that someone is here. */
+/** Live local-time readout — a small signal that someone is at the desk. */
 function LocalTime() {
   const [now, setNow] = useState(() =>
     new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -21,100 +20,53 @@ function LocalTime() {
 }
 
 /**
- * Editorial footer reskinned to match Portfolio.html:
- *  - Oversized "Shaurya Goyal." glyph as the visual anchor
- *  - Two-column row underneath: contact CTA on the left, "Elsewhere" + status
- *    on the right
- *  - Hairline rules separating the glyph and the meta strip
- *  - Repeats the primary nav so a user at the bottom of a long page can move
- *    sideways without scrolling back up (hidden on mobile — the hamburger
- *    menu in the header already covers that, and a bottom nav just adds
- *    scroll depth on small screens).
+ * Footer: the name, one way to reach me, and the time at my desk.
  */
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative z-[2] border-t border-border bg-background">
-      <div className="mx-auto max-w-[1440px] px-6 pb-10 pt-24 lg:px-10 lg:pt-32">
-        {/* Big name */}
-        <div className="mb-12 select-none">
-          <h2 className="font-display text-[clamp(80px,18vw,320px)] leading-[0.85] tracking-[-0.03em] text-foreground">
-            Shaurya
-            <span className="italic text-foreground/40"> Goyal.</span>
-          </h2>
-        </div>
+    <footer className="paper relative z-[2] border-t border-[var(--border-strong)]">
+      <div className="mx-auto max-w-[1440px] px-6 pb-8 pt-20 lg:px-10 lg:pt-24">
+        <h2 className="font-display text-[clamp(56px,13vw,220px)] leading-[0.82] text-foreground">
+          Goyal<span className="text-[color:var(--water)]">.</span>
+        </h2>
 
-        <div className="h-px w-full bg-border" />
-
-        {/* Contact + Elsewhere row */}
-        <div className="mt-12 grid gap-12 md:grid-cols-2">
+        <div className="mt-12 flex flex-wrap items-end justify-between gap-10">
           <div>
-            <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-              <span className="text-primary">/</span> Get in touch
-            </div>
-            <div className="mb-7 font-display text-[clamp(28px,4vw,44px)] leading-[1.1] text-foreground">
-              Have a website that needs{' '}
-              <span className="italic text-foreground/60">
-                building or rethinking?
-              </span>
-            </div>
+            <p className="max-w-md text-lg leading-relaxed text-[color:var(--text-secondary)]">
+              Have a business that deserves a better website? Tell me about it.
+            </p>
             <a
               href="mailto:seekshaurya@gmail.com"
-              data-cursor="hover"
-              className="group inline-flex items-center gap-3 rounded-full border border-border px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors hover:border-foreground hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              data-cursor="view"
+              data-cursor-label="Email"
+              className="mt-4 inline-block text-xl font-medium text-foreground underline decoration-[var(--water)] decoration-wavy decoration-2 underline-offset-8 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background md:text-2xl"
             >
-              Contact
-              <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              seekshaurya@gmail.com
             </a>
           </div>
 
-          <div className="flex flex-col gap-7">
-            <div>
-              <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/50">
-                Elsewhere
-              </div>
-              <ul className="flex flex-col gap-2.5 font-mono text-[13px]">
-                <li>
-                  <a
-                    href="https://github.com/shauryagoyal1316"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="hover"
-                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-                  >
-                    GitHub →
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/50">
-                Status
-              </div>
-              <div className="inline-flex items-center gap-2.5 font-mono text-[12px] text-foreground">
-                <span
-                  aria-hidden
-                  className="size-[7px] rounded-full bg-primary"
-                  style={{
-                    boxShadow:
-                      '0 0 0 4px color-mix(in oklch, var(--primary) 18%, transparent)',
-                  }}
-                />
-                {profile.availability}
-              </div>
-              <div className="mt-3 font-mono text-[12px] text-foreground/60">
-                <span className="text-foreground/40">Local time — </span>
-                <LocalTime />
-              </div>
-            </div>
+          <div className="flex flex-col items-start gap-1.5 text-sm text-foreground/60 md:items-end">
+            <a
+              href="https://github.com/shauryagoyal1316"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="text-foreground/70 transition-colors hover:text-primary"
+            >
+              GitHub ↗
+            </a>
+            <span>{profile.availability}</span>
+            <span>
+              At the desk it's <LocalTime />
+            </span>
           </div>
         </div>
 
-        {/* Copyright row */}
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/50">
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-strong)] pt-4 text-[13px] text-foreground/50">
           <div>© {year} Shaurya Goyal</div>
-          <div>Built with care · {profile.location}</div>
+          <div>{profile.location}</div>
         </div>
       </div>
     </footer>
