@@ -1,12 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
-import { createPortal } from 'react-dom';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   type MotionValue,
@@ -25,6 +17,7 @@ import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { Marquee } from '@/components/effects/Marquee';
 import { TiltCard } from '@/components/effects/TiltCard';
 import { getIntroOffset } from '@/components/effects/Preloader';
+import { PeriodPortal, PORTAL_TIMELINE } from '@/components/effects/PeriodPortal';
 import {
   Annotate,
   DimensionLine,
@@ -98,125 +91,39 @@ export default function Home() {
   // Frozen at mount: extra delay so hero reveals play after the preloader.
   const [intro] = useState(getIntroOffset);
   const heroRef = useRef<HTMLElement>(null);
+  // The sticky, viewport-sized stage both periods live in — the portal's
+  // coordinate space.
+  const pinRef = useRef<HTMLDivElement>(null);
   const heroDotRef = useRef<HTMLSpanElement>(null);
   const aboutDotRef = useRef<HTMLSpanElement>(null);
-  const measureFrameRef = useRef<number | null>(null);
-  const [portalMetrics, setPortalMetrics] = useState({
-    width: 1,
-    height: 1,
-    hero: { x: 0, y: 0 },
-    about: { x: 0, y: 0 },
-  });
 
-  const measurePortalAnchors = useCallback(() => {
-    const width = window.innerWidth || 1;
-    const height = window.innerHeight || 1;
-    const readAnchor = (node: HTMLSpanElement | null, fallback: { x: number; y: number }) => {
-      if (!node) return fallback;
-      const rect = node.getBoundingClientRect();
-      return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      };
-    };
-
-    const isPortrait = height > width;
-    const next = {
-      width,
-      height,
-      hero: readAnchor(heroDotRef.current, {
-        x: isPortrait ? width * 0.5  : width  * 0.66,
-        y: isPortrait ? height * 0.45 : height * 0.5,
-      }),
-      about: readAnchor(aboutDotRef.current, {
-        x: isPortrait ? width * 0.5  : width  * 0.75,
-        y: isPortrait ? height * 0.22 : height * 0.18,
-      }),
-    };
-
-    setPortalMetrics((current) => {
-      const changed =
-        Math.abs(current.width - next.width) > 0.5 ||
-        Math.abs(current.height - next.height) > 0.5 ||
-        Math.abs(current.hero.x - next.hero.x) > 0.5 ||
-        Math.abs(current.hero.y - next.hero.y) > 0.5 ||
-        Math.abs(current.about.x - next.about.x) > 0.5 ||
-        Math.abs(current.about.y - next.about.y) > 0.5;
-
-      return changed ? next : current;
-    });
-  }, []);
-
-  const schedulePortalMeasure = useCallback(() => {
-    if (measureFrameRef.current !== null) return;
-    measureFrameRef.current = window.requestAnimationFrame(() => {
-      measureFrameRef.current = null;
-      measurePortalAnchors();
-    });
-  }, [measurePortalAnchors]);
-
-  useLayoutEffect(() => {
-    measurePortalAnchors();
-    const timers = [
-      window.setTimeout(measurePortalAnchors, 90),
-      window.setTimeout(measurePortalAnchors, 450),
-      window.setTimeout(measurePortalAnchors, 1000),
-      window.setTimeout(measurePortalAnchors, 1700),
-      window.setTimeout(measurePortalAnchors, 2300),
-    ];
-
-    window.addEventListener('resize', schedulePortalMeasure);
-    window.addEventListener('orientationchange', schedulePortalMeasure);
-    return () => {
-      timers.forEach(window.clearTimeout);
-      window.removeEventListener('resize', schedulePortalMeasure);
-      window.removeEventListener('orientationchange', schedulePortalMeasure);
-      if (measureFrameRef.current !== null) {
-        window.cancelAnimationFrame(measureFrameRef.current);
-      }
-    };
-  }, [measurePortalAnchors, schedulePortalMeasure]);
-
+  // Progress 0→1 spans exactly the PINNED phase of the cover sheet
+  // ('end end' = the moment the sticky stage is released). Every keyframe
+  // below lives inside that range, so the whole portal sequence is
+  // guaranteed to finish while its landing target is still fixed on
+  // screen — this is what keeps the landing exact on every device.
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ['start start', 'end start'],
+    offset: ['start start', 'end end'],
   });
 
-  useEffect(() => {
-    return scrollYProgress.on('change', schedulePortalMeasure);
-  }, [scrollYProgress, schedulePortalMeasure]);
-
-  const heroScale = useTransform(scrollYProgress, [0, 0.05, 0.2, 0.34], [1, 1, 1.04, 1.07]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.18, 0.32], [1, 0.9, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.05, 0.32], ['0%', '0%', '-3%']);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.12, 0.25], [1, 0.55, 0]);
-  const heroDotOpacity = useTransform(scrollYProgress, [0, 0.03, 0.05], [1, 0.75, 0]);
-  const aboutDotOpacity = useTransform(scrollYProgress, [0, 0.5, 0.56], [0, 0, 1]);
-  const farthestRadius = (point: { x: number; y: number }) =>
-    Math.hypot(
-      Math.max(point.x, portalMetrics.width - point.x),
-      Math.max(point.y, portalMetrics.height - point.y)
-    );
-  const portalMaxRadius =
-    Math.ceil(Math.max(farthestRadius(portalMetrics.hero), farthestRadius(portalMetrics.about))) + 80;
-  const portalCx = useTransform(
-    scrollYProgress,
-    [0, 0.17, 0.27, 0.5],
-    [portalMetrics.hero.x, portalMetrics.hero.x, portalMetrics.about.x, portalMetrics.about.x]
-  );
-  const portalCy = useTransform(
-    scrollYProgress,
-    [0, 0.17, 0.27, 0.5],
-    [portalMetrics.hero.y, portalMetrics.hero.y, portalMetrics.about.y, portalMetrics.about.y]
-  );
-  const portalRadius = useTransform(
-    scrollYProgress,
-    [0, 0.05, 0.17, 0.27, 0.5],
-    [2, 22, portalMaxRadius, portalMaxRadius, 2]
-  );
-  const portalOpacity = useTransform(scrollYProgress, [0, 0.02, 0.5, 0.56], [0, 1, 1, 0]);
-  const aboutLift = useTransform(scrollYProgress, [0.48, 0.58], [24, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.46, 0.56], [0, 1]);
+  const T = PORTAL_TIMELINE;
+  const heroScale = useTransform(scrollYProgress, [0, T.liftoff, 0.32, 0.55], [1, 1, 1.04, 1.07]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.29, 0.51], [1, 0.9, 0]);
+  const heroY = useTransform(scrollYProgress, [0, T.liftoff, 0.51], ['0%', '0%', '-3%']);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.19, 0.4], [1, 0.55, 0]);
+  // Faded-out layers also drop visibility so their links can't be tabbed
+  // to or tapped through the layer that's actually on screen.
+  const heroVisibility = useTransform(heroOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
+  // The hero period hands off to the portal disc right as it ignites.
+  const heroDotOpacity = useTransform(scrollYProgress, [0, T.ignite, T.liftoff], [1, 1, 0]);
+  // …and the offer period fades in only once the disc has landed on it.
+  const aboutDotOpacity = useTransform(scrollYProgress, [0, T.land, T.settle], [0, 0, 1]);
+  // The offer block settles (lift → 0) BEFORE the disc lands, so the
+  // landing target is stationary at touchdown.
+  const aboutLift = useTransform(scrollYProgress, [0.6, 0.78], [24, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.58, 0.74], [0, 1]);
+  const aboutVisibility = useTransform(aboutOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
 
   // Velocity-reactive marquee: fast scrolling skews the track, springs back.
   const { scrollY } = useScroll();
@@ -234,27 +141,25 @@ export default function Home() {
   return (
     <>
       <SEOHead />
-      <BodyPortalLayer
-        reducedMotion={Boolean(reducedMotion)}
-        width={portalMetrics.width}
-        height={portalMetrics.height}
-        cx={portalCx}
-        cy={portalCy}
-        radius={portalRadius}
-        opacity={portalOpacity}
+      <PeriodPortal
+        progress={scrollYProgress}
+        pinRef={pinRef}
+        originRef={heroDotRef}
+        targetRef={aboutDotRef}
       />
 
       {/* SHEET 01 — COVER */}
       <section
         ref={heroRef}
-        className="relative h-[180svh] w-full md:h-[265svh]"
+        className="relative h-[210svh] w-full md:h-[265svh]"
       >
-        <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <div ref={pinRef} className="sticky top-0 h-[100svh] overflow-hidden">
           <motion.div
             style={{
               scale: heroScale,
               opacity: heroOpacity,
               y: heroY,
+              visibility: heroVisibility,
               transformOrigin: 'center 58%',
             }}
             className="relative z-[2] mx-auto flex h-full max-w-[1440px] flex-col justify-center px-6 md:px-10"
@@ -325,14 +230,20 @@ export default function Home() {
             >
               <motion.button
                 type="button"
-                onClick={() =>
-                  window.scrollTo({
-                    top:
-                      (heroRef.current?.offsetTop ?? 0) +
-                      (heroRef.current?.offsetHeight ?? window.innerHeight),
-                    behavior: 'smooth',
-                  })
-                }
+                onClick={() => {
+                  const top =
+                    (heroRef.current?.offsetTop ?? 0) +
+                    (heroRef.current?.offsetHeight ?? window.innerHeight);
+                  // Route through Lenis when it's driving the scroll, so
+                  // the glide matches the rest of the page.
+                  const lenis = (
+                    window as unknown as {
+                      __lenis?: { scrollTo: (target: number) => void };
+                    }
+                  ).__lenis;
+                  if (lenis) lenis.scrollTo(top);
+                  else window.scrollTo({ top, behavior: 'smooth' });
+                }}
                 data-cursor="hover"
                 aria-label="Scroll to next section"
                 initial={{ opacity: 0, y: 8 }}
@@ -361,7 +272,7 @@ export default function Home() {
 
           {/* Portal destination — the offer block */}
           <motion.div
-            style={{ opacity: aboutOpacity, y: aboutLift }}
+            style={{ opacity: aboutOpacity, y: aboutLift, visibility: aboutVisibility }}
             className="absolute inset-0 z-[2] flex items-center px-6 py-24 md:px-10"
           >
             <div className="mx-auto w-full max-w-5xl">
@@ -449,9 +360,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TICKER — velocity-reactive, hung a degree off level */}
+      {/* TICKER — velocity-reactive, hung a degree off level. The 102%
+          bleed only exists to hide the rotated strip's corners, so it is
+          md-scoped like the rotation — on phones it would overflow the
+          viewport and make mobile Safari zoom the whole layout out. */}
       <section
-        className="relative z-[3] -mx-[1%] w-[102%] overflow-hidden border-y border-[var(--border-strong)] py-10 md:-rotate-1 md:py-14"
+        className="relative z-[3] overflow-hidden border-y border-[var(--border-strong)] py-10 md:-mx-[1%] md:w-[102%] md:-rotate-1 md:py-14"
       >
         <motion.div style={reducedMotion ? undefined : { skewX: marqueeSkew }}>
           <Marquee duration={34}>
@@ -475,7 +389,11 @@ export default function Home() {
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
             <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
+              {/* JSX drops the newline between text and the span, leaving no
+                  soft-wrap opportunity — without <wbr /> the heading is one
+                  unbreakable run that widens the mobile layout viewport. */}
               Three steps,
+              <wbr />
               <span className="ml-4 text-[color:var(--text-secondary)]">two weeks.</span>
             </h2>
             <Link
@@ -538,6 +456,7 @@ export default function Home() {
           >
             <h2 className="font-display text-[clamp(56px,10.5vw,170px)] leading-[0.85] text-foreground transition-colors group-hover:text-primary">
               Start
+              <wbr />
               <span className="ml-6 text-[color:var(--text-secondary)] transition-colors group-hover:text-primary">
                 yours →
               </span>
@@ -611,53 +530,6 @@ function CapabilityCard({
     <div className="sticky" style={{ top: `calc(88px + ${index * 22}px)` }}>
       {still ? inner : <TiltCard max={2.2} parallax={5}>{inner}</TiltCard>}
     </div>
-  );
-}
-
-function BodyPortalLayer({
-  reducedMotion,
-  width,
-  height,
-  cx,
-  cy,
-  radius,
-  opacity,
-}: {
-  reducedMotion: boolean;
-  width: number;
-  height: number;
-  cx: MotionValue<number>;
-  cy: MotionValue<number>;
-  radius: MotionValue<number>;
-  opacity: MotionValue<number>;
-}) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (reducedMotion || !mounted) return null;
-
-  return createPortal(
-    <motion.svg
-      aria-hidden
-      viewBox={`0 0 ${width} ${height}`}
-      preserveAspectRatio="none"
-      style={{
-        opacity,
-      }}
-      className="pointer-events-none fixed inset-0 z-[10000] h-screen w-screen"
-    >
-      <motion.circle
-        cx={cx}
-        cy={cy}
-        r={radius}
-        fill="var(--primary)"
-        shapeRendering="geometricPrecision"
-      />
-    </motion.svg>,
-    document.body
   );
 }
 

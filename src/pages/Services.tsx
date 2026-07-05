@@ -135,7 +135,11 @@ export default function Services() {
           <div className="mb-12">
             <HandNote className="mb-5">everything on this list is included —</HandNote>
             <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
+              {/* JSX drops the newline between text and the span, leaving no
+                  soft-wrap opportunity — without <wbr /> the heading is one
+                  unbreakable run that widens the mobile layout viewport. */}
               Everything,
+              <wbr />
               <span className="ml-4 text-[color:var(--text-secondary)]">handled.</span>
             </h2>
           </div>
@@ -168,6 +172,7 @@ export default function Services() {
           <div className="mb-12">
             <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
               Brief to live URL,
+              <wbr />
               <span className="ml-4 text-[color:var(--text-secondary)]">two weeks.</span>
             </h2>
           </div>
@@ -206,6 +211,7 @@ export default function Services() {
             <HandNote className="mb-5">no stock case studies here —</HandNote>
             <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
               You're looking
+              <wbr />
               <span className="ml-4 text-[color:var(--text-secondary)]">at it.</span>
             </h2>
             <motion.p
@@ -232,6 +238,7 @@ export default function Services() {
             <div>
               <h2 className="font-display text-[clamp(30px,3.8vw,52px)] leading-[0.95] text-foreground">
                 A site that stays
+                <wbr />
                 <span className="ml-3 text-[color:var(--text-secondary)]">alive.</span>
               </h2>
             </div>
@@ -256,6 +263,7 @@ export default function Services() {
           <a href={CONTACT_HREF} data-cursor="view" data-cursor-label="Email me" className="group block">
             <h2 className="font-display text-[clamp(48px,9.5vw,150px)] leading-[0.85] text-foreground transition-colors group-hover:text-primary">
               Start
+              <wbr />
               <span className="ml-5 text-[color:var(--text-secondary)] transition-colors group-hover:text-primary">
                 yours →
               </span>

@@ -78,8 +78,14 @@ export function Stamp({
   const color = ink === 'red' ? 'var(--water)' : 'var(--primary)';
   return (
     <motion.span
-      initial={reduced ? { opacity: 1 } : { opacity: 0, scale: 1.6 }}
-      whileInView={{ opacity: 0.92, scale: 1 }}
+      // Rest at scale 1 and only pass through 1.6 via keyframes once in
+      // view: an off-screen stamp parked at scale 1.6 bloats its transform
+      // bounds, and near a page edge that widens the mobile layout
+      // viewport (Safari zooms the whole page out).
+      initial={reduced ? { opacity: 1 } : { opacity: 0, scale: 1 }}
+      whileInView={
+        reduced ? { opacity: 1 } : { opacity: [0, 0.92], scale: [1.6, 1] }
+      }
       viewport={{ once: true, margin: '-10% 0px' }}
       transition={
         reduced
