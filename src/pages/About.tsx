@@ -4,6 +4,33 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
+import { TiltCard } from '@/components/effects/TiltCard';
+import { EASE } from '@/lib/motion';
+
+/** Masked line reveal for body copy — the paragraph rises out of its own line box. */
+function RevealParagraph({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  return (
+    <div className="overflow-hidden">
+      <motion.p
+        initial={{ y: '55%', opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: '-8% 0px' }}
+        transition={{ duration: 0.85, delay, ease: EASE.snappy }}
+        className={className}
+      >
+        {children}
+      </motion.p>
+    </div>
+  );
+}
 
 /**
  * About — split editorial layout reskinned to match Portfolio.html:
@@ -74,20 +101,23 @@ export default function About() {
                 transition={{
                   duration: 0.75,
                   delay: i * 0.08,
-                  ease: [0.16, 1, 0.3, 1],
+                  ease: EASE.snappy,
                 }}
-                className="relative overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-md)] backdrop-blur-md"
               >
-                <div className="mb-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/45">
-                  <span>{panel.label}</span>
-                  <span className="text-[var(--water)]">0{i + 1}</span>
-                </div>
-                <h2 className="font-display text-3xl leading-[1.05] text-foreground">
-                  {panel.title}
-                </h2>
-                <p className="mt-5 text-sm leading-relaxed text-foreground/62">
-                  {panel.body}
-                </p>
+                <TiltCard max={3} parallax={6} className="h-full">
+                  <div className="relative h-full overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-md)] backdrop-blur-md">
+                    <div className="mb-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/45">
+                      <span>{panel.label}</span>
+                      <span className="text-[var(--water)]">0{i + 1}</span>
+                    </div>
+                    <h2 className="font-display text-3xl leading-[1.05] text-foreground">
+                      {panel.title}
+                    </h2>
+                    <p className="mt-5 text-sm leading-relaxed text-foreground/62">
+                      {panel.body}
+                    </p>
+                  </div>
+                </TiltCard>
               </motion.article>
             ))}
           </div>
@@ -142,15 +172,17 @@ export default function About() {
 
           {/* Bio */}
           <div className="md:col-span-7 md:col-start-6">
-            <p className="font-display text-[clamp(24px,2.6vw,36px)] leading-[1.2] text-foreground">
+            <RevealParagraph className="font-display text-[clamp(24px,2.6vw,36px)] leading-[1.2] text-foreground">
               {profile.biography.split('\n\n')[0]}
-            </p>
+            </RevealParagraph>
             <div className="mt-9 max-w-2xl space-y-5 text-base font-light leading-[1.7] text-foreground/70 md:text-[17px]">
               {profile.biography
                 .split('\n\n')
                 .slice(1)
                 .map((para, i) => (
-                  <p key={i}>{para}</p>
+                  <RevealParagraph key={i} delay={i * 0.08}>
+                    {para}
+                  </RevealParagraph>
                 ))}
             </div>
 
@@ -160,7 +192,9 @@ export default function About() {
               </div>
               <div className="max-w-2xl space-y-4 text-base font-light leading-[1.65] text-foreground md:text-[16px]">
                 {profile.approach.split('\n\n').map((para, i) => (
-                  <p key={i}>{para}</p>
+                  <RevealParagraph key={i} delay={i * 0.08}>
+                    {para}
+                  </RevealParagraph>
                 ))}
               </div>
             </div>
@@ -243,16 +277,18 @@ export default function About() {
       <section className="border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-[1440px]">
           <h2 className="font-display text-[clamp(40px,7vw,112px)] leading-[0.95] tracking-[-0.025em] text-foreground">
-            Want to{' '}
-            <span className="italic text-foreground/55">see the work?</span>
+            <SplitTextReveal text="Like how" stagger={0.04} />{' '}
+            <span className="italic text-foreground/55">
+              <SplitTextReveal text="this feels?" stagger={0.04} delay={0.12} />
+            </span>
           </h2>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
-              to="/work"
+              to="/services"
               data-cursor="hover"
               className="group inline-flex items-center gap-3 rounded-full border border-foreground bg-foreground px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.22em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              View work
+              Your site, done like this
               <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
             </Link>
             <a

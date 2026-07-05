@@ -1,5 +1,24 @@
+import { useEffect, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
+
+/** Live local-time readout — a small editorial signal that someone is here. */
+function LocalTime() {
+  const [now, setNow] = useState(() =>
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  );
+  useEffect(() => {
+    const t = setInterval(
+      () =>
+        setNow(
+          new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        ),
+      30_000
+    );
+    return () => clearInterval(t);
+  }, []);
+  return <span className="tabular-nums">{now}</span>;
+}
 
 /**
  * Editorial footer reskinned to match Portfolio.html:
@@ -67,50 +86,6 @@ export function Footer() {
                     GitHub →
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="https://shauryagoyal1316.github.io/fade-co-showcase/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="hover"
-                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-                  >
-                    Fade & Co. (Live)
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://shauryagoyal1316.github.io/privatechefportfolio/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="hover"
-                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-                  >
-                    Private Chef Landing Page (Live)
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://bookskyward.vercel.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="hover"
-                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-                  >
-                    Skyward (Live)
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://ghosted.vercel.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="hover"
-                    className="rounded-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-                  >
-                    Ghosted (Live)
-                  </a>
-                </li>
               </ul>
             </div>
             <div>
@@ -127,6 +102,10 @@ export function Footer() {
                   }}
                 />
                 {profile.availability}
+              </div>
+              <div className="mt-3 font-mono text-[12px] text-foreground/60">
+                <span className="text-foreground/40">Local time — </span>
+                <LocalTime />
               </div>
             </div>
           </div>
