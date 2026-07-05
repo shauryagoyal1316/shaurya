@@ -39,13 +39,13 @@ const CONTACT_HREF =
   'mailto:seekshaurya@gmail.com?subject=Website%20for%20my%20business';
 
 const MANIFESTO =
-  'Most small-business websites are templates wearing a logo. Yours should read like this page does — drawn for one business, measured twice, built once.';
+  'Most small-business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
 
 const capabilities = [
   {
     key: 'direction',
     title: 'Design direction',
-    body: 'Typography, layout, colour, and pacing chosen for your business, not pulled from a theme. Every page is composed, not filled.',
+    body: 'Typography, layout, colour, and pacing chosen for your business. Every page gets composed like a poster.',
     note: 'the part templates skip',
   },
   {
@@ -57,7 +57,7 @@ const capabilities = [
   {
     key: 'motion',
     title: 'Motion & feel',
-    body: 'The difference between a page and an experience: scroll choreography, micro-interactions, and restraint where it counts.',
+    body: 'The difference between a page and an experience: scroll choreography, and restraint where it counts.',
     note: 'why this page feels alive',
   },
   {
@@ -387,7 +387,7 @@ export default function Home() {
                 className="mt-9 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
               >
                 Fourteen days from first call to live URL. Five pages, drawn
-                from zero. <Annotate>Twenty percent down</Annotate> — and the
+                from zero. <Annotate>Twenty percent down</Annotate>, and the
                 balance only if you decide to keep the site.
               </motion.p>
               <div className="mt-9">
@@ -405,15 +405,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE POINT (scroll-scrubbed) */}
-      <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-40">
-        <div className="mx-auto max-w-[1440px]">
-          <ScrollScrubText
-            text={MANIFESTO}
-            className="max-w-5xl font-sans text-[clamp(26px,4vw,54px)] font-medium leading-[1.2] tracking-[-0.02em] text-foreground"
-          />
-          <div className="mt-10">
-            <Stamp text="Measured twice" ink="blue" rotate={-4} />
+      {/* THE POINT (scroll-scrubbed) — set off-axis, to the right */}
+      <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 pb-10 pt-24 md:px-10 md:pb-14 md:pt-40">
+        <div className="mx-auto max-w-[1440px] md:flex md:justify-end">
+          <div className="md:w-[82%]">
+            <ScrollScrubText
+              text={MANIFESTO}
+              className="max-w-4xl font-sans text-[clamp(26px,4vw,54px)] font-medium leading-[1.2] tracking-[-0.02em] text-foreground"
+            />
+            {/* Stamp hangs over the next section's rule — paste-up, not grid */}
+            <div className="relative z-[4] mt-12 md:-mb-24">
+              <Stamp text="Measured twice" ink="blue" rotate={-4} />
+            </div>
           </div>
         </div>
       </section>
@@ -425,7 +428,7 @@ export default function Home() {
             <HandNote className="mb-5">what your money buys ↓</HandNote>
             <h2 className="font-display text-[clamp(40px,6.5vw,96px)] leading-[0.88] text-foreground">
               <SplitTextReveal text="The whole" stagger={0.04} />
-              <span className="block text-[color:var(--text-secondary)]">
+              <span className="block text-[color:var(--text-secondary)] md:ml-[14%]">
                 <SplitTextReveal text="craft." stagger={0.04} delay={0.1} />
               </span>
             </h2>
@@ -446,8 +449,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TICKER — velocity-reactive */}
-      <section className="relative z-[3] overflow-hidden border-y border-[var(--border-strong)] py-10 md:py-14">
+      {/* TICKER — velocity-reactive, hung a degree off level */}
+      <section
+        className="relative z-[3] -mx-[1%] w-[102%] overflow-hidden border-y border-[var(--border-strong)] py-10 md:-rotate-1 md:py-14"
+      >
         <motion.div style={reducedMotion ? undefined : { skewX: marqueeSkew }}>
           <Marquee duration={34}>
             {profile.stack.map((tech, i) => (
@@ -482,6 +487,7 @@ export default function Home() {
             </Link>
           </div>
 
+          <div className="md:ml-[12%]">
           <DrawnRule strong />
           {processSteps.map((step) => (
             <div key={step.word}>
@@ -507,6 +513,7 @@ export default function Home() {
               <DrawnRule strong />
             </div>
           ))}
+          </div>
 
           <div className="mt-8 md:hidden">
             <Link
@@ -520,9 +527,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CONTACT */}
+      {/* CONTACT — set hard right, the one right-aligned moment on the page */}
       <section className="relative z-[3] px-6 py-24 md:px-10 md:py-40">
-        <div className="mx-auto max-w-[1440px]">
+        <div className="mx-auto max-w-[1440px] md:text-right">
           <a
             href={CONTACT_HREF}
             data-cursor="view"
@@ -536,7 +543,7 @@ export default function Home() {
               </span>
             </h2>
           </a>
-          <div className="mt-10 flex flex-wrap items-center gap-6">
+          <div className="mt-10 flex flex-wrap items-center gap-6 md:justify-end">
             <Stamp text="20% down · walk anytime" ink="red" rotate={-5} />
             <Link
               to="/services"
