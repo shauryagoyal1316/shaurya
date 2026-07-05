@@ -36,7 +36,7 @@ Every detail earns its place — type, spacing, motion, colour. The goal is a si
     'Framer Motion',
   ],
   location: 'Available worldwide / Remote',
-  availability: 'Available · 2026',
+  availability: 'Taking client projects · 2026',
   socialLinks: {},
   portraitImage: '',
 };
