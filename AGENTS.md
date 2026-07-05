@@ -40,6 +40,8 @@ This site must work from static hosting and from directly opening `dist/index.ht
 
 Be careful not to switch back to `BrowserRouter` unless static hosting rewrites are also added.
 
+Route pages must be imported with `lazyWithRetry` (`src/lib/lazyWithRetry.ts`), not bare `React.lazy`: each deploy replaces the content-hashed chunks, so a visitor holding a cached `index.html` would otherwise hit "Importing a module script failed" when navigating. The wrapper hard-reloads once (session-guarded) to fetch the fresh manifest, and `ErrorBoundary` treats stale-chunk errors the same way.
+
 ## Main Commands
 
 ```sh

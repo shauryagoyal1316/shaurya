@@ -1,6 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
+import { isStaleChunkError } from '@/lib/lazyWithRetry';
 
 interface Props {
   children: ReactNode;
@@ -26,7 +27,14 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleReset = () => {
-    // Just clear the error state and re-render — don't navigate.
+    // A failed chunk import means the cached page references files a newer
+    // deploy replaced — re-rendering would just re-import the same dead
+    // URL, so hard-reload to fetch the fresh manifest instead.
+    if (isStaleChunkError(this.state.error)) {
+      window.location.reload();
+      return;
+    }
+    // Otherwise just clear the error state and re-render — don't navigate.
     // Navigating to a hard-coded path breaks under HashRouter on a GitHub
     // Pages project subpath, and there's no need to leave the current route
     // anyway: a re-render usually recovers if the cause was transient.
@@ -36,12 +44,20 @@ export class ErrorBoundary extends Component<Props, State> {
   private handleHome = () => {
     // HashRouter route reset: clear the hash route, keep the project subpath.
     window.location.hash = '#/';
+    if (isStaleChunkError(this.state.error)) {
+      window.location.reload();
+      return;
+    }
     this.setState({ hasError: false, error: undefined });
   };
 
   public render() {
     if (this.state.hasError) {
-      const msg = this.state.error?.message ?? 'Unknown error';
+      // Translate the stale-deploy case for humans; raw import errors read
+      // as a broken site when the fix is just fetching the new version.
+      const msg = isStaleChunkError(this.state.error)
+        ? 'This page was updated since you opened it. Try again to load the new version.'
+        : this.state.error?.message ?? 'Unknown error';
       return (
         <div className="min-h-screen flex items-center justify-center px-6">
           <div className="max-w-md text-center space-y-6">

@@ -10,12 +10,16 @@ import { PageTransition } from "@/components/ui/PageTransition";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AnimatePresence } from "framer-motion";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import { lazyWithRetry } from "@/lib/lazyWithRetry";
 
-const Home = lazy(() => import("./pages/Home"));
-const Services = lazy(() => import("./pages/Services"));
-const About = lazy(() => import("./pages/About"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+// lazyWithRetry (not bare lazy): after a redeploy, a cached index.html
+// points at chunk files that no longer exist; this reloads once to fetch
+// the fresh manifest instead of stranding the visitor on the error screen.
+const Home = lazyWithRetry(() => import("./pages/Home"));
+const Services = lazyWithRetry(() => import("./pages/Services"));
+const About = lazyWithRetry(() => import("./pages/About"));
+const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
