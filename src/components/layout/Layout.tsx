@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { MagneticCursor } from '@/components/effects/MagneticCursor';
+import { DraftingCursor } from '@/components/effects/DraftingCursor';
 import { ScrollProgress } from '@/components/effects/ScrollProgress';
 import { NoiseOverlay } from '@/components/effects/NoiseOverlay';
 import { SmoothScroll } from '@/components/effects/SmoothScroll';
@@ -39,12 +39,17 @@ export function Layout({ children }: { children: ReactNode }) {
       <SmoothScroll />
       <Preloader />
       <NoiseOverlay />
-      <MagneticCursor />
+      <DraftingCursor />
       <ScrollProgress />
+      {/* Ruler ticks down the right edge — the sheet is measured */}
+      <div
+        aria-hidden
+        className="ruler-y fixed bottom-0 right-0 top-0 z-[3] hidden w-[14px] md:block"
+      />
       <Header />
       <main
         id="main-content"
-        className="relative z-[2] flex-1 bg-background"
+        className="paper relative z-[2] flex-1"
         style={!isMobile ? { marginBottom: footerH } : undefined}
         tabIndex={-1}
       >

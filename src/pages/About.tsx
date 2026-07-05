@@ -5,6 +5,12 @@ import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { TiltCard } from '@/components/effects/TiltCard';
+import {
+  Annotate,
+  DrawnRule,
+  HandNote,
+  Stamp,
+} from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
 
 /** Masked line reveal for body copy — the paragraph rises out of its own line box. */
@@ -33,12 +39,8 @@ function RevealParagraph({
 }
 
 /**
- * About — split editorial layout reskinned to match Portfolio.html:
- *  - Oversized "Hello. / I'm Shaurya." hero
- *  - Bio strip with a sidebar (currently / based / status / email / GitHub)
- *    on the left and a long-form narrative on the right
- *  - Skills constellation that drifts in place + a stack list
- *  - Closing CTA pointing back at /work
+ * Sheet 03 — who drew this. Split editorial layout in the working-drawing
+ * language: bordered capability cells, a spec-table sidebar, drawn rules.
  */
 export default function About() {
   const reducedMotion = useReducedMotion();
@@ -67,31 +69,25 @@ export default function About() {
         description={`About ${profile.name} — ${profile.tagline}.`}
       />
 
-      {/* BIO — leads the page; hero stripped to remove dead space */}
+      {/* BIO HERO */}
       <section className="relative overflow-hidden px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-36">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(ellipse_at_50%_0%,var(--water-glow),transparent_62%)]"
-        />
         <div className="relative mx-auto max-w-[1440px]">
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.9, ease: EASE.snappy }}
             className="max-w-5xl"
           >
-            <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-              <span className="text-primary">/</span> About
-            </div>
-            <h1 className="font-display text-[clamp(64px,12vw,180px)] leading-[0.86] tracking-[-0.03em] text-foreground">
+            <HandNote className="mb-5">who drew all this —</HandNote>
+            <h1 className="font-display text-[clamp(52px,10.5vw,160px)] leading-[0.86] text-foreground">
               Full websites,
-              <span className="block italic text-foreground/55">
-                fluid execution.
+              <span className="block text-[color:var(--text-secondary)]">
+                <Annotate note="design → deploy">one</Annotate> pair of hands.
               </span>
             </h1>
           </motion.div>
 
-          <div className="mt-10 grid gap-3 md:grid-cols-3">
+          <div className="mt-12 grid border border-[var(--border-strong)] md:grid-cols-3">
             {capabilityPanels.map((panel, i) => (
               <motion.article
                 key={panel.label}
@@ -103,17 +99,17 @@ export default function About() {
                   delay: i * 0.08,
                   ease: EASE.snappy,
                 }}
+                className={`border-[var(--border-strong)] max-md:border-b md:border-r ${i === 2 ? 'md:border-r-0 max-md:border-b-0' : ''}`}
               >
-                <TiltCard max={3} parallax={6} className="h-full">
-                  <div className="relative h-full overflow-hidden rounded-lg border border-border bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-md)] backdrop-blur-md">
-                    <div className="mb-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/45">
-                      <span>{panel.label}</span>
-                      <span className="text-[var(--water)]">0{i + 1}</span>
+                <TiltCard max={2.5} parallax={5} className="h-full">
+                  <div className="h-full p-6">
+                    <div className="mb-8 font-note text-base text-[color:var(--water)]" style={{ rotate: '-1.5deg' }}>
+                      {panel.label.toLowerCase()}
                     </div>
-                    <h2 className="font-display text-3xl leading-[1.05] text-foreground">
+                    <h2 className="font-display text-2xl leading-[1.02] text-foreground">
                       {panel.title}
                     </h2>
-                    <p className="mt-5 text-sm leading-relaxed text-foreground/62">
+                    <p className="mt-5 text-sm leading-relaxed text-[color:var(--text-secondary)]">
                       {panel.body}
                     </p>
                   </div>
@@ -126,42 +122,40 @@ export default function About() {
 
       <section className="px-6 pb-16 pt-8 md:px-10 md:pb-20 md:pt-12">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
-          {/* Sidebar */}
+          {/* Spec-table sidebar */}
           <motion.aside
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-10% 0px' }}
-            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.85, ease: EASE.snappy }}
             className="md:col-span-4"
           >
-            <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
-              Currently
-            </div>
-            <div className="mb-5 font-display text-[clamp(28px,3vw,40px)] leading-[1.1] text-foreground">
-              Building{' '}
-              <span className="italic text-foreground/60">
+            <div className="mb-5 text-sm text-foreground/50">Currently</div>
+            <div className="mb-6 font-display text-[clamp(24px,2.6vw,36px)] leading-[1.02] text-foreground">
+              Building
+              <span className="block text-[color:var(--text-secondary)]">
                 websites that ship.
               </span>
             </div>
-            <dl className="flex flex-col gap-4 border-t border-[color:var(--water-soft)] pt-6 font-mono text-[11px] uppercase tracking-[0.22em]">
+            <dl className="border border-[var(--border-strong)]">
               <MetaRow label="Based" value={profile.location} />
               <MetaRow label="Status" value={profile.availability} />
               <MetaRow label="Email">
                 <a
                   href="mailto:seekshaurya@gmail.com"
                   data-cursor="hover"
-                  className="rounded-sm normal-case tracking-[0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="normal-case tracking-[0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   seekshaurya@gmail.com
                 </a>
               </MetaRow>
-              <MetaRow label="GitHub">
+              <MetaRow label="GitHub" last>
                 <a
                   href="https://github.com/shauryagoyal1316"
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="hover"
-                  className="inline-flex items-center gap-1.5 rounded-sm normal-case tracking-[0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex items-center gap-1.5 normal-case tracking-[0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   shauryagoyal1316
                   <ArrowUpRight className="size-3.5" />
@@ -172,10 +166,10 @@ export default function About() {
 
           {/* Bio */}
           <div className="md:col-span-7 md:col-start-6">
-            <RevealParagraph className="font-display text-[clamp(24px,2.6vw,36px)] leading-[1.2] text-foreground">
+            <RevealParagraph className="font-sans text-[clamp(22px,2.4vw,32px)] font-medium leading-[1.3] tracking-[-0.01em] text-foreground">
               {profile.biography.split('\n\n')[0]}
             </RevealParagraph>
-            <div className="mt-9 max-w-2xl space-y-5 text-base font-light leading-[1.7] text-foreground/70 md:text-[17px]">
+            <div className="mt-9 max-w-2xl space-y-5 text-base font-light leading-[1.7] text-[color:var(--text-secondary)] md:text-[17px]">
               {profile.biography
                 .split('\n\n')
                 .slice(1)
@@ -186,10 +180,9 @@ export default function About() {
                 ))}
             </div>
 
-            <div className="mt-10 border-t border-[color:var(--water-soft)] pt-7">
-              <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
-                Approach
-              </div>
+            <div className="mt-10 pt-7">
+              <DrawnRule strong className="mb-7" />
+              <div className="mb-4 text-sm text-foreground/50">Approach</div>
               <div className="max-w-2xl space-y-4 text-base font-light leading-[1.65] text-foreground md:text-[16px]">
                 {profile.approach.split('\n\n').map((para, i) => (
                   <RevealParagraph key={i} delay={i * 0.08}>
@@ -203,18 +196,11 @@ export default function About() {
       </section>
 
       {/* SKILLS / STACK */}
-      <section className="relative overflow-hidden border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute right-[-20vw] top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,var(--water-glow),transparent_65%)]"
-        />
+      <section className="relative overflow-hidden border-t border-[var(--border-strong)] px-6 py-16 md:px-10 md:py-20">
         <div className="relative mx-auto max-w-[1440px]">
-          <div className="mb-6 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-foreground/50">
-            <span className="text-primary">/</span>What I do
-          </div>
-          <h2 className="font-display text-[clamp(40px,6vw,96px)] leading-[0.95] tracking-[-0.025em] text-foreground">
+          <h2 className="font-display text-[clamp(38px,5.5vw,88px)] leading-[0.9] text-foreground">
             <SplitTextReveal text="Skills" stagger={0.04} />{' '}
-            <span className="italic text-foreground/55">
+            <span className="text-[color:var(--text-secondary)]">
               <SplitTextReveal text="& tools." stagger={0.04} delay={0.12} />
             </span>
           </h2>
@@ -231,9 +217,9 @@ export default function About() {
                   transition={{
                     duration: 0.6,
                     delay: i * 0.05,
-                    ease: [0.16, 1, 0.3, 1],
+                    ease: EASE.snappy,
                   }}
-                  className="font-display text-[clamp(24px,3vw,40px)] leading-[1.1] text-foreground"
+                  className="font-display text-[clamp(20px,2.6vw,34px)] leading-[1.05] text-foreground"
                   style={
                     reducedMotion
                       ? undefined
@@ -246,24 +232,19 @@ export default function About() {
                 >
                   {s}
                   {i < profile.skills.length - 1 && (
-                    <span className="mx-2.5 text-primary">·</span>
+                    <span className="mx-2.5 text-[color:var(--water)]">+</span>
                   )}
                 </motion.span>
               ))}
             </div>
 
             {/* Stack */}
-            <div className="rounded-lg border border-[color:var(--water-soft)] bg-[var(--surface-premium)] p-6 shadow-[var(--shadow-sm)]">
-              <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground/50">
-                Stack
-              </div>
-              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 font-mono text-[12px] uppercase tracking-[0.18em] text-foreground">
+            <div className="paper-plain border border-[var(--border-strong)] p-6 shadow-[var(--shadow-sm)]">
+              <div className="mb-5 text-sm text-foreground/50">The stack</div>
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-[14px] text-foreground">
                 {profile.stack.map((tech) => (
                   <li key={tech} className="flex items-center gap-3">
-                    <span
-                      aria-hidden
-                      className="size-1.5 rounded-full bg-primary"
-                    />
+                    <span aria-hidden className="size-1.5 bg-primary" />
                     {tech}
                   </li>
                 ))}
@@ -274,11 +255,11 @@ export default function About() {
       </section>
 
       {/* OUTRO */}
-      <section className="border-t border-border bg-background px-6 py-16 md:px-10 md:py-20">
+      <section className="border-t border-[var(--border-strong)] px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-[1440px]">
-          <h2 className="font-display text-[clamp(40px,7vw,112px)] leading-[0.95] tracking-[-0.025em] text-foreground">
+          <h2 className="font-display text-[clamp(38px,6.5vw,104px)] leading-[0.88] text-foreground">
             <SplitTextReveal text="Like how" stagger={0.04} />{' '}
-            <span className="italic text-foreground/55">
+            <span className="text-[color:var(--text-secondary)]">
               <SplitTextReveal text="this feels?" stagger={0.04} delay={0.12} />
             </span>
           </h2>
@@ -286,18 +267,19 @@ export default function About() {
             <Link
               to="/services"
               data-cursor="hover"
-              className="group inline-flex items-center gap-3 rounded-full border border-foreground bg-foreground px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.22em] text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] bg-primary px-7 py-3.5 text-[15px] font-medium text-primary-foreground shadow-[var(--shadow-md)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Your site, done like this
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+              Your site, drawn like this
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a
               href="mailto:seekshaurya@gmail.com"
               data-cursor="hover"
-              className="inline-flex items-center gap-3 rounded-full border border-border px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.22em] text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex items-center gap-3 border border-[var(--border-strong)] px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Get in touch
             </a>
+            <Stamp text="Open for work" ink="blue" rotate={4} />
           </div>
         </div>
       </section>
@@ -309,15 +291,17 @@ function MetaRow({
   label,
   value,
   children,
+  last = false,
 }: {
   label: string;
   value?: string;
   children?: React.ReactNode;
+  last?: boolean;
 }) {
   return (
-    <div>
-      <dt className="mb-1.5 text-foreground/40">{label}</dt>
-      <dd className="text-foreground">{value || children}</dd>
+    <div className={`p-4 ${last ? '' : 'border-b border-[var(--border-strong)]'}`}>
+      <dt className="mb-1 text-[13px] text-foreground/50">{label}</dt>
+      <dd className="text-[14px] text-foreground">{value || children}</dd>
     </div>
   );
 }

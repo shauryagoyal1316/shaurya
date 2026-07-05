@@ -2,44 +2,50 @@
 @import "tw-animate-css";
 
 /*
-  Shaurya Goyal — editorial design system (reskin).
-  Default: warm bone canvas + ink type, single warm-orange accent.
-  Dark theme available via [data-theme="dark"] toggle (persisted in localStorage).
-  All semantic Tailwind tokens (background, foreground, border, surface-*,
-  primary) point at CSS variables, so a token swap retheme the whole app.
+  Shaurya Goyal — "The Working Drawing" design system.
+  The site is presented as an engineer's drawing of itself: drafting paper
+  with a live graph grid, ink type, drafting-blue primary, red-pencil
+  annotations. Dark theme = night blueprint (pale lines on deep blue paper).
+  All semantic Tailwind tokens point at CSS variables, so this token block
+  IS the theme.
 */
 
 :root,
 :root[data-theme="light"] {
-  /* Canvas + surfaces — bone over ink */
-  --background: hsl(38 34% 95%);          /* soft ivory */
-  --foreground: hsl(22 15% 5%);           /* warm ink */
-  --surface-1: hsl(38 24% 91%);
-  --surface-2: hsl(38 18% 87%);
-  --surface-3: hsl(38 12% 80%);
-  --surface-premium: hsl(38 30% 93% / 0.72);
+  /* Canvas + surfaces — drafting paper over ink */
+  --background: hsl(84 12% 93%);          /* cool technical paper #EEF0EB */
+  --foreground: hsl(100 7% 8%);           /* ink #141613 */
+  --surface-1: hsl(84 10% 90%);
+  --surface-2: hsl(84 9% 86%);
+  --surface-3: hsl(84 7% 78%);
+  --surface-premium: hsl(84 12% 95%);     /* solid — this system has no glass */
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
   --popover: var(--surface-1);
   --popover-foreground: var(--foreground);
 
-  /* Type hierarchy mirrors the design's fg-1 .. fg-4 alpha ramp */
+  /* Type hierarchy */
   --text-primary: var(--foreground);
-  --text-secondary: hsla(20 11% 4% / 0.62);
-  --text-tertiary: hsla(20 11% 4% / 0.42);
+  --text-secondary: hsla(100 7% 8% / 0.64);
+  --text-tertiary: hsla(100 7% 8% / 0.42);
 
-  /* Brand — warm sienna orange (oklch maps roughly to hsl 22 55% 53%) */
-  --primary: oklch(0.64 0.15 48);
-  --primary-foreground: hsl(36 25% 96%);
+  /* Brand — drafting blue; red pencil rides the old --water slots so every
+     existing primary→water gradient becomes blueprint-blue→redline */
+  --primary: hsl(232 100% 58%);           /* #2B45FF drafting blue */
+  --primary-foreground: hsl(84 12% 95%);
   --accent: var(--primary);
   --accent-foreground: var(--primary-foreground);
-  --accent-soft: oklch(0.66 0.16 50 / 0.12);
-  --water: oklch(0.52 0.10 218);
-  --water-deep: oklch(0.36 0.09 232);
-  --water-soft: oklch(0.52 0.10 218 / 0.18);
-  --water-glow: oklch(0.66 0.10 205 / 0.22);
-  --portal-solid: oklch(0.36 0.09 232);
+  --accent-soft: hsla(232 100% 58% / 0.10);
+  --water: hsl(4 66% 51%);                /* #D5382E red pencil */
+  --water-deep: hsl(4 60% 40%);
+  --water-soft: hsla(4 66% 51% / 0.22);
+  --water-glow: hsla(4 66% 51% / 0.14);
+  --portal-solid: hsl(232 100% 58%);
+
+  /* Graph-paper grid lines */
+  --grid-minor: hsla(232 45% 40% / 0.055);
+  --grid-major: hsla(232 45% 40% / 0.11);
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -49,13 +55,13 @@
   --destructive: hsl(0 70% 50%);
   --destructive-foreground: hsl(36 25% 96%);
 
-  /* Hairlines that work on light or dark surfaces */
-  --border: hsla(20 11% 4% / 0.10);
-  --border-strong: hsla(20 11% 4% / 0.18);
-  --input: hsla(20 11% 4% / 0.10);
+  /* Hairlines — a drawing's lines are meant to be SEEN */
+  --border: hsla(100 7% 8% / 0.22);
+  --border-strong: hsla(100 7% 8% / 0.55);
+  --input: hsla(100 7% 8% / 0.22);
   --ring: var(--primary);
 
-  --radius: 0.25rem;
+  --radius: 0rem; /* drawings have corners, not fillets */
 
   /* Sidebar (kept for shadcn primitives that reference these) */
   --sidebar-background: var(--background);
@@ -73,11 +79,11 @@
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-pill:   cubic-bezier(0.34, 1.2, 0.64, 1);
 
-  /* Shadow scale */
-  --shadow-sm: 0 1px 2px hsla(20 11% 4% / 0.04);
-  --shadow-md: 0 1px 2px hsla(20 11% 4% / 0.04), 0 4px 12px hsla(20 11% 4% / 0.06);
-  --shadow-lg: 0 2px 4px hsla(20 11% 4% / 0.05), 0 12px 32px hsla(20 11% 4% / 0.10);
-  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
+  /* Shadow scale — hard offset prints, not soft blurs */
+  --shadow-sm: 2px 2px 0 hsla(100 7% 8% / 0.12);
+  --shadow-md: 3px 3px 0 hsla(100 7% 8% / 0.16);
+  --shadow-lg: 5px 5px 0 hsla(100 7% 8% / 0.18);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 4px 4px 0 var(--accent-soft);
 
   /* Legacy tokens kept so vendored shadcn pieces still resolve */
   --context-card-border: var(--border-strong);
@@ -98,12 +104,13 @@
 
 :root[data-theme="dark"],
 .dark {
-  --background: hsl(20 11% 4%);           /* #0A0908 ink */
-  --foreground: hsl(36 25% 94%);          /* #F5F2EC bone */
-  --surface-1: hsl(20 8% 8%);
-  --surface-2: hsl(20 6% 12%);
-  --surface-3: hsl(20 5% 18%);
-  --surface-premium: hsl(20 8% 8% / 0.78);
+  /* Night blueprint — pale lines on deep blue paper */
+  --background: hsl(219 49% 10%);         /* #0D1526 blueprint */
+  --foreground: hsl(220 45% 93%);         /* pale print #E6ECF7 */
+  --surface-1: hsl(219 42% 13%);
+  --surface-2: hsl(219 38% 16%);
+  --surface-3: hsl(219 32% 22%);
+  --surface-premium: hsl(219 45% 12%);
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
@@ -111,33 +118,36 @@
   --popover-foreground: var(--foreground);
 
   --text-primary: var(--foreground);
-  --text-secondary: hsla(36 25% 94% / 0.66);
-  --text-tertiary: hsla(36 25% 94% / 0.42);
+  --text-secondary: hsla(220 45% 93% / 0.66);
+  --text-tertiary: hsla(220 45% 93% / 0.42);
 
-  --primary: oklch(0.78 0.14 60);
-  --primary-foreground: hsl(20 11% 4%);
+  --primary: hsl(227 100% 74%);           /* #7A97FF print blue */
+  --primary-foreground: hsl(219 49% 10%);
   --accent: var(--primary);
   --accent-foreground: var(--primary-foreground);
-  --accent-soft: oklch(0.78 0.14 60 / 0.16);
-  --water: oklch(0.70 0.10 218);
-  --water-deep: oklch(0.48 0.10 232);
-  --water-soft: oklch(0.70 0.10 218 / 0.18);
-  --water-glow: oklch(0.74 0.11 205 / 0.26);
-  --portal-solid: oklch(0.48 0.10 232);
+  --accent-soft: hsla(227 100% 74% / 0.14);
+  --water: hsl(6 100% 66%);               /* #FF5C4D redline, brightened for night */
+  --water-deep: hsl(6 80% 52%);
+  --water-soft: hsla(6 100% 66% / 0.24);
+  --water-glow: hsla(6 100% 66% / 0.14);
+  --portal-solid: hsl(227 100% 74%);
+
+  --grid-minor: hsla(220 70% 80% / 0.05);
+  --grid-major: hsla(220 70% 80% / 0.10);
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
   --muted: var(--surface-2);
-  --muted-foreground: hsla(36 25% 94% / 0.60);
+  --muted-foreground: hsla(220 45% 93% / 0.60);
 
-  --border: hsla(36 25% 94% / 0.10);
-  --border-strong: hsla(36 25% 94% / 0.18);
-  --input: hsla(36 25% 94% / 0.10);
+  --border: hsla(220 45% 93% / 0.22);
+  --border-strong: hsla(220 45% 93% / 0.55);
+  --input: hsla(220 45% 93% / 0.22);
 
-  --shadow-sm: 0 1px 2px hsla(0 0% 0% / 0.4);
-  --shadow-md: 0 1px 2px hsla(0 0% 0% / 0.4), 0 4px 12px hsla(0 0% 0% / 0.5);
-  --shadow-lg: 0 2px 4px hsla(0 0% 0% / 0.4), 0 12px 32px hsla(0 0% 0% / 0.6);
-  --shadow-glow: 0 0 0 1px var(--accent-soft), 0 8px 32px var(--accent-soft);
+  --shadow-sm: 2px 2px 0 hsla(219 60% 4% / 0.7);
+  --shadow-md: 3px 3px 0 hsla(219 60% 4% / 0.8);
+  --shadow-lg: 5px 5px 0 hsla(219 60% 4% / 0.85);
+  --shadow-glow: 0 0 0 1px var(--accent-soft), 4px 4px 0 var(--accent-soft);
 
   --ds-gray-100: var(--surface-1);
   --ds-gray-400: var(--surface-3);
@@ -199,12 +209,15 @@
   --shadow-border-small: var(--ds-shadow-border-small);
 
   --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-sm: var(--radius);
 
-  --font-display: 'Instrument Serif', 'Times New Roman', serif;
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* One family. Width and weight do the hierarchy — the single-typeface
+     site is a deliberate, human constraint. */
+  --font-display: 'Archivo', 'Arial Black', sans-serif;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-note: 'Architects Daughter', 'Comic Sans MS', cursive;
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -261,6 +274,14 @@
     overflow-x: hidden;
   }
 
+  /* Display type is condensed-heavy Archivo, always uppercase-leaning */
+  .font-display {
+    font-variation-settings: 'wdth' 78;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
   ::selection {
     background: var(--primary);
     color: var(--primary-foreground);
@@ -287,6 +308,47 @@
   .font-display { font-family: var(--font-display); }
   .font-mono    { font-family: var(--font-mono); }
   .font-sans    { font-family: var(--font-sans); }
+  .font-note    { font-family: var(--font-note); text-transform: none; }
+
+  /* The paper itself: opaque background + live graph grid. Any element that
+     must be opaque (main column, footer, stacked cards) uses .paper instead
+     of bg-background so the grid never disappears. */
+  .paper {
+    background-color: var(--background);
+    background-image:
+      linear-gradient(var(--grid-minor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px),
+      linear-gradient(var(--grid-major) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+    background-size: 12px 12px, 12px 12px, 96px 96px, 96px 96px;
+  }
+
+  /* Solid paper without grid — for cards that sit ON the drawing */
+  .paper-plain { background-color: var(--surface-premium); }
+
+  /* Drawing frame: the 1px ink outline every "detail view" gets */
+  .draw-frame { border: 1px solid var(--border-strong); }
+
+  /* Red-pencil ink for annotations */
+  .redline { color: var(--water); }
+
+  /* Ruler ticks along an edge (vertical strip, desktop decoration) */
+  .ruler-y {
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        var(--border-strong) 0 1px,
+        transparent 1px 12px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        var(--border-strong) 0 1px,
+        transparent 1px 96px
+      );
+    background-size: 6px 100%, 14px 100%;
+    background-repeat: repeat-y;
+    background-position: right top, right top;
+  }
 
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
