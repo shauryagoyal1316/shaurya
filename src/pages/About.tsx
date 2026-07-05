@@ -66,7 +66,7 @@ export default function About() {
     <>
       <SEOHead
         title="About"
-        description={`About ${profile.name} — ${profile.tagline}.`}
+        description={`About ${profile.name}, ${profile.tagline.toLowerCase()}.`}
       />
 
       {/* BIO HERO */}

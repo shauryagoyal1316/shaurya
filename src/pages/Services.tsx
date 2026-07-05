@@ -51,7 +51,7 @@ const steps = [
     word: 'First',
     title: 'Survey',
     detail:
-      'A 30-minute conversation about your business: who walks in, what they ask, what you want more of. It becomes a one-page brief we both sign off on.',
+      'A 30-minute conversation about your business: who walks in, and what you want more of. It becomes a one-page brief we both sign off on.',
   },
   {
     word: 'Then',
@@ -108,7 +108,7 @@ export default function Services() {
           >
             Cafés, barbershops, studios, chefs, small firms. A custom-designed
             website, written, built, and live on your own domain in about two
-            weeks. No templates, no agency invoice, no six-week timeline.
+            weeks. None of it from a template, and none of it at agency prices.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 14 }}
@@ -199,27 +199,29 @@ export default function Services() {
         </div>
       </section>
 
-      {/* PROOF */}
+      {/* PROOF — set off-axis, to the right */}
       <section className="border-t border-[var(--border-strong)] px-6 py-14 md:px-10 md:py-[4.5rem]">
-        <div className="mx-auto max-w-[1440px]">
-          <HandNote className="mb-5">no stock case studies here —</HandNote>
-          <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
-            You're looking
-            <span className="ml-4 text-[color:var(--text-secondary)]">at it.</span>
-          </h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-8% 0px' }}
-            transition={{ duration: 0.8, ease: EASE.snappy }}
-            className="mt-8 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
-          >
-            The site you're reading right now is the demo. Judge it the way
-            your customers will: the <Annotate>type</Annotate>, the motion,
-            the speed on your phone. This is the standard your site gets
-            built to — and if the build doesn't clear it for you, the 20%
-            deposit is all you ever spent.
-          </motion.p>
+        <div className="mx-auto max-w-[1440px] md:flex md:justify-end">
+          <div className="md:w-[78%]">
+            <HandNote className="mb-5">no stock case studies here —</HandNote>
+            <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
+              You're looking
+              <span className="ml-4 text-[color:var(--text-secondary)]">at it.</span>
+            </h2>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-8% 0px' }}
+              transition={{ duration: 0.8, ease: EASE.snappy }}
+              className="mt-8 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
+            >
+              The site you're reading right now is the demo. Judge it the way
+              your customers will: on your phone, at full speed, down to the
+              smallest <Annotate>detail</Annotate>. This is the standard your
+              site gets built to. If the build doesn't clear it for you, the
+              20% deposit is all you ever spent.
+            </motion.p>
+          </div>
         </div>
       </section>
 
