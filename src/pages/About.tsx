@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { ScrollDrift } from '@/components/effects/ScrollDrift';
+import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { TiltCard } from '@/components/effects/TiltCard';
 import {
@@ -166,9 +168,10 @@ export default function About() {
 
           {/* Bio */}
           <div className="md:col-span-7 md:col-start-6">
-            <RevealParagraph className="font-sans text-[clamp(22px,2.4vw,32px)] font-medium leading-[1.3] tracking-[-0.01em] text-foreground">
-              {profile.biography.split('\n\n')[0]}
-            </RevealParagraph>
+            <ScrollScrubText
+              text={profile.biography.split('\n\n')[0]}
+              className="font-sans text-[clamp(22px,2.4vw,32px)] font-medium leading-[1.3] tracking-[-0.01em] text-foreground"
+            />
             <div className="mt-9 max-w-2xl space-y-5 text-base font-light leading-[1.7] text-[color:var(--text-secondary)] md:text-[17px]">
               {profile.biography
                 .split('\n\n')
@@ -206,7 +209,8 @@ export default function About() {
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-12 md:grid-cols-2">
-            {/* Skills cloud */}
+            {/* Skills cloud — the two halves square up as you scroll */}
+            <ScrollDrift from={-48}>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
               {profile.skills.map((s, i) => (
                 <motion.span
@@ -237,9 +241,11 @@ export default function About() {
                 </motion.span>
               ))}
             </div>
+            </ScrollDrift>
 
             {/* Stack */}
-            <div className="paper-plain border border-[var(--border-strong)] p-6 shadow-[var(--shadow-sm)]">
+            <ScrollDrift from={56}>
+            <div className="paper-plain h-full border border-[var(--border-strong)] p-6 shadow-[var(--shadow-sm)]">
               <div className="mb-5 text-sm text-foreground/50">The stack</div>
               <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-[14px] text-foreground">
                 {profile.stack.map((tech) => (
@@ -250,6 +256,7 @@ export default function About() {
                 ))}
               </ul>
             </div>
+            </ScrollDrift>
           </div>
         </div>
       </section>

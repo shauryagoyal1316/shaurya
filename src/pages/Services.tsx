@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { ScrollDrift } from '@/components/effects/ScrollDrift';
+import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import {
   Annotate,
   DimensionLine,
@@ -46,6 +48,29 @@ const included = [
   },
 ];
 
+const modules = [
+  {
+    name: 'Inventory & stock',
+    detail:
+      'Items in, items out, live counts, and a reminder before a shelf runs empty.',
+  },
+  {
+    name: 'Fleet & maintenance',
+    detail:
+      'Service logs and schedules per asset, with every cost and repair on record.',
+  },
+  {
+    name: 'Approvals & roles',
+    detail:
+      'Permission levels and sign-off chains, with an audit trail behind every change.',
+  },
+  {
+    name: 'Reports & PDF export',
+    detail:
+      'Management reports drawn from live data, exported as PDFs your accountant will actually open.',
+  },
+];
+
 const steps = [
   {
     word: 'First',
@@ -75,7 +100,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Custom websites for local businesses — designed, built, and live on your domain in about two weeks. 20% deposit to start, balance only if you take it."
+        description="Custom websites for local businesses, live on your domain in about two weeks with a 20% deposit to start. Internal SaaS tools and sectional ERP software, scoped module by module."
       />
 
       {/* HERO */}
@@ -134,14 +159,16 @@ export default function Services() {
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-12">
             <HandNote className="mb-5">everything on this list is included —</HandNote>
-            <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
-              {/* JSX drops the newline between text and the span, leaving no
-                  soft-wrap opportunity — without <wbr /> the heading is one
-                  unbreakable run that widens the mobile layout viewport. */}
-              Everything,
-              <wbr />
-              <span className="ml-4 text-[color:var(--text-secondary)]">handled.</span>
-            </h2>
+            <ScrollDrift from={-48}>
+              <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
+                {/* JSX drops the newline between text and the span, leaving no
+                    soft-wrap opportunity — without <wbr /> the heading is one
+                    unbreakable run that widens the mobile layout viewport. */}
+                Everything,
+                <wbr />
+                <span className="ml-4 text-[color:var(--text-secondary)]">handled.</span>
+              </h2>
+            </ScrollDrift>
           </div>
           <DrawnRule strong />
           {included.map((item, i) => (
@@ -170,11 +197,13 @@ export default function Services() {
       <section className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-12">
-            <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
-              Brief to live URL,
-              <wbr />
-              <span className="ml-4 text-[color:var(--text-secondary)]">two weeks.</span>
-            </h2>
+            <ScrollDrift from={56}>
+              <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
+                Brief to live URL,
+                <wbr />
+                <span className="ml-4 text-[color:var(--text-secondary)]">two weeks.</span>
+              </h2>
+            </ScrollDrift>
           </div>
           <DrawnRule strong />
           {steps.map((step) => (
@@ -227,6 +256,71 @@ export default function Services() {
               site gets built to. If the build doesn't clear it for you, the
               20% deposit is all you ever spent.
             </motion.p>
+          </div>
+        </div>
+      </section>
+
+      {/* SOFTWARE — the second service line. Scrubbed pitch, inset module
+          schedule, proof block set hard right with a stamp crossing the
+          section rule below. */}
+      <section className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-32">
+        <div className="mx-auto max-w-[1440px]">
+          <HandNote className="mb-5">when the spreadsheet stops coping —</HandNote>
+          <h2 className="font-display text-[clamp(38px,5.5vw,84px)] leading-[0.88] text-foreground">
+            Software,
+            <span className="ml-4 text-[color:var(--text-secondary)]">same pencil.</span>
+          </h2>
+
+          <div className="mt-12 max-w-3xl md:ml-[8%]">
+            <ScrollScrubText
+              text="Somewhere past the tenth spreadsheet tab, a business stops needing a website and starts needing software. I build internal SaaS tools and sectional ERP systems: one module at a time, each fitted to how your operation already runs."
+              className="font-sans text-[clamp(22px,2.8vw,40px)] font-medium leading-[1.25] tracking-[-0.02em] text-foreground"
+            />
+          </div>
+
+          <div className="mt-16 md:ml-[16%]">
+            <DrawnRule strong />
+            {modules.map((mod) => (
+              <div key={mod.name}>
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-8% 0px' }}
+                  transition={{ duration: 0.7, ease: EASE.snappy }}
+                  className="grid gap-2 py-7 md:grid-cols-12 md:items-baseline md:gap-8"
+                >
+                  <div className="font-display text-xl leading-snug text-foreground md:col-span-4 md:text-2xl">
+                    {mod.name}
+                  </div>
+                  <p className="max-w-xl text-sm leading-relaxed text-[color:var(--text-secondary)] md:col-span-7 md:text-base">
+                    {mod.detail}
+                  </p>
+                </motion.div>
+                <DrawnRule />
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-14 md:flex md:justify-end">
+            <div className="max-w-2xl">
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-8% 0px' }}
+                transition={{ duration: 0.8, ease: EASE.snappy }}
+                className="text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
+              >
+                Two of these run in production right now: a parts-inventory
+                platform and a fleet-maintenance app, both used every working
+                day by teams that will never see this page. Software is quoted
+                per module after a 30-minute call. The quote arrives in
+                writing, and the same <Annotate>20% deposit</Annotate> rule
+                applies.
+              </motion.p>
+              <div className="relative z-[4] mt-10 md:-mb-24">
+                <Stamp text="In production · daily use" ink="blue" rotate={3} />
+              </div>
+            </div>
           </div>
         </div>
       </section>

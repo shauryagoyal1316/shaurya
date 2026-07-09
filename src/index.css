@@ -41,7 +41,9 @@
   --water-deep: hsl(4 60% 40%);
   --water-soft: hsla(4 66% 51% / 0.22);
   --water-glow: hsla(4 66% 51% / 0.14);
-  --portal-solid: hsl(232 100% 58%);
+  /* The period-portal wash matches the red-pencil periods it grows out of
+     and lands on — one ink throughout, never a colour swap mid-flight. */
+  --portal-solid: var(--water);
 
   /* Graph-paper grid lines */
   --grid-minor: hsla(232 45% 40% / 0.055);
@@ -130,7 +132,7 @@
   --water-deep: hsl(6 80% 52%);
   --water-soft: hsla(6 100% 66% / 0.24);
   --water-glow: hsla(6 100% 66% / 0.14);
-  --portal-solid: hsl(227 100% 74%);
+  --portal-solid: var(--water);
 
   --grid-minor: hsla(220 70% 80% / 0.05);
   --grid-major: hsla(220 70% 80% / 0.10);
