@@ -332,15 +332,21 @@ export function PeriodPortal({
   return createPortal(
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[10000] h-screen w-screen bg-[var(--portal-solid)]"
+      className="pointer-events-none fixed left-0 top-0 z-[10000] bg-[var(--portal-solid)]"
       style={{
         clipPath,
         opacity,
         visibility,
-        // Large-viewport height so the wash never exposes a strip while
-        // the iOS toolbar collapses; invalid where unsupported, in which
-        // case the h-screen class above applies.
-        height: '100lvh',
+        // The wash's box must be EXACTLY the space the insets were
+        // computed in. Sizing with vw/lvh units broke that: 100vw
+        // includes the classic Windows scrollbar while clientWidth does
+        // not, so every right inset came up ~17px short and the wash
+        // bled a period-width past the mark at ignite. Sizing from the
+        // measured numbers keeps box and math in one space everywhere
+        // (viewportHeight is still the 100lvh probe, so the iOS
+        // toolbar-collapse cover guarantee is unchanged).
+        width: geo.viewportWidth,
+        height: geo.viewportHeight,
         willChange: 'clip-path, opacity',
         transform: 'translateZ(0)',
       }}

@@ -119,10 +119,13 @@ export default function Home() {
   const heroDotOpacity = useTransform(scrollYProgress, [0, T.ignite, T.liftoff], [1, 1, 0]);
   // …and the offer period fades in only once the square has landed on it.
   const aboutDotOpacity = useTransform(scrollYProgress, [0, T.land, T.settle], [0, 0, 1]);
-  // The offer block settles (lift → 0) BEFORE the square lands, so the
-  // landing target is stationary at touchdown.
-  const aboutLift = useTransform(scrollYProgress, [0.6, 0.78], [24, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.58, 0.74], [0, 1]);
+  // The offer block settles (lift → 0) while the wash is still 15×+ the
+  // period's size, so the landing target is stationary long before the
+  // eye can judge alignment. Settling at 0.78 (land is 0.8) left the
+  // square hovering at the resting spot while the text was still rising
+  // underneath it.
+  const aboutLift = useTransform(scrollYProgress, [0.46, 0.62], [24, 0]);
+  const aboutOpacity = useTransform(scrollYProgress, [0.46, 0.6], [0, 1]);
   const aboutVisibility = useTransform(aboutOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
 
   // Velocity-reactive marquee: fast scrolling skews the track, springs back.
