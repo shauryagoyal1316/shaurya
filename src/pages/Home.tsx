@@ -297,8 +297,8 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.15, ease: EASE.snappy }}
                 className="mt-9 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
               >
-                Fourteen days from first call to live URL. Five pages, drawn
-                from zero. <Annotate>Twenty percent down</Annotate>, and the
+                Fourteen days from first call to live URL. Every page drawn
+                from zero. <Annotate>Twenty-five percent down</Annotate>, and the
                 balance only if you decide to keep the site.
               </motion.p>
               <div className="mt-9">
@@ -463,7 +463,7 @@ export default function Home() {
             </h2>
           </a>
           <div className="mt-10 flex flex-wrap items-center gap-6 md:justify-end">
-            <Stamp text="20% down · walk anytime" ink="red" rotate={-5} />
+            <Stamp text="25% down · walk anytime" ink="red" rotate={-5} />
             <Link
               to="/services"
               data-cursor="hover"

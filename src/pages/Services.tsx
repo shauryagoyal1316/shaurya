@@ -17,9 +17,9 @@ const CONTACT_HREF =
 
 const included = [
   {
-    label: 'Five pages, custom-designed',
+    label: 'The pages you actually need',
     detail:
-      'Home, About, Menu or Services, Gallery, Contact. Each shaped around your business, not poured into a template.',
+      'A single page can carry a food truck; a growing firm might need seven. We settle the page list on the first call, and each one is designed around your business from a blank sheet.',
   },
   {
     label: 'Perfect on a phone',
@@ -82,7 +82,7 @@ const steps = [
     word: 'Then',
     title: 'Draft',
     detail:
-      'A 20% deposit starts the build. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
+      'A 25% deposit starts the build. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
   },
   {
     word: 'Last',
@@ -100,7 +100,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Custom websites for local businesses, live on your domain in about two weeks with a 20% deposit to start. Internal SaaS tools and sectional ERP software, scoped module by module."
+        description="Custom websites for local businesses, live on your domain in about two weeks with a 25% deposit to start. Internal SaaS tools and sectional ERP software, scoped module by module."
       />
 
       {/* HERO */}
@@ -149,7 +149,7 @@ export default function Services() {
               Start a project
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
-            <Stamp text="From $500 · 20% to start" ink="red" rotate={-4} />
+            <Stamp text="From $500 · 25% to start" ink="red" rotate={-4} />
           </motion.div>
         </div>
       </section>
@@ -158,13 +158,13 @@ export default function Services() {
       <section className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-12">
-            <HandNote className="mb-5">everything on this list is included —</HandNote>
+            <HandNote className="mb-5">the whole list is included —</HandNote>
             <ScrollDrift from={-48}>
               <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
                 {/* JSX drops the newline between text and the span, leaving no
                     soft-wrap opportunity — without <wbr /> the heading is one
                     unbreakable run that widens the mobile layout viewport. */}
-                Everything,
+                All of it,
                 <wbr />
                 <span className="ml-4 text-[color:var(--text-secondary)]">handled.</span>
               </h2>
@@ -254,7 +254,7 @@ export default function Services() {
               your customers will: on your phone, at full speed, down to the
               smallest <Annotate>detail</Annotate>. This is the standard your
               site gets built to. If the build doesn't clear it for you, the
-              20% deposit is all you ever spent.
+              25% deposit is all you ever spent.
             </motion.p>
           </div>
         </div>
@@ -314,7 +314,7 @@ export default function Services() {
                 platform and a fleet-maintenance app, both used every working
                 day by teams that will never see this page. Software is quoted
                 per module after a 30-minute call. The quote arrives in
-                writing, and the same <Annotate>20% deposit</Annotate> rule
+                writing, and the same <Annotate>25% deposit</Annotate> rule
                 applies.
               </motion.p>
               <div className="relative z-[4] mt-10 md:-mb-24">
