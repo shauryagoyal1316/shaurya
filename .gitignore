@@ -25,6 +25,7 @@ dist-ssr
 
 # Local-only tool config
 notes.local.md
+session-handoff.md
 
 # local scratch state
 .scratch/
