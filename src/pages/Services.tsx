@@ -172,7 +172,7 @@ export default function Services() {
               Start a project
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
-            <Stamp text="From $500 · 25% to start" ink="red" rotate={-4} />
+            <Stamp text="From $700 · 25% to start" ink="red" rotate={-4} />
           </motion.div>
         </div>
       </section>
