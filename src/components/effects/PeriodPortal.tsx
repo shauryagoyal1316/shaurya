@@ -25,36 +25,42 @@ import {
  * "random spot" again; preserve it if you retune the numbers.
  */
 export const PORTAL_TIMELINE = {
-  /** Portal disc has faded in over the visible period. */
+  /** Portal square has faded in exactly over the visible period. */
   ignite: 0.02,
   /** Slow swell ends; the rush to full cover begins. */
   liftoff: 0.08,
   /** The wash fully covers the viewport. */
   cover: 0.3,
-  /** Still fully covered — the disc centre quietly travels to the target. */
+  /** Still fully covered — the square's centre quietly travels to the target. */
   carry: 0.46,
-  /** Contraction complete: the disc sits exactly on the target period. */
+  /** Contraction complete: the square sits exactly on the target period. */
   land: 0.8,
   /** Crossfade to the real ink period is done; the portal is gone. */
   settle: 0.88,
 } as const;
 
 /**
- * A square period rendered as a circle of equal area reads as the same
- * mark: r = side / √π.
+ * The wash is the SAME shape as the period marks it connects — a sharp
+ * square (--radius: 0 everywhere). Anything else (the old equal-area
+ * circle) reads as a second, different mark blooming beside the period
+ * and then morphing at touchdown. `half` is the square's half-side.
  */
-const SQUARE_TO_CIRCLE = 1 / Math.sqrt(Math.PI);
-
-type Anchor = { x: number; y: number; r: number };
-type Geometry = { origin: Anchor; target: Anchor; coverRadius: number };
+type Anchor = { x: number; y: number; half: number };
+type Geometry = {
+  origin: Anchor;
+  target: Anchor;
+  coverHalf: number;
+  viewportWidth: number;
+  viewportHeight: number;
+};
 
 /** Gentle in-out for the first swell — the period "wakes up". */
 const swell = cubicBezier(0.45, 0, 0.55, 1);
 /** Hard acceleration into the wash — the takeoff. */
 const rush = cubicBezier(0.7, 0, 0.3, 1);
-/** Linear hold while fully covered (radius is constant here anyway). */
+/** Linear hold while fully covered (size is constant here anyway). */
 const hold = (v: number) => v;
-/** Long decelerating tail — the disc settles onto the period, no bounce. */
+/** Long decelerating tail — the square settles onto the period, no bounce. */
 const landing = cubicBezier(0.23, 1, 0.32, 1);
 
 /**
@@ -91,7 +97,7 @@ function layoutDocumentLeft(node: HTMLElement) {
 /**
  * The period glyphs carry a tiny constant optical nudge (`translate-y-*`
  * for baseline alignment). Layout offsets can't see it, but the eye can —
- * read it from computed style so the disc ignites and lands exactly on
+ * read it from computed style so the wash ignites and lands exactly on
  * the visible mark. Handles both the CSS `translate` property (Tailwind
  * v4) and a plain 2D `transform` matrix.
  */
@@ -133,16 +139,18 @@ function anchorsEqual(a: Anchor, b: Anchor) {
   return (
     Math.abs(a.x - b.x) < 0.5 &&
     Math.abs(a.y - b.y) < 0.5 &&
-    Math.abs(a.r - b.r) < 0.5
+    Math.abs(a.half - b.half) < 0.5
   );
 }
 
 /**
- * Renders the portal disc into <body> as a fixed, full-viewport layer
- * clipped to an animated circle. clip-path is resolution-independent
- * (crisp at 4px and at 4000px) and composites without per-frame repaints,
- * which is what keeps this smooth on iPhone — where animating a
- * full-screen SVG circle visibly stutters.
+ * Renders the portal wash into <body> as a fixed, full-viewport layer
+ * clipped to an animated inset() rectangle — the same square shape as the
+ * periods themselves, so the visible period appears to inflate, take over
+ * the screen, and deflate onto the destination period as one continuous
+ * mark. clip-path is resolution-independent (crisp at 4px and at 4000px)
+ * and composites without per-frame repaints, which is what keeps this
+ * smooth on iPhone — where animating a full-screen SVG visibly stutters.
  *
  * @param progress Pinned-range scroll progress (see PORTAL_TIMELINE).
  * @param pinRef   The sticky, viewport-sized stage both periods live in.
@@ -184,7 +192,7 @@ export function PeriodPortal({
         return {
           x: pinLeft + offset.x + nudge.dx + dot.offsetWidth / 2,
           y: offset.y + nudge.dy + dot.offsetHeight / 2,
-          r: Math.max(dot.offsetWidth * SQUARE_TO_CIRCLE, 2),
+          half: Math.max(dot.offsetWidth / 2, 1),
         };
       }
       // Rect fallback, only reachable if the offsetParent chain ever stops
@@ -194,30 +202,41 @@ export function PeriodPortal({
       return {
         x: rect.left - pinRect.left + rect.width / 2 + pinLeft,
         y: rect.top - pinRect.top + rect.height / 2,
-        r: Math.max(rect.width * SQUARE_TO_CIRCLE, 2),
+        half: Math.max(rect.width / 2, 1),
       };
     };
 
     const originAnchor = readAnchor(origin);
     const targetAnchor = readAnchor(target);
-    const farthestCorner = (anchor: Anchor) =>
-      Math.hypot(
-        Math.max(anchor.x, viewportWidth - anchor.x),
-        Math.max(anchor.y, viewportHeight - anchor.y)
+    // Half-side of a square that overshoots every viewport edge from
+    // either anchor (Chebyshev distance to the farthest edge).
+    const farthestEdge = (anchor: Anchor) =>
+      Math.max(
+        anchor.x,
+        viewportWidth - anchor.x,
+        anchor.y,
+        viewportHeight - anchor.y
       );
-    const coverRadius =
+    const coverHalf =
       Math.ceil(
-        Math.max(farthestCorner(originAnchor), farthestCorner(targetAnchor)) *
-          1.06
+        Math.max(farthestEdge(originAnchor), farthestEdge(targetAnchor)) * 1.06
       ) + 32;
 
     setGeometry((current) =>
       current &&
       anchorsEqual(current.origin, originAnchor) &&
       anchorsEqual(current.target, targetAnchor) &&
-      Math.abs(current.coverRadius - coverRadius) < 1
+      Math.abs(current.coverHalf - coverHalf) < 1 &&
+      current.viewportWidth === viewportWidth &&
+      current.viewportHeight === viewportHeight
         ? current
-        : { origin: originAnchor, target: targetAnchor, coverRadius }
+        : {
+            origin: originAnchor,
+            target: targetAnchor,
+            coverHalf,
+            viewportWidth,
+            viewportHeight,
+          }
     );
   }, [pinRef, originRef, targetRef]);
 
@@ -258,9 +277,11 @@ export function PeriodPortal({
 
   const T = PORTAL_TIMELINE;
   const geo = geometry ?? {
-    origin: { x: 0, y: 0, r: 0 },
-    target: { x: 0, y: 0, r: 0 },
-    coverRadius: 1,
+    origin: { x: 0, y: 0, half: 0 },
+    target: { x: 0, y: 0, half: 0 },
+    coverHalf: 1,
+    viewportWidth: 1,
+    viewportHeight: 1,
   };
 
   const cx = useTransform(
@@ -273,11 +294,26 @@ export function PeriodPortal({
     [T.cover, T.carry],
     [geo.origin.y, geo.target.y]
   );
-  const radius = useTransform(
+  const half = useTransform(
     progress,
     [0, T.liftoff, T.cover, T.carry, T.land],
-    [geo.origin.r, geo.origin.r * 3, geo.coverRadius, geo.coverRadius, geo.target.r],
+    [geo.origin.half, geo.origin.half * 3, geo.coverHalf, geo.coverHalf, geo.target.half],
     { ease: [swell, rush, hold, landing] }
+  );
+  // Each inset clamps at 0: once a side of the square passes a viewport
+  // edge it stays flush with it, which keeps every value valid for
+  // inset() however far the square overshoots the screen.
+  const insetTop = useTransform([cy, half], ([y, h]: number[]) =>
+    Math.max(y - h, 0)
+  );
+  const insetLeft = useTransform([cx, half], ([x, h]: number[]) =>
+    Math.max(x - h, 0)
+  );
+  const insetRight = useTransform([cx, half], ([x, h]: number[]) =>
+    Math.max(geo.viewportWidth - x - h, 0)
+  );
+  const insetBottom = useTransform([cy, half], ([y, h]: number[]) =>
+    Math.max(geo.viewportHeight - y - h, 0)
   );
   const opacity = useTransform(
     progress,
@@ -289,7 +325,7 @@ export function PeriodPortal({
   const visibility = useTransform(opacity, (v) =>
     v > 0.001 ? ('visible' as const) : ('hidden' as const)
   );
-  const clipPath = useMotionTemplate`circle(${radius}px at ${cx}px ${cy}px)`;
+  const clipPath = useMotionTemplate`inset(${insetTop}px ${insetRight}px ${insetBottom}px ${insetLeft}px)`;
 
   if (reducedMotion || !geometry) return null;
 

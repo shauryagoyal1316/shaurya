@@ -115,11 +115,11 @@ export default function Home() {
   // Faded-out layers also drop visibility so their links can't be tabbed
   // to or tapped through the layer that's actually on screen.
   const heroVisibility = useTransform(heroOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
-  // The hero period hands off to the portal disc right as it ignites.
+  // The hero period hands off to the portal square right as it ignites.
   const heroDotOpacity = useTransform(scrollYProgress, [0, T.ignite, T.liftoff], [1, 1, 0]);
-  // …and the offer period fades in only once the disc has landed on it.
+  // …and the offer period fades in only once the square has landed on it.
   const aboutDotOpacity = useTransform(scrollYProgress, [0, T.land, T.settle], [0, 0, 1]);
-  // The offer block settles (lift → 0) BEFORE the disc lands, so the
+  // The offer block settles (lift → 0) BEFORE the square lands, so the
   // landing target is stationary at touchdown.
   const aboutLift = useTransform(scrollYProgress, [0.6, 0.78], [24, 0]);
   const aboutOpacity = useTransform(scrollYProgress, [0.58, 0.74], [0, 1]);
