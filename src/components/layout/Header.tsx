@@ -51,8 +51,17 @@ export function Header() {
           to="/"
           data-cursor="hover"
           aria-label={`${profile.name} — home`}
-          className="font-display text-[15px] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="flex items-center gap-2.5 font-display text-[15px] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
+          {/* White plate + ink border so the mark reads as a pasted label on
+              the drawing in both themes (the artwork has a white ground). */}
+          <img
+            src={`${import.meta.env.BASE_URL}logo-mark.png`}
+            alt=""
+            width={28}
+            height={28}
+            className="size-7 border border-[var(--border-strong)] bg-white p-[3px]"
+          />
           Shaurya Goyal
         </Link>
 

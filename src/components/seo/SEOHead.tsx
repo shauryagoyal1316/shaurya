@@ -10,12 +10,12 @@ interface SEOHeadProps {
 }
 
 /**
- * Fallback OG image used on pages that don't pass one explicitly. Shared
- * across Home / Work / About / 404 so social previews always render with
- * an image rather than as bare text.
+ * Fallback OG image used on pages that don't pass one explicitly — the
+ * official logo lockup, served from this site (absolute URL because
+ * social crawlers resolve nothing).
  */
 const DEFAULT_OG_IMAGE =
-  'https://api.microlink.io/?url=https%3A%2F%2Fshauryagoyal1316.github.io%2Fshaurya%2F&screenshot=true&embed=screenshot.url&waitFor=2000&meta=false';
+  'https://shauryagoyal1316.github.io/shaurya/og-image.png';
 
 /**
  * Imperative SEO updater — sets <title> and meta tags on each page change.
