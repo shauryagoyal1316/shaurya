@@ -27,9 +27,9 @@ const included = [
       'Most of your customers find you on a phone via Google Maps. Every page is designed for that screen first.',
   },
   {
-    label: 'Your domain, live',
+    label: 'Live on a real domain',
     detail:
-      'Domain, hosting, and deployment handled end to end. You get a live URL, not a folder of files.',
+      'Launch day ends with a URL your customers can type, on a domain of your own. How it stays online afterward is your pick of the plans further down this page.',
   },
   {
     label: 'Photography-led',
@@ -45,6 +45,29 @@ const included = [
     label: 'Two revision rounds',
     detail:
       'Structured feedback passes at design and pre-launch. Enough to get it right, scoped enough to ship.',
+  },
+];
+
+const afterLaunch = [
+  {
+    label: 'I run it, end to end',
+    detail:
+      'I register an available domain and run the hosting, deploys included, for a flat $75 to $100 a month, fixed in your written quote. You never touch a server.',
+  },
+  {
+    label: 'A backend behind it',
+    detail:
+      'Orders, bookings, logins, or live inventory run on real infrastructure, and real infrastructure carries real costs. When I manage that layer too, it adds $75 to $100 a month.',
+  },
+  {
+    label: 'On a plan you already pay for',
+    detail:
+      'Hold your own hosting or backend account? I set the finished site up on it for a one-time $50. The bills stay in your name, and so does the control.',
+  },
+  {
+    label: 'Own the code outright',
+    detail:
+      'The complete codebase, delivered clean and ready to host anywhere. Simple builds start at $700, larger ones sit closer to $1,000. One payment, then it answers to you.',
   },
 ];
 
@@ -347,11 +370,35 @@ export default function Services() {
                 Care plan, from $75 a month
               </div>
               <p className="mt-3 text-sm leading-relaxed text-[color:var(--text-secondary)] md:text-base">
-                Menu changes, new photos, seasonal updates, and someone who
-                answers when something needs doing. Your site never quietly
-                goes stale. Optional, cancel any time.
+                Separate from hosting: menu changes, new photos, seasonal
+                updates, and someone who answers when something needs doing.
+                Your site never quietly goes stale. Optional, cancel any time.
               </p>
             </motion.div>
+          </div>
+
+          <div className="mb-24 md:ml-[10%]">
+            <HandNote className="mb-5">after launch, four ways to run it —</HandNote>
+            <DrawnRule strong />
+            {afterLaunch.map((option) => (
+              <div key={option.label}>
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-8% 0px' }}
+                  transition={{ duration: 0.7, ease: EASE.snappy }}
+                  className="grid gap-2 py-7 md:grid-cols-12 md:items-baseline md:gap-8"
+                >
+                  <div className="font-display text-xl leading-snug text-foreground md:col-span-4 md:text-2xl">
+                    {option.label}
+                  </div>
+                  <p className="max-w-xl text-sm leading-relaxed text-[color:var(--text-secondary)] md:col-span-7 md:text-base">
+                    {option.detail}
+                  </p>
+                </motion.div>
+                <DrawnRule />
+              </div>
+            ))}
           </div>
 
           <a href={CONTACT_HREF} data-cursor="view" data-cursor-label="Email me" className="group block">
