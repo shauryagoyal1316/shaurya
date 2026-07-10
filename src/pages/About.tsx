@@ -60,7 +60,7 @@ export default function About() {
     {
       label: 'AI workflow',
       title: 'AI-assisted execution with taste.',
-      body: 'AI tools speed up production while decisions stay focused on quality, clarity, and polish.',
+      body: 'AI tools speed up production while every decision about quality and polish stays human.',
     },
   ];
 
@@ -68,7 +68,7 @@ export default function About() {
     <>
       <SEOHead
         title="About"
-        description={`About ${profile.name}, ${profile.tagline.toLowerCase()}.`}
+        description={`About ${profile.name}: custom websites and internal business software for local businesses.`}
       />
 
       {/* BIO HERO */}

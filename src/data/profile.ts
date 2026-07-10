@@ -4,9 +4,9 @@ export const profile: ProfileInfo = {
   name: 'Shaurya Goyal',
   firstName: 'Shaurya',
   lastName: 'Goyal',
-  tagline: 'Full-Stack Website Builder',
+  tagline: 'Websites & Business Software',
   heroIntroduction:
-    'I build complete websites for people who want something sharper than a template. Front end, back end, motion, deployment: handled.',
+    'I build complete websites for people who want something sharper than a template, and internal software for businesses outgrowing the spreadsheet. Front end, back end, motion, deployment: handled.',
   biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, deployment. A website only works when the whole thing feels intentional.
 
 My job is taste and follow-through. I turn a business idea into a clear brief, choose the right stack, design the pages, and ship something that feels made for you.
@@ -23,6 +23,7 @@ Every detail earns its place: type, spacing, motion, colour. The goal is a site 
     'Type & Layout',
     'Motion Design',
     'Launch & Deployment',
+    'Internal Tools & ERP',
     'Brand Direction',
   ],
   stack: [

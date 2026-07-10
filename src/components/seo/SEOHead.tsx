@@ -29,8 +29,8 @@ export function SEOHead({
   const location = useLocation();
 
   const fullTitle = title
-    ? `${title} — ${profile.name}`
-    : `${profile.name} — ${profile.tagline}`;
+    ? `${title} · ${profile.name}`
+    : `${profile.name} · ${profile.tagline}`;
   const fullDescription = description || profile.heroIntroduction;
   // Under HashRouter the visible browser URL is `${origin}${pathname}#${route}`,
   // so reading `window.location.href` is the only reliable way to share the
