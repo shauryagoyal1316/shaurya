@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 import { EASE } from '@/lib/motion';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 /**
  * Route transition: a primary-colored curtain wipes up to cover the outgoing
@@ -9,6 +10,10 @@ import { EASE } from '@/lib/motion';
  */
 export function PageTransition({ children }: { children: ReactNode }) {
   const reduced = useReducedMotion();
+  // A full-page blur at phone pixel densities is one of the most expensive
+  // effects a mobile GPU can be asked for, right at the moment a page
+  // loads. Phones get the same curtain + rise with no filter. Mobile-first.
+  const blur = !useIsMobile();
 
   if (reduced) {
     return (
@@ -27,22 +32,22 @@ export function PageTransition({ children }: { children: ReactNode }) {
     <motion.div initial="initial" animate="enter" exit="exit">
       <motion.div
         variants={{
-          initial: { opacity: 0, y: 24, filter: 'blur(8px)' },
+          initial: { opacity: 0, y: 24, ...(blur && { filter: 'blur(8px)' }) },
           enter: {
             opacity: 1,
             y: 0,
-            filter: 'blur(0px)',
+            ...(blur && { filter: 'blur(0px)' }),
             transition: { duration: 0.65, delay: 0.25, ease: EASE.snappy },
             // Drop the filter entirely once the blur-in lands. A resting
             // 'blur(0px)' still forces the whole page through an isolated
             // render surface, which made every scroll-linked animation
             // (the period portal especially) visibly stutter.
-            transitionEnd: { filter: 'none' },
+            ...(blur && { transitionEnd: { filter: 'none' } }),
           },
           exit: {
             opacity: 0,
             y: -14,
-            filter: 'blur(6px)',
+            ...(blur && { filter: 'blur(6px)' }),
             transition: { duration: 0.32, ease: EASE.smooth },
           },
         }}

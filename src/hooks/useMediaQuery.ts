@@ -5,12 +5,19 @@ import { useState, useEffect } from 'react';
  * @param query - Media query string (e.g., '(min-width: 768px)')
  */
 export const useMediaQuery = (query: string): boolean => {
-  const [matches, setMatches] = useState(false);
+  // Read synchronously so the FIRST render is already correct. A false
+  // start here means every consumer renders one desktop frame on mobile —
+  // ScrollDrift once painted its full 56px offset (widening the phone
+  // layout viewport) because nothing re-triggered the value after the
+  // effect flipped the flag.
+  const [matches, setMatches] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(query).matches : false
+  );
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(query);
-    
-    // Set initial value
+
+    // Sync in case the environment changed between render and effect
     setMatches(mediaQuery.matches);
 
     // Listen for changes

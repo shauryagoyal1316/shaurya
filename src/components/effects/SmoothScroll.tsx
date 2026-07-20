@@ -45,6 +45,10 @@ export function SmoothScroll() {
 
     const start = () => {
       if (mql?.matches || nativePreferred()) return;
+      // Touch devices scroll natively either way (Lenis only intercepts
+      // wheel input), so on phones its rAF loop is pure overhead — skip
+      // it and give the main thread every frame back. Mobile-first.
+      if (window.matchMedia('(pointer: coarse)').matches) return;
       lenis = new Lenis({
         duration: 1.15,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

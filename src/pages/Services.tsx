@@ -217,7 +217,7 @@ export default function Services() {
                 if (lenis) lenis.scrollTo(el);
                 else el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="font-note redline text-left text-lg leading-snug transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="-my-2 py-2 font-note redline text-left text-lg leading-snug transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               running a fleet, a warehouse, a team? the software is further down ↓
             </button>
