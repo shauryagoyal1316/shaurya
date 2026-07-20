@@ -9,7 +9,7 @@ import {
   useTransform,
   useVelocity,
 } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
@@ -27,12 +27,10 @@ import {
 } from '@/components/effects/drawing';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { EASE } from '@/lib/motion';
-
-const CONTACT_HREF =
-  'mailto:seekshaurya@gmail.com?subject=Website%20for%20my%20business';
+import { EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
 const MANIFESTO =
-  'Most small-business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
+  'Most business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
 
 const capabilities = [
   {
@@ -44,7 +42,7 @@ const capabilities = [
   {
     key: 'build',
     title: 'Full-stack build',
-    body: 'Front end, back end, forms, bookings. Built as one system, deployed on your own domain, fast on any phone.',
+    body: 'Front end, back end, forms, bookings, quote requests. Built as one system, deployed on your own domain, fast on any phone.',
     note: 'yes, the backend too',
   },
   {
@@ -75,7 +73,7 @@ const processSteps = [
   {
     word: 'Last',
     title: 'Build',
-    line: 'Live on your domain. You pay the balance only if you take it.',
+    line: 'Live on your domain. You only take it if you love it.',
   },
 ];
 
@@ -164,6 +162,10 @@ export default function Home() {
               y: heroY,
               visibility: heroVisibility,
               transformOrigin: 'center 58%',
+              // Promoted: this block re-styles on every frame of the pinned
+              // scroll; without its own compositor layer the whole headline
+              // repaints per frame and the portal visibly stutters.
+              willChange: 'transform, opacity',
             }}
             className="relative z-[2] mx-auto flex h-full max-w-[1440px] flex-col justify-center px-6 md:px-10"
           >
@@ -184,7 +186,10 @@ export default function Home() {
                 stagger={0.04}
               />
               <span className="block">
-                <Annotate note="no templates. ever." className="align-top">
+                {/* delay syncs the pencil with the staggered letters — on a
+                    first visit they land at intro + ~2s; without it the
+                    ellipse circles empty space behind the preloader. */}
+                <Annotate note="no templates. ever." className="align-top" delay={intro + 1.2}>
                   <SplitTextReveal
                     text="measure"
                     once={false}
@@ -275,7 +280,12 @@ export default function Home() {
 
           {/* Portal destination — the offer block */}
           <motion.div
-            style={{ opacity: aboutOpacity, y: aboutLift, visibility: aboutVisibility }}
+            style={{
+              opacity: aboutOpacity,
+              y: aboutLift,
+              visibility: aboutVisibility,
+              willChange: 'transform, opacity',
+            }}
             className="absolute inset-0 z-[2] flex items-center px-6 py-24 md:px-10"
           >
             <div className="mx-auto w-full max-w-5xl">
@@ -301,8 +311,8 @@ export default function Home() {
                 className="mt-9 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
               >
                 Fourteen days from first call to live URL. Every page drawn
-                from zero. <Annotate>Twenty-five percent down</Annotate>, and the
-                balance only if you decide to keep the site.
+                from zero. <Annotate>Quoted in writing</Annotate> after one
+                call, and you only keep it if you love it.
               </motion.p>
               <div className="mt-9">
                 <Link
@@ -339,7 +349,7 @@ export default function Home() {
       <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-14">
-            <HandNote className="mb-5">what your money buys ↓</HandNote>
+            <HandNote className="mb-5">what every build includes ↓</HandNote>
             <h2 className="font-display text-[clamp(40px,6.5vw,96px)] leading-[0.88] text-foreground">
               <SplitTextReveal text="The whole" stagger={0.04} />
               <span className="block text-[color:var(--text-secondary)] md:ml-[14%]">
@@ -348,7 +358,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div ref={capRef} className="flex flex-col gap-8 pb-8 md:gap-10">
+          <div ref={capRef} className="relative flex flex-col gap-8 pb-8 md:gap-10">
             {capabilities.map((cap, i) => (
               <CapabilityCard
                 key={cap.key}
@@ -404,7 +414,7 @@ export default function Home() {
               data-cursor="hover"
               className="hidden whitespace-nowrap text-[15px] text-foreground/60 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background md:inline-flex"
             >
-              Full offer &amp; pricing →
+              The full offer →
             </Link>
           </div>
 
@@ -442,7 +452,7 @@ export default function Home() {
               data-cursor="hover"
               className="text-[15px] text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              Full offer &amp; pricing →
+              The full offer →
             </Link>
           </div>
         </div>
@@ -466,17 +476,27 @@ export default function Home() {
             </h2>
           </a>
           <div className="mt-10 flex flex-wrap items-center gap-6 md:justify-end">
-            <Stamp text="25% down · walk anytime" ink="red" rotate={-5} />
+            <Stamp text="Quoted in writing · walk anytime" ink="red" rotate={-5} />
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
+            </a>
             <Link
               to="/services"
               data-cursor="hover"
               className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              Services &amp; pricing
+              Services &amp; process
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <span className="text-sm text-foreground/50">
-              One email. Reply within a day.
+              Email or WhatsApp. Reply within a day.
             </span>
           </div>
         </div>

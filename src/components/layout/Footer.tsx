@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { profile } from '@/data/profile';
+import { EMAIL, EMAIL_HREF, WHATSAPP_DISPLAY, WHATSAPP_HREF } from '@/lib/contact';
 
 /** Live local-time readout — a small signal that someone is at the desk. */
 function LocalTime() {
@@ -38,13 +39,24 @@ export function Footer() {
               Have a business that deserves a better website? Tell me about it.
             </p>
             <a
-              href="mailto:seekshaurya@gmail.com"
+              href={EMAIL_HREF}
               data-cursor="view"
               data-cursor-label="Email"
               className="mt-4 inline-block text-xl font-medium text-foreground underline decoration-[var(--water)] decoration-wavy decoration-2 underline-offset-8 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background md:text-2xl"
             >
-              seekshaurya@gmail.com
+              {EMAIL}
             </a>
+            <div className="mt-3">
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="hover"
+                className="text-base text-foreground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              >
+                or WhatsApp {WHATSAPP_DISPLAY} ↗
+              </a>
+            </div>
           </div>
 
           <div className="flex flex-col items-start gap-1.5 text-sm text-foreground/60 md:items-end">

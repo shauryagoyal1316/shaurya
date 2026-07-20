@@ -12,11 +12,15 @@ export function Annotate({
   children,
   note,
   className = '',
+  delay = 0,
 }: {
   children: ReactNode;
   /** Optional hand-written margin note, hidden on small screens. */
   note?: string;
   className?: string;
+  /** Extra seconds before the ellipse draws — sync with staggered text
+      reveals so the pencil circles a word that has already landed. */
+  delay?: number;
 }) {
   const reduced = useReducedMotion();
   return (
@@ -41,7 +45,7 @@ export function Annotate({
           initial={{ pathLength: reduced ? 1 : 0, opacity: reduced ? 0.9 : 0 }}
           whileInView={{ pathLength: 1, opacity: 0.9 }}
           viewport={{ once: true, margin: '-12% 0px' }}
-          transition={{ duration: 0.9, delay: 0.35, ease: EASE.smooth }}
+          transition={{ duration: 0.9, delay: delay + 0.35, ease: EASE.smooth }}
         />
       </svg>
       {note && (
@@ -50,7 +54,7 @@ export function Annotate({
           initial={{ opacity: 0, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-12% 0px' }}
-          transition={{ duration: 0.6, delay: 1.1, ease: EASE.snappy }}
+          transition={{ duration: 0.6, delay: delay + 1.1, ease: EASE.snappy }}
           className="font-note redline absolute -right-4 -top-9 hidden translate-x-full whitespace-nowrap text-base leading-none md:block"
         >
           ↖ {note}
@@ -98,7 +102,7 @@ export function Stamp({
         borderColor: color,
         boxShadow: `inset 0 0 0 1.5px ${color}`,
       }}
-      className={`inline-block select-none border-[2.5px] px-3 py-1.5 font-display text-[13px] tracking-[0.14em] ${className}`}
+      className={`inline-block select-none border-[2.5px] px-3 py-1.5 font-display text-[13px] tracking-[0.14em] [text-wrap:balance] ${className}`}
     >
       {text}
     </motion.span>

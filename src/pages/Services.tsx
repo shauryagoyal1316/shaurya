@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollDrift } from '@/components/effects/ScrollDrift';
 import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
@@ -11,15 +11,13 @@ import {
   Stamp,
 } from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
-
-const CONTACT_HREF =
-  'mailto:seekshaurya@gmail.com?subject=Website%20for%20my%20business';
+import { EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
 const included = [
   {
     label: 'The pages you actually need',
     detail:
-      'A single page can carry a food truck; a growing firm might need seven. We settle the page list on the first call, and each one is designed around your business from a blank sheet.',
+      'A single page can carry a food truck; a logistics firm might need a coverage map, a fleet page, and a quote-request form. We settle the page list on the first call, and each one is designed around your business from a blank sheet.',
   },
   {
     label: 'Perfect on a phone',
@@ -52,22 +50,22 @@ const afterLaunch = [
   {
     label: 'I run it, end to end',
     detail:
-      'I register an available domain and run the hosting, deploys included, for a flat $75 to $100 a month, fixed in your written quote. You never touch a server.',
+      'I register an available domain and run the hosting, deploys included, for a flat monthly rate fixed in your written quote. You never touch a server.',
   },
   {
     label: 'A backend behind it',
     detail:
-      'Orders, bookings, logins, or live inventory run on real infrastructure, and real infrastructure carries real costs. When I manage that layer too, it adds $75 to $100 a month.',
+      'Orders, bookings, logins, or live inventory run on real infrastructure. When I manage that layer too, it carries its own flat monthly rate, spelled out in the same written quote.',
   },
   {
     label: 'On a plan you already pay for',
     detail:
-      'Hold your own hosting or backend account? I set the finished site up on it for a one-time $50. The bills stay in your name, and so does the control.',
+      'Hold your own hosting or backend account? I set the finished site up on it for a small one-time setup fee. The bills stay in your name, and so does the control.',
   },
   {
     label: 'Own the code outright',
     detail:
-      'The complete codebase, delivered clean and ready to host anywhere. Simple builds start at $700, larger ones sit closer to $1,000. One payment, then it answers to you.',
+      'The complete codebase, delivered clean and ready to host anywhere. Quoted to the size of the build. One payment, then it answers to you.',
   },
 ];
 
@@ -81,6 +79,11 @@ const modules = [
     name: 'Fleet & maintenance',
     detail:
       'Service logs and schedules per asset, with every cost and repair on record.',
+  },
+  {
+    name: 'Compliance & documents',
+    detail:
+      'Permits, insurance, licences, and fitness certificates on file, with a reminder before each one lapses.',
   },
   {
     name: 'Approvals & roles',
@@ -105,13 +108,13 @@ const steps = [
     word: 'Then',
     title: 'Draft',
     detail:
-      'A 25% deposit starts the build. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
+      'A written quote arrives after the call, and the build starts. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
   },
   {
     word: 'Last',
     title: 'Build',
     detail:
-      'Love it? Pay the balance and it goes live on your domain, with a simple handoff of how updates work. Not right for you? You walk away. The deposit is all you ever spent.',
+      'Love it? It goes live on your domain, with a simple handoff of how updates work. Not right for you? You walk away, no questions asked.',
   },
 ];
 
@@ -123,7 +126,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Custom websites for local businesses, live on your domain in about two weeks with a 25% deposit to start. Internal SaaS tools and sectional ERP software, scoped module by module."
+        description="Custom websites for local businesses and growing operations, live on your domain in about two weeks, quoted in writing after one call. Internal SaaS tools and sectional ERP software, scoped module by module."
       />
 
       {/* HERO */}
@@ -133,11 +136,16 @@ export default function Services() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.1, ease: EASE.snappy }}
-            className="max-w-5xl font-display text-[clamp(42px,7.5vw,110px)] leading-[0.88] text-foreground"
+            className="max-w-6xl font-display text-[clamp(42px,7.5vw,110px)] leading-[0.88] text-foreground"
           >
             Your business,
             <span className="block text-[color:var(--text-secondary)]">
-              online <Annotate note="the way it deserves">properly</Annotate>.
+              {/* nowrap wrapper: without it the period can wrap onto its own
+                  line at desktop widths — a giant lone dot at the margin. */}
+              online{' '}
+              <span className="whitespace-nowrap">
+                <Annotate note="the way it deserves">properly</Annotate>.
+              </span>
             </span>
           </motion.h1>
           <motion.div
@@ -146,7 +154,7 @@ export default function Services() {
             transition={{ duration: 0.8, delay: 0.35 }}
             className="mt-6 max-w-3xl"
           >
-            <DimensionLine label="fixed scope · fixed price · two weeks" />
+            <DimensionLine label="fixed scope · written quote · two weeks" />
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -154,9 +162,10 @@ export default function Services() {
             transition={{ duration: 0.9, delay: 0.3, ease: EASE.snappy }}
             className="mt-8 max-w-xl text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg"
           >
-            Cafés, barbershops, studios, chefs, small firms. A custom-designed
+            Cafés, barbershops, studios, logistics fleets, growing firms. A custom-designed
             website, written, built, and live on your own domain in about two
-            weeks. None of it from a template, and none of it at agency prices.
+            weeks. None of it from a template, and all of it quoted in writing
+            before the build begins.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 14 }}
@@ -172,7 +181,46 @@ export default function Services() {
               Start a project
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
-            <Stamp text="From $700 · 25% to start" ink="red" rotate={-4} />
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
+            </a>
+            <Stamp text="Scoped on one call · quoted in writing" ink="red" rotate={-4} />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.7, ease: EASE.snappy }}
+            className="mt-9"
+            style={{ rotate: '-2deg' }}
+          >
+            <button
+              type="button"
+              data-cursor="hover"
+              onClick={() => {
+                const el = document.getElementById('software');
+                if (!el) return;
+                // Under HashRouter the URL hash is the route, so a plain
+                // #software anchor would navigate instead of scroll. Route
+                // through Lenis when it's driving, like the Home hero does.
+                const lenis = (
+                  window as unknown as {
+                    __lenis?: { scrollTo: (target: HTMLElement) => void };
+                  }
+                ).__lenis;
+                if (lenis) lenis.scrollTo(el);
+                else el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="font-note redline text-left text-lg leading-snug transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              running a fleet, a warehouse, a team? the software is further down ↓
+            </button>
           </motion.div>
         </div>
       </section>
@@ -276,8 +324,8 @@ export default function Services() {
               The site you're reading right now is the demo. Judge it the way
               your customers will: on your phone, at full speed, down to the
               smallest <Annotate>detail</Annotate>. This is the standard your
-              site gets built to. If the build doesn't clear it for you, the
-              25% deposit is all you ever spent.
+              site gets built to. If the build doesn't clear it for you, you
+              walk away.
             </motion.p>
           </div>
         </div>
@@ -286,7 +334,7 @@ export default function Services() {
       {/* SOFTWARE — the second service line. Scrubbed pitch, inset module
           schedule, proof block set hard right with a stamp crossing the
           section rule below. */}
-      <section className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-32">
+      <section id="software" className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-32">
         <div className="mx-auto max-w-[1440px]">
           <HandNote className="mb-5">when the spreadsheet stops coping —</HandNote>
           <h2 className="font-display text-[clamp(38px,5.5vw,84px)] leading-[0.88] text-foreground">
@@ -337,7 +385,7 @@ export default function Services() {
                 platform and a fleet-maintenance app, both used every working
                 day by teams that will never see this page. Software is quoted
                 per module after a 30-minute call. The quote arrives in
-                writing, and the same <Annotate>25% deposit</Annotate> rule
+                writing, and the same <Annotate>walk-away</Annotate> rule
                 applies.
               </motion.p>
               <div className="relative z-[4] mt-10 md:-mb-24">
@@ -367,7 +415,7 @@ export default function Services() {
               className="paper-plain relative border border-[var(--border-strong)] p-8 shadow-[var(--shadow-md)]"
             >
               <div className="text-sm font-medium text-foreground">
-                Care plan, from $75 a month
+                Care plan, month to month
               </div>
               <p className="mt-3 text-sm leading-relaxed text-[color:var(--text-secondary)] md:text-base">
                 Separate from hosting: menu changes, new photos, seasonal
@@ -410,9 +458,22 @@ export default function Services() {
               </span>
             </h2>
           </a>
-          <p className="mt-6 text-sm text-foreground/50">
-            One email. Tell me about your business, get a reply within a day.
-          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
+            </a>
+            <p className="text-sm text-foreground/50">
+              One email or message. Tell me about your business, get a reply
+              within a day.
+            </p>
+          </div>
         </div>
       </section>
     </>
