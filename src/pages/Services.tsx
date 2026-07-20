@@ -108,13 +108,13 @@ const steps = [
     word: 'Then',
     title: 'Draft',
     detail:
-      'A written quote arrives after the call, and a small deposit starts the build. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
+      'A written quote arrives after the call, and the build starts. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
   },
   {
     word: 'Last',
     title: 'Build',
     detail:
-      'Love it? Pay the balance and it goes live on your domain, with a simple handoff of how updates work. Not right for you? You walk away. The deposit is all you ever spent.',
+      'Love it? It goes live on your domain, with a simple handoff of how updates work. Not right for you? You walk away, no questions asked.',
   },
 ];
 
@@ -319,8 +319,8 @@ export default function Services() {
               The site you're reading right now is the demo. Judge it the way
               your customers will: on your phone, at full speed, down to the
               smallest <Annotate>detail</Annotate>. This is the standard your
-              site gets built to. If the build doesn't clear it for you, the
-              deposit is all you ever spent.
+              site gets built to. If the build doesn't clear it for you, you
+              walk away.
             </motion.p>
           </div>
         </div>
