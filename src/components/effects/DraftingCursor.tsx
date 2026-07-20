@@ -10,6 +10,9 @@ import { hasFinePointer, prefersReducedMotion } from '@/lib/motion';
  */
 export function DraftingCursor() {
   const [enabled, setEnabled] = useState(false);
+  // Stay invisible until the pointer actually moves — otherwise the reticle
+  // and coordinate readout sit parked over the hero at page load.
+  const [live, setLive] = useState(false);
   const [variant, setVariant] = useState<'default' | 'hover' | 'view' | 'text'>(
     'default'
   );
@@ -30,10 +33,19 @@ export function DraftingCursor() {
     let tx = x;
     let ty = y;
     let raf = 0;
+    let moved = false;
 
     const onMove = (e: PointerEvent) => {
       tx = e.clientX;
       ty = e.clientY;
+      if (!moved) {
+        // Snap to the first real position so the crosshair doesn't glide
+        // in from screen center, then fade the overlay on.
+        moved = true;
+        x = tx;
+        y = ty;
+        setLive(true);
+      }
     };
 
     const frame = () => {
@@ -87,7 +99,7 @@ export function DraftingCursor() {
     };
   }, []);
 
-  if (!enabled || variant === 'text') return null;
+  if (!enabled || !live || variant === 'text') return null;
 
   const active = variant !== 'default';
   const ret = variant === 'view' ? 72 : variant === 'hover' ? 34 : 12;

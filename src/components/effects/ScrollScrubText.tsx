@@ -31,7 +31,9 @@ export function ScrollScrubText({ text, className }: ScrollScrubTextProps) {
   }
 
   return (
-    <p ref={ref} className={className}>
+    // relative: framer's useScroll needs a positioned target to compute
+    // offsets reliably (it warns on static elements).
+    <p ref={ref} className={`relative ${className ?? ''}`}>
       <span className="sr-only">{text}</span>
       <span aria-hidden>
         {words.map((word, i) => (

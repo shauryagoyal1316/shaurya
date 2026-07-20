@@ -256,6 +256,11 @@
 
   html {
     background: var(--background);
+    /* clip (not hidden: keeps position:sticky working) so transformed
+       elements — ScrollDrift offsets, rotated stamps mid-spring — can
+       never widen the mobile layout viewport and cause a sideways wobble.
+       body's overflow-x alone doesn't stop viewport expansion on mobile. */
+    overflow-x: clip;
     /* color-scheme drives form-control native theming + scrollbar color
        and is the simplest knob to flip alongside data-theme. */
     color-scheme: light;

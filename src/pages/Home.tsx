@@ -182,7 +182,10 @@ export default function Home() {
                 stagger={0.04}
               />
               <span className="block">
-                <Annotate note="no templates. ever." className="align-top">
+                {/* delay syncs the pencil with the staggered letters — on a
+                    first visit they land at intro + ~2s; without it the
+                    ellipse circles empty space behind the preloader. */}
+                <Annotate note="no templates. ever." className="align-top" delay={intro + 1.2}>
                   <SplitTextReveal
                     text="measure"
                     once={false}
@@ -346,7 +349,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div ref={capRef} className="flex flex-col gap-8 pb-8 md:gap-10">
+          <div ref={capRef} className="relative flex flex-col gap-8 pb-8 md:gap-10">
             {capabilities.map((cap, i) => (
               <CapabilityCard
                 key={cap.key}

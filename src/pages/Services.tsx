@@ -136,11 +136,16 @@ export default function Services() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.1, ease: EASE.snappy }}
-            className="max-w-5xl font-display text-[clamp(42px,7.5vw,110px)] leading-[0.88] text-foreground"
+            className="max-w-6xl font-display text-[clamp(42px,7.5vw,110px)] leading-[0.88] text-foreground"
           >
             Your business,
             <span className="block text-[color:var(--text-secondary)]">
-              online <Annotate note="the way it deserves">properly</Annotate>.
+              {/* nowrap wrapper: without it the period can wrap onto its own
+                  line at desktop widths — a giant lone dot at the margin. */}
+              online{' '}
+              <span className="whitespace-nowrap">
+                <Annotate note="the way it deserves">properly</Annotate>.
+              </span>
             </span>
           </motion.h1>
           <motion.div
@@ -212,7 +217,7 @@ export default function Services() {
                 if (lenis) lenis.scrollTo(el);
                 else el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="font-note redline text-lg leading-snug transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="font-note redline text-left text-lg leading-snug transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               running a fleet, a warehouse, a team? the software is further down ↓
             </button>
