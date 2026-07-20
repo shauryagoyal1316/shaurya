@@ -1,6 +1,6 @@
 # Shaurya Goyal — Portfolio
 
-Personal portfolio site for **Shaurya Goyal**, a full-stack website builder. Editorial dark aesthetic, true-black canvas, single electric-lime accent.
+Personal portfolio site for **Shaurya Goyal**, a full-stack website builder. Designed as "The Working Drawing" — the site presented as an engineer's drawing of itself: drafting-paper light theme, night-blueprint dark theme, drafting-blue primary, red-pencil annotations. Mobile-first, with a quote-first offer (no listed prices) and email + WhatsApp contact throughout.
 
 ## Stack
 
@@ -9,7 +9,7 @@ Personal portfolio site for **Shaurya Goyal**, a full-stack website builder. Edi
 - Tailwind CSS v4
 - shadcn/ui (Radix primitives)
 - Framer Motion + GSAP
-- Lenis (inertial smooth scroll)
+- Lenis (inertial smooth scroll — desktop only; phones scroll natively, and a frame-rate governor falls back to native scrolling on devices that can't hold the frame rate)
 - React Router (HashRouter for static hosting)
 
 ## Local development
