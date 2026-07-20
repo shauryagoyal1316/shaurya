@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollDrift } from '@/components/effects/ScrollDrift';
@@ -14,6 +14,7 @@ import {
   Stamp,
 } from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
+import { EMAIL, EMAIL_HREF, WHATSAPP_DISPLAY, WHATSAPP_HREF } from '@/lib/contact';
 
 /** Masked line reveal for body copy — the paragraph rises out of its own line box. */
 function RevealParagraph({
@@ -144,11 +145,22 @@ export default function About() {
               <MetaRow label="Status" value={profile.availability} />
               <MetaRow label="Email">
                 <a
-                  href="mailto:seekshaurya@gmail.com"
+                  href={EMAIL_HREF}
                   data-cursor="hover"
                   className="normal-case tracking-[0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  seekshaurya@gmail.com
+                  {EMAIL}
+                </a>
+              </MetaRow>
+              <MetaRow label="WhatsApp">
+                <a
+                  href={WHATSAPP_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor="hover"
+                  className="normal-case tracking-[0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  {WHATSAPP_DISPLAY}
                 </a>
               </MetaRow>
               <MetaRow label="GitHub" last>
@@ -280,11 +292,21 @@ export default function About() {
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a
-              href="mailto:seekshaurya@gmail.com"
+              href={EMAIL_HREF}
               data-cursor="hover"
               className="inline-flex items-center gap-3 border border-[var(--border-strong)] px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Get in touch
+              Email me
+            </a>
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="inline-flex items-center gap-3 border border-[var(--border-strong)] px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
             </a>
             <Stamp text="Open for work" ink="blue" rotate={4} />
           </div>

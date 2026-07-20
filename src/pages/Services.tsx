@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollDrift } from '@/components/effects/ScrollDrift';
 import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
@@ -11,9 +11,7 @@ import {
   Stamp,
 } from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
-
-const CONTACT_HREF =
-  'mailto:seekshaurya@gmail.com?subject=Website%20for%20my%20business';
+import { EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
 const included = [
   {
@@ -177,6 +175,16 @@ export default function Services() {
             >
               Start a project
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
             </a>
             <Stamp text="Scoped on one call · quoted in writing" ink="red" rotate={-4} />
           </motion.div>
@@ -445,9 +453,22 @@ export default function Services() {
               </span>
             </h2>
           </a>
-          <p className="mt-6 text-sm text-foreground/50">
-            One email. Tell me about your business, get a reply within a day.
-          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
+            </a>
+            <p className="text-sm text-foreground/50">
+              One email or message. Tell me about your business, get a reply
+              within a day.
+            </p>
+          </div>
         </div>
       </section>
     </>

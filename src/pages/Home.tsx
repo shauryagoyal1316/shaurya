@@ -9,7 +9,7 @@ import {
   useTransform,
   useVelocity,
 } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
@@ -27,9 +27,7 @@ import {
 } from '@/components/effects/drawing';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { EASE } from '@/lib/motion';
-
-const CONTACT_HREF =
-  'mailto:seekshaurya@gmail.com?subject=Website%20for%20my%20business';
+import { EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
 const MANIFESTO =
   'Most business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
@@ -467,6 +465,16 @@ export default function Home() {
           </a>
           <div className="mt-10 flex flex-wrap items-center gap-6 md:justify-end">
             <Stamp text="Quoted in writing · walk anytime" ink="red" rotate={-5} />
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              WhatsApp me
+              <MessageCircle className="size-4" />
+            </a>
             <Link
               to="/services"
               data-cursor="hover"
@@ -476,7 +484,7 @@ export default function Home() {
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <span className="text-sm text-foreground/50">
-              One email. Reply within a day.
+              Email or WhatsApp. Reply within a day.
             </span>
           </div>
         </div>
