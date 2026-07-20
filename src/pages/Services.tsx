@@ -19,7 +19,7 @@ const included = [
   {
     label: 'The pages you actually need',
     detail:
-      'A single page can carry a food truck; a growing firm might need seven. We settle the page list on the first call, and each one is designed around your business from a blank sheet.',
+      'A single page can carry a food truck; a logistics firm might need a coverage map, a fleet page, and a quote-request form. We settle the page list on the first call, and each one is designed around your business from a blank sheet.',
   },
   {
     label: 'Perfect on a phone',
@@ -83,6 +83,11 @@ const modules = [
       'Service logs and schedules per asset, with every cost and repair on record.',
   },
   {
+    name: 'Compliance & documents',
+    detail:
+      'Permits, insurance, licences, and fitness certificates on file, with a reminder before each one lapses.',
+  },
+  {
     name: 'Approvals & roles',
     detail:
       'Permission levels and sign-off chains, with an audit trail behind every change.',
@@ -123,7 +128,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Custom websites for local businesses, live on your domain in about two weeks, quoted in writing after one call. Internal SaaS tools and sectional ERP software, scoped module by module."
+        description="Custom websites for local businesses and growing operations, live on your domain in about two weeks, quoted in writing after one call. Internal SaaS tools and sectional ERP software, scoped module by module."
       />
 
       {/* HERO */}
@@ -154,7 +159,7 @@ export default function Services() {
             transition={{ duration: 0.9, delay: 0.3, ease: EASE.snappy }}
             className="mt-8 max-w-xl text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg"
           >
-            Cafés, barbershops, studios, chefs, small firms. A custom-designed
+            Cafés, barbershops, studios, logistics fleets, growing firms. A custom-designed
             website, written, built, and live on your own domain in about two
             weeks. None of it from a template, and all of it quoted in writing
             before the build begins.
@@ -174,6 +179,35 @@ export default function Services() {
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <Stamp text="Scoped on one call · quoted in writing" ink="red" rotate={-4} />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.7, ease: EASE.snappy }}
+            className="mt-9"
+            style={{ rotate: '-2deg' }}
+          >
+            <button
+              type="button"
+              data-cursor="hover"
+              onClick={() => {
+                const el = document.getElementById('software');
+                if (!el) return;
+                // Under HashRouter the URL hash is the route, so a plain
+                // #software anchor would navigate instead of scroll. Route
+                // through Lenis when it's driving, like the Home hero does.
+                const lenis = (
+                  window as unknown as {
+                    __lenis?: { scrollTo: (target: HTMLElement) => void };
+                  }
+                ).__lenis;
+                if (lenis) lenis.scrollTo(el);
+                else el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="font-note redline text-lg leading-snug transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              running a fleet, a warehouse, a team? the software is further down ↓
+            </button>
           </motion.div>
         </div>
       </section>
@@ -287,7 +321,7 @@ export default function Services() {
       {/* SOFTWARE — the second service line. Scrubbed pitch, inset module
           schedule, proof block set hard right with a stamp crossing the
           section rule below. */}
-      <section className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-32">
+      <section id="software" className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-32">
         <div className="mx-auto max-w-[1440px]">
           <HandNote className="mb-5">when the spreadsheet stops coping —</HandNote>
           <h2 className="font-display text-[clamp(38px,5.5vw,84px)] leading-[0.88] text-foreground">

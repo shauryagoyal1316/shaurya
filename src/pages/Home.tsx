@@ -32,7 +32,7 @@ const CONTACT_HREF =
   'mailto:seekshaurya@gmail.com?subject=Website%20for%20my%20business';
 
 const MANIFESTO =
-  'Most small-business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
+  'Most business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
 
 const capabilities = [
   {
@@ -44,7 +44,7 @@ const capabilities = [
   {
     key: 'build',
     title: 'Full-stack build',
-    body: 'Front end, back end, forms, bookings. Built as one system, deployed on your own domain, fast on any phone.',
+    body: 'Front end, back end, forms, bookings, quote requests. Built as one system, deployed on your own domain, fast on any phone.',
     note: 'yes, the backend too',
   },
   {

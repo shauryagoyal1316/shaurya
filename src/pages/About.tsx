@@ -68,7 +68,7 @@ export default function About() {
     <>
       <SEOHead
         title="About"
-        description={`About ${profile.name}: custom websites and internal business software for local businesses.`}
+        description={`About ${profile.name}: custom websites and internal business software for local businesses and growing operations.`}
       />
 
       {/* BIO HERO */}
