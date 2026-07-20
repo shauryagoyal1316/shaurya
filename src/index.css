@@ -256,11 +256,12 @@
 
   html {
     background: var(--background);
-    /* clip (not hidden: keeps position:sticky working) so transformed
-       elements — ScrollDrift offsets, rotated stamps mid-spring — can
-       never widen the mobile layout viewport and cause a sideways wobble.
-       body's overflow-x alone doesn't stop viewport expansion on mobile. */
-    overflow-x: clip;
+    /* NEVER set overflow-x here: any non-visible overflow on the root —
+       even `clip` — kills every position:sticky descendant in Chromium,
+       which unpins the Home hero stage mid-portal and hides the offer
+       block. Mobile viewport-widening is prevented at the source instead:
+       ScrollDrift clamps its lateral offset inside the page padding on
+       small screens, and body keeps its own overflow-x guard. */
     /* color-scheme drives form-control native theming + scrollbar color
        and is the simplest knob to flip alongside data-theme. */
     color-scheme: light;
