@@ -69,4 +69,3 @@ Expected dev server port is `8080`.
 - For animation or layout changes, verify in a real browser at both 1440×900 and 390×844 across the hero's full pinned scroll range — screenshots at scroll position 0 alone have missed pin regressions before.
 - Lint may include pre-existing issues, especially in copied/reference UI material. Do not treat unrelated lint churn as part of small content fixes.
 - The `tailwind-plus/` folder is design/reference material and should not be deleted without an explicit request.
-- `SPECIFICATION.md` and `PLAN.md` describe the original template project ("Frame Portfolio", a photography platform) and do not document this site.
