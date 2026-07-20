@@ -106,10 +106,14 @@ export default function Home() {
   });
 
   const T = PORTAL_TIMELINE;
-  const heroScale = useTransform(scrollYProgress, [0, T.liftoff, 0.32, 0.55], [1, 1, 1.04, 1.07]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.29, 0.51], [1, 0.9, 0]);
-  const heroY = useTransform(scrollYProgress, [0, T.liftoff, 0.51], ['0%', '0%', '-3%']);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.19, 0.4], [1, 0.55, 0]);
+  // The hero fades out completely by the moment the wash reaches full
+  // cover: nothing renders beneath the opaque wash during the hold, and
+  // the takeoff reads as the ink swallowing the page in one gesture.
+  // Deliberately no scale here — slowly scaling the page's largest text
+  // layer forces periodic re-rasterisation, which reads as stutter.
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.24, T.cover], [1, 0.92, 0]);
+  const heroY = useTransform(scrollYProgress, [0, T.liftoff, T.cover], ['0%', '0%', '-2%']);
+  const supportOpacity = useTransform(scrollYProgress, [0, 0.16, 0.28], [1, 0.55, 0]);
   // Faded-out layers also drop visibility so their links can't be tabbed
   // to or tapped through the layer that's actually on screen.
   const heroVisibility = useTransform(heroOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
@@ -157,11 +161,9 @@ export default function Home() {
         <div ref={pinRef} className="sticky top-0 h-[100svh] overflow-hidden">
           <motion.div
             style={{
-              scale: heroScale,
               opacity: heroOpacity,
               y: heroY,
               visibility: heroVisibility,
-              transformOrigin: 'center 58%',
               // Promoted: this block re-styles on every frame of the pinned
               // scroll; without its own compositor layer the whole headline
               // repaints per frame and the portal visibly stutters.
