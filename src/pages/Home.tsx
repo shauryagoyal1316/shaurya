@@ -130,12 +130,6 @@ export default function Home() {
   const aboutOpacity = useTransform(scrollYProgress, [0.46, 0.6], [0, 1]);
   const aboutVisibility = useTransform(aboutOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
 
-  // Velocity-reactive marquee: fast scrolling skews the track, springs back.
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const skewRaw = useTransform(scrollVelocity, [-1400, 1400], [-5, 5]);
-  const marqueeSkew = useSpring(skewRaw, { stiffness: 220, damping: 28, mass: 0.6 });
-
   // Sticky-stack progress for the capability cards.
   const capRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: capProgress } = useScroll({
@@ -382,21 +376,17 @@ export default function Home() {
       <section
         className="relative z-[3] overflow-hidden border-y border-[var(--border-strong)] py-10 md:-mx-[1%] md:w-[102%] md:-rotate-1 md:py-14"
       >
-        <motion.div style={reducedMotion ? undefined : { skewX: marqueeSkew }}>
-          <Marquee duration={34}>
-            {profile.stack.map((tech, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-[0.5em] whitespace-nowrap font-display text-[clamp(34px,6vw,96px)] leading-none text-foreground"
-              >
-                {tech}
-                <span aria-hidden className="text-[0.5em] text-[color:var(--water)]">
-                  ＋
-                </span>
-              </span>
-            ))}
-          </Marquee>
-        </motion.div>
+        {/* The velocity spring integrates on every scroll frame, so phones
+            (where the skew is invisible anyway) render the plain track and
+            keep that time. The hooks live in SkewOnVelocity so the spring
+            never even mounts on mobile / reduced motion. */}
+        {reducedMotion || isMobile ? (
+          <StackTicker />
+        ) : (
+          <SkewOnVelocity>
+            <StackTicker />
+          </SkewOnVelocity>
+        )}
       </section>
 
       {/* SEQUENCE */}
@@ -505,6 +495,34 @@ export default function Home() {
       </section>
     </>
   );
+}
+
+/** The technology ticker track — shared by both skewed and plain modes. */
+function StackTicker() {
+  return (
+    <Marquee duration={34}>
+      {profile.stack.map((tech, i) => (
+        <span
+          key={i}
+          className="inline-flex items-center gap-[0.5em] whitespace-nowrap font-display text-[clamp(34px,6vw,96px)] leading-none text-foreground"
+        >
+          {tech}
+          <span aria-hidden className="text-[0.5em] text-[color:var(--water)]">
+            ＋
+          </span>
+        </span>
+      ))}
+    </Marquee>
+  );
+}
+
+/** Velocity-reactive wrapper: fast scrolling skews the track, springs back. */
+function SkewOnVelocity({ children }: { children: React.ReactNode }) {
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const skewRaw = useTransform(scrollVelocity, [-1400, 1400], [-5, 5]);
+  const skewX = useSpring(skewRaw, { stiffness: 220, damping: 28, mass: 0.6 });
+  return <motion.div style={{ skewX }}>{children}</motion.div>;
 }
 
 function CapabilityCard({
