@@ -52,22 +52,22 @@ const afterLaunch = [
   {
     label: 'I run it, end to end',
     detail:
-      'I register an available domain and run the hosting, deploys included, for a flat $75 to $100 a month, fixed in your written quote. You never touch a server.',
+      'I register an available domain and run the hosting, deploys included, for a flat monthly rate fixed in your written quote. You never touch a server.',
   },
   {
     label: 'A backend behind it',
     detail:
-      'Orders, bookings, logins, or live inventory run on real infrastructure, and real infrastructure carries real costs. When I manage that layer too, it adds $75 to $100 a month.',
+      'Orders, bookings, logins, or live inventory run on real infrastructure. When I manage that layer too, it carries its own flat monthly rate, spelled out in the same written quote.',
   },
   {
     label: 'On a plan you already pay for',
     detail:
-      'Hold your own hosting or backend account? I set the finished site up on it for a one-time $50. The bills stay in your name, and so does the control.',
+      'Hold your own hosting or backend account? I set the finished site up on it for a small one-time setup fee. The bills stay in your name, and so does the control.',
   },
   {
     label: 'Own the code outright',
     detail:
-      'The complete codebase, delivered clean and ready to host anywhere. Simple builds start at $700, larger ones sit closer to $1,000. One payment, then it answers to you.',
+      'The complete codebase, delivered clean and ready to host anywhere. Quoted to the size of the build. One payment, then it answers to you.',
   },
 ];
 
@@ -105,7 +105,7 @@ const steps = [
     word: 'Then',
     title: 'Draft',
     detail:
-      'A 25% deposit starts the build. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
+      'A written quote arrives after the call, and a small deposit starts the build. Within days you get a working preview link, a real site you can tap through on your own phone, not a static mockup. Feedback goes straight into the build.',
   },
   {
     word: 'Last',
@@ -123,7 +123,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Custom websites for local businesses, live on your domain in about two weeks with a 25% deposit to start. Internal SaaS tools and sectional ERP software, scoped module by module."
+        description="Custom websites for local businesses, live on your domain in about two weeks, quoted in writing after one call. Internal SaaS tools and sectional ERP software, scoped module by module."
       />
 
       {/* HERO */}
@@ -146,7 +146,7 @@ export default function Services() {
             transition={{ duration: 0.8, delay: 0.35 }}
             className="mt-6 max-w-3xl"
           >
-            <DimensionLine label="fixed scope · fixed price · two weeks" />
+            <DimensionLine label="fixed scope · written quote · two weeks" />
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -156,7 +156,8 @@ export default function Services() {
           >
             Cafés, barbershops, studios, chefs, small firms. A custom-designed
             website, written, built, and live on your own domain in about two
-            weeks. None of it from a template, and none of it at agency prices.
+            weeks. None of it from a template, and all of it quoted in writing
+            before the build begins.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 14 }}
@@ -172,7 +173,7 @@ export default function Services() {
               Start a project
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
-            <Stamp text="From $700 · 25% to start" ink="red" rotate={-4} />
+            <Stamp text="Scoped on one call · quoted in writing" ink="red" rotate={-4} />
           </motion.div>
         </div>
       </section>
@@ -277,7 +278,7 @@ export default function Services() {
               your customers will: on your phone, at full speed, down to the
               smallest <Annotate>detail</Annotate>. This is the standard your
               site gets built to. If the build doesn't clear it for you, the
-              25% deposit is all you ever spent.
+              deposit is all you ever spent.
             </motion.p>
           </div>
         </div>
@@ -337,7 +338,7 @@ export default function Services() {
                 platform and a fleet-maintenance app, both used every working
                 day by teams that will never see this page. Software is quoted
                 per module after a 30-minute call. The quote arrives in
-                writing, and the same <Annotate>25% deposit</Annotate> rule
+                writing, and the same <Annotate>walk-away</Annotate> rule
                 applies.
               </motion.p>
               <div className="relative z-[4] mt-10 md:-mb-24">
@@ -367,7 +368,7 @@ export default function Services() {
               className="paper-plain relative border border-[var(--border-strong)] p-8 shadow-[var(--shadow-md)]"
             >
               <div className="text-sm font-medium text-foreground">
-                Care plan, from $75 a month
+                Care plan, month to month
               </div>
               <p className="mt-3 text-sm leading-relaxed text-[color:var(--text-secondary)] md:text-base">
                 Separate from hosting: menu changes, new photos, seasonal
