@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu, MessageCircle } from 'lucide-react';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
+import { WHATSAPP_HREF } from '@/lib/contact';
 import {
   Sheet,
   SheetContent,
@@ -130,8 +131,22 @@ export function Header() {
                     );
                   })}
                 </nav>
-                <div className="text-sm text-foreground/60">
-                  {profile.availability}
+                <div className="space-y-4">
+                  {/* One-tap contact from the menu itself — a prospect on a
+                      phone shouldn't have to hunt for the way to reach out. */}
+                  <a
+                    href={WHATSAPP_HREF}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-between border border-[var(--border-strong)] px-4 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+                  >
+                    WhatsApp me
+                    <MessageCircle className="size-4" />
+                  </a>
+                  <div className="text-sm text-foreground/60">
+                    {profile.availability}
+                  </div>
                 </div>
               </div>
             </SheetContent>

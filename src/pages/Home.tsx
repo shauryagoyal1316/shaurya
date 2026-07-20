@@ -287,13 +287,19 @@ export default function Home() {
             <div className="mx-auto w-full max-w-5xl">
               <HandNote className="mb-6">the offer, in plain terms —</HandNote>
               <h2 className="max-w-4xl font-display text-[clamp(30px,4.6vw,64px)] leading-[0.95] text-foreground">
-                Designed, built, and live
-                <motion.span
-                  ref={aboutDotRef}
-                  style={{ opacity: reducedMotion ? 1 : aboutDotOpacity }}
-                  aria-hidden
-                  className="ml-[0.06em] inline-block size-[0.11em] translate-y-[-0.04em] bg-[var(--water)] align-baseline"
-                />
+                Designed, built, and{' '}
+                {/* nowrap keeps the landing period welded to "live": without
+                    it the word wraps at narrow widths and the portal's target
+                    dot orphans onto a line of its own (a lone red mark). */}
+                <span className="whitespace-nowrap">
+                  live
+                  <motion.span
+                    ref={aboutDotRef}
+                    style={{ opacity: reducedMotion ? 1 : aboutDotOpacity }}
+                    aria-hidden
+                    className="ml-[0.06em] inline-block size-[0.11em] translate-y-[-0.04em] bg-[var(--water)] align-baseline"
+                  />
+                </span>
                 <span className="mt-2 block text-[color:var(--text-secondary)]">
                   on your own domain.
                 </span>
