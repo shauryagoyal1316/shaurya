@@ -144,19 +144,24 @@ function anchorsEqual(a: Anchor, b: Anchor) {
 }
 
 /**
- * Renders the portal wash into <body> as a fixed, full-viewport layer
- * clipped to an animated inset() rectangle — the same square shape as the
- * periods themselves, so the visible period appears to inflate, take over
- * the screen, and deflate onto the destination period as one continuous
- * mark. clip-path is resolution-independent (crisp at 4px and at 4000px)
- * and composites without per-frame repaints, which is what keeps this
- * smooth on iPhone — where animating a full-screen SVG visibly stutters.
+ * Renders the portal wash into <body> as a small solid square translated
+ * and scaled with pure transforms — the same square shape as the periods
+ * it connects, so the visible period appears to inflate, take over the
+ * screen, and deflate onto the destination period as one continuous mark.
+ *
+ * Why transforms and not clip-path: a solid-color element is composited
+ * as a geometry quad (no texture, no repaint, crisp edges at any scale),
+ * and transform updates ride the compositor's fastest path. Animating
+ * clip-path per frame takes the paint-property update path instead, which
+ * shows up as stutter on modest GPUs. A fixed clipping container bounds
+ * the overscaled square so it can never widen the mobile layout viewport.
  *
  * @param progress Pinned-range scroll progress (see PORTAL_TIMELINE).
  * @param pinRef   The sticky, viewport-sized stage both periods live in.
  * @param originRef The hero headline's period.
  * @param targetRef The offer block's period.
  */
+const WASH_SIZE = 100;
 export function PeriodPortal({
   progress,
   pinRef,
@@ -300,21 +305,14 @@ export function PeriodPortal({
     [geo.origin.half, geo.origin.half * 3, geo.coverHalf, geo.coverHalf, geo.target.half],
     { ease: [swell, rush, hold, landing] }
   );
-  // Each inset clamps at 0: once a side of the square passes a viewport
-  // edge it stays flush with it, which keeps every value valid for
-  // inset() however far the square overshoots the screen.
-  const insetTop = useTransform([cy, half], ([y, h]: number[]) =>
-    Math.max(y - h, 0)
-  );
-  const insetLeft = useTransform([cx, half], ([x, h]: number[]) =>
-    Math.max(x - h, 0)
-  );
-  const insetRight = useTransform([cx, half], ([x, h]: number[]) =>
-    Math.max(geo.viewportWidth - x - h, 0)
-  );
-  const insetBottom = useTransform([cy, half], ([y, h]: number[]) =>
-    Math.max(geo.viewportHeight - y - h, 0)
-  );
+  // The square's layout box is a constant WASH_SIZE; translate parks its
+  // centre on (cx, cy) and scale (about the default centre origin) blows
+  // it up to the live half-size. Solid-colour quads keep geometric edges,
+  // so the square is crisp at period size and at full cover alike.
+  const washScale = useTransform(half, (h) => (h * 2) / WASH_SIZE);
+  const washX = useTransform(cx, (v) => v - WASH_SIZE / 2);
+  const washY = useTransform(cy, (v) => v - WASH_SIZE / 2);
+  const washTransform = useMotionTemplate`translate3d(${washX}px, ${washY}px, 0) scale(${washScale})`;
   const opacity = useTransform(
     progress,
     [0, T.ignite, T.land, T.settle],
@@ -325,32 +323,38 @@ export function PeriodPortal({
   const visibility = useTransform(opacity, (v) =>
     v > 0.001 ? ('visible' as const) : ('hidden' as const)
   );
-  const clipPath = useMotionTemplate`inset(${insetTop}px ${insetRight}px ${insetBottom}px ${insetLeft}px)`;
 
   if (reducedMotion || !geometry) return null;
 
   return createPortal(
-    <motion.div
+    // The container's box must be EXACTLY the space the anchors were
+    // measured in. Sizing with vw/lvh units broke that: 100vw includes
+    // the classic Windows scrollbar while clientWidth does not. Sizing
+    // from the measured numbers keeps box and math in one space
+    // (viewportHeight is still the 100lvh probe, so the iOS
+    // toolbar-collapse cover guarantee is unchanged). overflow: clip
+    // bounds the overscaled square without creating a scroll container.
+    <div
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[10000] bg-[var(--portal-solid)]"
+      className="pointer-events-none fixed left-0 top-0 z-[10000]"
       style={{
-        clipPath,
-        opacity,
-        visibility,
-        // The wash's box must be EXACTLY the space the insets were
-        // computed in. Sizing with vw/lvh units broke that: 100vw
-        // includes the classic Windows scrollbar while clientWidth does
-        // not, so every right inset came up ~17px short and the wash
-        // bled a period-width past the mark at ignite. Sizing from the
-        // measured numbers keeps box and math in one space everywhere
-        // (viewportHeight is still the 100lvh probe, so the iOS
-        // toolbar-collapse cover guarantee is unchanged).
         width: geo.viewportWidth,
         height: geo.viewportHeight,
-        willChange: 'clip-path, opacity',
-        transform: 'translateZ(0)',
+        overflow: 'clip',
       }}
-    />,
+    >
+      <motion.div
+        className="absolute left-0 top-0 bg-[var(--portal-solid)]"
+        style={{
+          width: WASH_SIZE,
+          height: WASH_SIZE,
+          transform: washTransform,
+          opacity,
+          visibility,
+          willChange: 'transform, opacity',
+        }}
+      />
+    </div>,
     document.body
   );
 }
