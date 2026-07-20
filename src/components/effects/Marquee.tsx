@@ -1,4 +1,4 @@
-import { ReactNode, Children } from 'react';
+import { ReactNode, Children, useEffect, useRef, useState } from 'react';
 
 interface MarqueeProps {
   children: ReactNode;
@@ -13,6 +13,8 @@ interface MarqueeProps {
  *   - `animation: marquee <duration>s linear infinite` (-50% wrap)
  *   - hover pauses the track
  *   - edge mask fades both sides
+ *   - the track pauses entirely while off-screen, so an endless
+ *     animation never competes for frames with the visible page
  * Children are duplicated 4× so the loop reads seamless across viewports.
  */
 export function Marquee({
@@ -22,8 +24,23 @@ export function Marquee({
   reverse = false,
 }: MarqueeProps) {
   const items = Children.toArray(children);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [offscreen, setOffscreen] = useState(false);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setOffscreen(!entry.isIntersecting),
+      { rootMargin: '120px 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div
+      ref={rootRef}
       className={`relative flex w-full overflow-hidden ${className}`}
       style={{
         maskImage:
@@ -37,6 +54,7 @@ export function Marquee({
         style={{
           animationDuration: `${duration}s`,
           animationDirection: reverse ? 'reverse' : undefined,
+          animationPlayState: offscreen ? 'paused' : undefined,
         }}
       >
         {[...items, ...items, ...items, ...items].map((c, i) => (
