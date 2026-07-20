@@ -162,6 +162,10 @@ export default function Home() {
               y: heroY,
               visibility: heroVisibility,
               transformOrigin: 'center 58%',
+              // Promoted: this block re-styles on every frame of the pinned
+              // scroll; without its own compositor layer the whole headline
+              // repaints per frame and the portal visibly stutters.
+              willChange: 'transform, opacity',
             }}
             className="relative z-[2] mx-auto flex h-full max-w-[1440px] flex-col justify-center px-6 md:px-10"
           >
@@ -276,7 +280,12 @@ export default function Home() {
 
           {/* Portal destination — the offer block */}
           <motion.div
-            style={{ opacity: aboutOpacity, y: aboutLift, visibility: aboutVisibility }}
+            style={{
+              opacity: aboutOpacity,
+              y: aboutLift,
+              visibility: aboutVisibility,
+              willChange: 'transform, opacity',
+            }}
             className="absolute inset-0 z-[2] flex items-center px-6 py-24 md:px-10"
           >
             <div className="mx-auto w-full max-w-5xl">

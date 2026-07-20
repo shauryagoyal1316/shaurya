@@ -33,6 +33,11 @@ export function PageTransition({ children }: { children: ReactNode }) {
             y: 0,
             filter: 'blur(0px)',
             transition: { duration: 0.65, delay: 0.25, ease: EASE.snappy },
+            // Drop the filter entirely once the blur-in lands. A resting
+            // 'blur(0px)' still forces the whole page through an isolated
+            // render surface, which made every scroll-linked animation
+            // (the period portal especially) visibly stutter.
+            transitionEnd: { filter: 'none' },
           },
           exit: {
             opacity: 0,
