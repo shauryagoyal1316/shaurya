@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import {
   type MotionValue,
@@ -119,23 +119,39 @@ export default function Home() {
         ref={heroRef}
         className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden px-6 py-28 md:px-10"
       >
-        {/* Construction datum lines rule in first — the plotter laying its
-            guides before the type. Decorative; parallax-drifted behind the
-            headline for depth. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
+        {/* Construction crosshair STRIKES across the sheet — bold drafting
+            blue sweeping full-bleed, then settling to a quiet guide. The
+            instrument hitting the paper, not a faint hairline. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
           <motion.div
-            initial={reducedMotion ? { scaleX: 1 } : { scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: intro + 0.05, ease: EASE.snappy }}
+            initial={reducedMotion ? { scaleX: 1, opacity: 0.14 } : { scaleX: 0, opacity: 0.6 }}
+            animate={reducedMotion ? { scaleX: 1, opacity: 0.14 } : { scaleX: 1, opacity: [0.6, 0.6, 0.14] }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { scaleX: { duration: 0.5, delay: intro + 0.05, ease: EASE.snappy }, opacity: { duration: 1.4, delay: intro + 0.05, times: [0, 0.4, 1] } }
+            }
             style={reducedMotion ? undefined : { x: lineX }}
-            className="absolute inset-x-0 top-[36%] h-px origin-left bg-[var(--border)]"
+            className="absolute inset-x-0 top-[42%] h-[2px] origin-left bg-primary md:h-px"
           />
           <motion.div
-            initial={reducedMotion ? { scaleY: 1 } : { scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 0.7, delay: intro + 0.14, ease: EASE.snappy }}
+            initial={reducedMotion ? { scaleY: 1, opacity: 0.14 } : { scaleY: 0, opacity: 0.6 }}
+            animate={reducedMotion ? { scaleY: 1, opacity: 0.14 } : { scaleY: 1, opacity: [0.6, 0.6, 0.14] }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { scaleY: { duration: 0.5, delay: intro + 0.16, ease: EASE.snappy }, opacity: { duration: 1.4, delay: intro + 0.16, times: [0, 0.4, 1] } }
+            }
             style={reducedMotion ? undefined : { x: lineX }}
-            className="absolute inset-y-0 left-[7%] w-px origin-top bg-[var(--border)] md:left-[9%]"
+            className="absolute inset-y-0 left-[9%] w-[2px] origin-top bg-primary md:w-px"
+          />
+          {/* datum marker pops where they cross */}
+          <motion.div
+            initial={reducedMotion ? { scale: 1, opacity: 0.45 } : { scale: 0, opacity: 0 }}
+            animate={reducedMotion ? { scale: 1, opacity: 0.45 } : { scale: 1, opacity: [0, 1, 0.45] }}
+            transition={reducedMotion ? { duration: 0 } : { duration: 0.9, delay: intro + 0.42, times: [0, 0.45, 1], ease: EASE.snappy }}
+            style={reducedMotion ? undefined : { x: lineX }}
+            className="absolute left-[9%] top-[42%] size-3.5 -translate-x-1/2 -translate-y-1/2 border border-primary"
           />
         </div>
 
@@ -143,44 +159,45 @@ export default function Home() {
           style={reducedMotion ? undefined : { x: blockX, y: blockY }}
           className="relative z-[2] mx-auto w-full max-w-[1440px]"
         >
-          {/* Headline — left-set, measured, annotated */}
+          {/* Headline — each line SWINGS up from a tilted 3D plane (real
+              depth, no WebGL), staggered, weighty. This is the impact beat. */}
           <h1 className="select-none font-display text-[clamp(58px,11.5vw,196px)] leading-[0.86] text-foreground">
-            <SplitTextReveal
-              text="Websites,"
-              className="block"
-              once={false}
-              delay={intro + 0.3}
-              stagger={0.04}
-            />
-            <SplitTextReveal
-              text="built to"
-              className="block text-[color:var(--text-secondary)]"
-              once={false}
-              delay={intro + 0.5}
-              stagger={0.04}
-            />
-            <span className="block">
-              {/* delay syncs the pencil with the staggered letters. */}
-              <Annotate note="no templates. ever." className="align-top" delay={intro + 1.05}>
-                <SplitTextReveal
-                  text="measure"
-                  once={false}
-                  delay={intro + 0.7}
-                  stagger={0.045}
-                  className="text-primary"
-                />
+            <HeroLine delay={intro + 0.1} still={Boolean(reducedMotion)}>
+              Websites,
+            </HeroLine>
+            <HeroLine
+              delay={intro + 0.24}
+              still={Boolean(reducedMotion)}
+              className="text-[color:var(--text-secondary)]"
+            >
+              built to
+            </HeroLine>
+            <HeroLine delay={intro + 0.38} still={Boolean(reducedMotion)}>
+              <Annotate note="no templates. ever." className="align-top text-primary" delay={intro + 0.85}>
+                measure
               </Annotate>
-              {/* The red period is the last beat — it stamps in with a firm
-                  settle and floats nearest the eye under parallax. */}
-              <motion.span
-                initial={reducedMotion ? { scale: 1, opacity: 1 } : { scale: 1.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.42, delay: intro + 1.1, ease: EASE.snappy }}
-                style={reducedMotion ? undefined : { x: markX, y: markY }}
-                aria-hidden
-                className="ml-[0.05em] inline-block size-[0.1em] translate-y-[-0.06em] bg-[var(--water)] align-baseline"
-              />
-            </span>
+              {/* Red period: stamps in big and settles, with an ink ripple
+                  striking outward — the punctuation lands, it doesn't fade. */}
+              <span className="relative ml-[0.05em] inline-block size-[0.1em] translate-y-[-0.06em] align-baseline">
+                <motion.span
+                  initial={reducedMotion ? { scale: 1, opacity: 1 } : { scale: 2.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: intro + 0.8, ease: EASE.snappy }}
+                  style={reducedMotion ? undefined : { x: markX, y: markY }}
+                  aria-hidden
+                  className="absolute inset-0 bg-[var(--water)]"
+                />
+                {!reducedMotion && (
+                  <motion.span
+                    aria-hidden
+                    initial={{ scale: 0.7, opacity: 0 }}
+                    animate={{ scale: 4.2, opacity: [0.55, 0] }}
+                    transition={{ duration: 0.7, delay: intro + 0.86, ease: 'easeOut' }}
+                    className="absolute inset-0 border border-[var(--water)]"
+                  />
+                )}
+              </span>
+            </HeroLine>
           </h1>
 
           {/* Wrapper gates visibility so the dimension line's own reveal
@@ -495,6 +512,39 @@ function SkewOnVelocity({ children }: { children: React.ReactNode }) {
   const skewRaw = useTransform(scrollVelocity, [-1400, 1400], [-5, 5]);
   const skewX = useSpring(skewRaw, { stiffness: 220, damping: 28, mass: 0.6 });
   return <motion.div style={{ skewX }}>{children}</motion.div>;
+}
+
+/**
+ * One headline line that SWINGS up into place from a tilted 3D plane — the
+ * entrance's impact beat (real depth via CSS perspective, no WebGL). The
+ * outer span carries the perspective; the inner motion span pivots on its
+ * bottom edge so the line rotates upright rather than sliding. `still`
+ * (reduced motion) renders it flat and instant.
+ */
+function HeroLine({
+  children,
+  className = '',
+  delay,
+  still,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay: number;
+  still: boolean;
+}) {
+  if (still) return <span className={`block ${className}`}>{children}</span>;
+  return (
+    <span className={`block [perspective:1200px] ${className}`}>
+      <motion.span
+        className="block origin-bottom [transform-style:preserve-3d] will-change-transform"
+        initial={{ opacity: 0, rotateX: -72, y: '30%' }}
+        animate={{ opacity: 1, rotateX: 0, y: '0%' }}
+        transition={{ duration: 0.95, delay, ease: EASE.snappy }}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
 }
 
 function CapabilityCard({
