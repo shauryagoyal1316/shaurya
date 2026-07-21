@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { EASE } from '@/lib/motion';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 /**
  * The Working Drawing language — annotations, stamps, rules, and dimension
@@ -23,6 +24,12 @@ export function Annotate({
   delay?: number;
 }) {
   const reduced = useReducedMotion();
+  // Animating SVG pathLength re-rasterises the stroke every frame — cheap on
+  // desktop, a real cost on phones under load. On a touch device the pencil
+  // fades in fully-formed (opacity only, compositor-cheap) instead of drawing;
+  // the draw-on flourish stays where it can afford it.
+  const coarse = useMediaQuery('(pointer: coarse)');
+  const lite = coarse && !reduced;
   return (
     <span className={`relative inline-block whitespace-nowrap ${className}`}>
       {children}
@@ -42,10 +49,10 @@ export function Annotate({
           strokeWidth="2.5"
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
-          initial={{ pathLength: reduced ? 1 : 0, opacity: reduced ? 0.9 : 0 }}
+          initial={{ pathLength: reduced || lite ? 1 : 0, opacity: reduced ? 0.9 : 0 }}
           whileInView={{ pathLength: 1, opacity: 0.9 }}
           viewport={{ once: true, margin: '-12% 0px' }}
-          transition={{ duration: 0.9, delay: delay + 0.35, ease: EASE.smooth }}
+          transition={{ duration: lite ? 0.5 : 0.9, delay: delay + 0.35, ease: EASE.smooth }}
         />
       </svg>
       {note && (

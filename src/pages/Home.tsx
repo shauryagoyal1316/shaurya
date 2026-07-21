@@ -17,7 +17,6 @@ import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { Marquee } from '@/components/effects/Marquee';
 import { TiltCard } from '@/components/effects/TiltCard';
 import { getIntroOffset } from '@/components/effects/Preloader';
-import { PeriodPortal, PORTAL_TIMELINE } from '@/components/effects/PeriodPortal';
 import {
   Annotate,
   DimensionLine,
@@ -26,6 +25,7 @@ import {
   Stamp,
 } from '@/components/effects/drawing';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { usePointerParallax } from '@/hooks/usePointerParallax';
 import { EASE } from '@/lib/motion';
 import { EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
@@ -86,49 +86,20 @@ const processSteps = [
 export default function Home() {
   const reducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
-  // Frozen at mount: extra delay so hero reveals play after the preloader.
+  // Frozen at mount: extra delay so the hero entrance plays after the preloader.
   const [intro] = useState(getIntroOffset);
   const heroRef = useRef<HTMLElement>(null);
-  // The sticky, viewport-sized stage both periods live in — the portal's
-  // coordinate space.
-  const pinRef = useRef<HTMLDivElement>(null);
-  const heroDotRef = useRef<HTMLSpanElement>(null);
-  const aboutDotRef = useRef<HTMLSpanElement>(null);
 
-  // Progress 0→1 spans exactly the PINNED phase of the cover sheet
-  // ('end end' = the moment the sticky stage is released). Every keyframe
-  // below lives inside that range, so the whole portal sequence is
-  // guaranteed to finish while its landing target is still fixed on
-  // screen — this is what keeps the landing exact on every device.
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end end'],
-  });
-
-  const T = PORTAL_TIMELINE;
-  // The hero fades out completely by the moment the wash reaches full
-  // cover: nothing renders beneath the opaque wash during the hold, and
-  // the takeoff reads as the ink swallowing the page in one gesture.
-  // Deliberately no scale here — slowly scaling the page's largest text
-  // layer forces periodic re-rasterisation, which reads as stutter.
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.24, T.cover], [1, 0.92, 0]);
-  const heroY = useTransform(scrollYProgress, [0, T.liftoff, T.cover], ['0%', '0%', '-2%']);
-  const supportOpacity = useTransform(scrollYProgress, [0, 0.16, 0.28], [1, 0.55, 0]);
-  // Faded-out layers also drop visibility so their links can't be tabbed
-  // to or tapped through the layer that's actually on screen.
-  const heroVisibility = useTransform(heroOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
-  // The hero period hands off to the portal square right as it ignites.
-  const heroDotOpacity = useTransform(scrollYProgress, [0, T.ignite, T.liftoff], [1, 1, 0]);
-  // …and the offer period fades in only once the square has landed on it.
-  const aboutDotOpacity = useTransform(scrollYProgress, [0, T.land, T.settle], [0, 0, 1]);
-  // The offer block settles (lift → 0) while the wash is still 15×+ the
-  // period's size, so the landing target is stationary long before the
-  // eye can judge alignment. Settling at 0.78 (land is 0.8) left the
-  // square hovering at the resting spot while the text was still rising
-  // underneath it.
-  const aboutLift = useTransform(scrollYProgress, [0.46, 0.62], [24, 0]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.46, 0.6], [0, 1]);
-  const aboutVisibility = useTransform(aboutOpacity, (v) => (v > 0.02 ? 'visible' : 'hidden'));
+  // Pointer parallax gives the on-load hero real depth without scroll or
+  // WebGL: the headline floats a few px over the static sheet, and the red
+  // period floats a touch more (nearest the eye). Zero cost on touch /
+  // reduced-motion — the hook returns static values and never listens.
+  const { x: pointerX, y: pointerY } = usePointerParallax();
+  const blockX = useTransform(pointerX, (v) => v * 6);
+  const blockY = useTransform(pointerY, (v) => v * 6);
+  const markX = useTransform(pointerX, (v) => v * 6);
+  const markY = useTransform(pointerY, (v) => v * 6);
+  const lineX = useTransform(pointerX, (v) => v * -10);
 
   // Sticky-stack progress for the capability cards.
   const capRef = useRef<HTMLDivElement>(null);
@@ -140,194 +111,189 @@ export default function Home() {
   return (
     <>
       <SEOHead />
-      <PeriodPortal
-        progress={scrollYProgress}
-        pinRef={pinRef}
-        originRef={heroDotRef}
-        targetRef={aboutDotRef}
-      />
-
-      {/* SHEET 01 — COVER */}
+      {/* SHEET 01 — COVER. On-load "plotter" entrance: the sheet is drawn in
+          front of the visitor in ~1.5s, then gets out of the way. No scroll
+          pin and no scroll-linked work — the hero is a normal screen and the
+          content below is one short scroll away. */}
       <section
         ref={heroRef}
-        className="relative h-[210svh] w-full md:h-[265svh]"
+        className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden px-6 py-28 md:px-10"
       >
-        <div ref={pinRef} className="sticky top-0 h-[100svh] overflow-hidden">
+        {/* Construction datum lines rule in first — the plotter laying its
+            guides before the type. Decorative; parallax-drifted behind the
+            headline for depth. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
           <motion.div
-            style={{
-              opacity: heroOpacity,
-              y: heroY,
-              visibility: heroVisibility,
-              // Promoted: this block re-styles on every frame of the pinned
-              // scroll; without its own compositor layer the whole headline
-              // repaints per frame and the portal visibly stutters.
-              willChange: 'transform, opacity',
-            }}
-            className="relative z-[2] mx-auto flex h-full max-w-[1440px] flex-col justify-center px-6 md:px-10"
+            initial={reducedMotion ? { scaleX: 1 } : { scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.7, delay: intro + 0.05, ease: EASE.snappy }}
+            style={reducedMotion ? undefined : { x: lineX }}
+            className="absolute inset-x-0 top-[36%] h-px origin-left bg-[var(--border)]"
+          />
+          <motion.div
+            initial={reducedMotion ? { scaleY: 1 } : { scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.7, delay: intro + 0.14, ease: EASE.snappy }}
+            style={reducedMotion ? undefined : { x: lineX }}
+            className="absolute inset-y-0 left-[7%] w-px origin-top bg-[var(--border)] md:left-[9%]"
+          />
+        </div>
+
+        <motion.div
+          style={reducedMotion ? undefined : { x: blockX, y: blockY }}
+          className="relative z-[2] mx-auto w-full max-w-[1440px]"
+        >
+          {/* Headline — left-set, measured, annotated */}
+          <h1 className="select-none font-display text-[clamp(58px,11.5vw,196px)] leading-[0.86] text-foreground">
+            <SplitTextReveal
+              text="Websites,"
+              className="block"
+              once={false}
+              delay={intro + 0.3}
+              stagger={0.04}
+            />
+            <SplitTextReveal
+              text="built to"
+              className="block text-[color:var(--text-secondary)]"
+              once={false}
+              delay={intro + 0.5}
+              stagger={0.04}
+            />
+            <span className="block">
+              {/* delay syncs the pencil with the staggered letters. */}
+              <Annotate note="no templates. ever." className="align-top" delay={intro + 1.05}>
+                <SplitTextReveal
+                  text="measure"
+                  once={false}
+                  delay={intro + 0.7}
+                  stagger={0.045}
+                  className="text-primary"
+                />
+              </Annotate>
+              {/* The red period is the last beat — it stamps in with a firm
+                  settle and floats nearest the eye under parallax. */}
+              <motion.span
+                initial={reducedMotion ? { scale: 1, opacity: 1 } : { scale: 1.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.42, delay: intro + 1.1, ease: EASE.snappy }}
+                style={reducedMotion ? undefined : { x: markX, y: markY }}
+                aria-hidden
+                className="ml-[0.05em] inline-block size-[0.1em] translate-y-[-0.06em] bg-[var(--water)] align-baseline"
+              />
+            </span>
+          </h1>
+
+          {/* Wrapper gates visibility so the dimension line's own reveal
+              never plays behind the preloader on a first visit. */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: intro + 0.95 }}
+            className="mt-6 max-w-3xl"
           >
-            {/* Headline — left-set, measured, annotated */}
-            <h1 className="select-none font-display text-[clamp(58px,11.5vw,196px)] leading-[0.86] text-foreground">
-              <SplitTextReveal
-                text="Websites,"
-                className="block"
-                once={false}
-                delay={intro + 0.5}
-                stagger={0.04}
-              />
-              <SplitTextReveal
-                text="built to"
-                className="block text-[color:var(--text-secondary)]"
-                once={false}
-                delay={intro + 0.75}
-                stagger={0.04}
-              />
-              <span className="block">
-                {/* delay syncs the pencil with the staggered letters — on a
-                    first visit they land at intro + ~2s; without it the
-                    ellipse circles empty space behind the preloader. */}
-                <Annotate note="no templates. ever." className="align-top" delay={intro + 1.2}>
-                  <SplitTextReveal
-                    text="measure"
-                    once={false}
-                    delay={intro + 1.0}
-                    stagger={0.045}
-                    className="text-primary"
-                  />
-                </Annotate>
-                <motion.span
-                  ref={heroDotRef}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.5, delay: intro + 1.45, ease: EASE.bounce }}
-                  style={{ opacity: reducedMotion ? 1 : heroDotOpacity }}
+            <DimensionLine label="drawn to fit · live in two weeks" />
+          </motion.div>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: intro + 1.3, ease: EASE.snappy }}
+            className="mt-8 max-w-xl text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg"
+          >
+            {profile.heroIntroduction}
+          </motion.p>
+        </motion.div>
+
+        {/* Bottom row */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: intro + 1.5 }}
+          className="absolute inset-x-6 bottom-9 z-[2] flex items-center justify-between text-[13px] text-foreground/50 md:inset-x-10"
+        >
+          <button
+            type="button"
+            onClick={() => {
+              const top =
+                (heroRef.current?.offsetTop ?? 0) +
+                (heroRef.current?.offsetHeight ?? window.innerHeight);
+              // Route through Lenis when it's driving the scroll so the glide
+              // matches the rest of the page.
+              const lenis = (
+                window as unknown as {
+                  __lenis?: { scrollTo: (target: number) => void };
+                }
+              ).__lenis;
+              if (lenis) lenis.scrollTo(top);
+              else window.scrollTo({ top, behavior: 'smooth' });
+            }}
+            data-cursor="hover"
+            aria-label="Scroll to the offer"
+            className="inline-flex items-center px-2 py-1 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Keep scrolling
+            <motion.span
+              className="ml-2 inline-block"
+              animate={reducedMotion ? undefined : { y: [0, 4, 0] }}
+              transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
+            >
+              ↓
+            </motion.span>
+          </button>
+          <div>{profile.location}</div>
+        </motion.div>
+      </section>
+
+      {/* THE OFFER — once the portal's landing target, now a plain section a
+          single scroll below the hero. */}
+      <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-32">
+        <div className="mx-auto w-full max-w-5xl">
+          <HandNote className="mb-6">the offer, in plain terms —</HandNote>
+          <div className="overflow-hidden">
+            <motion.h2
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-10% 0px' }}
+              transition={{ duration: 0.85, ease: EASE.snappy }}
+              className="max-w-4xl font-display text-[clamp(30px,4.6vw,64px)] leading-[0.95] text-foreground"
+            >
+              Designed, built, and{' '}
+              {/* nowrap welds the red period to "live" so it never orphans. */}
+              <span className="whitespace-nowrap">
+                live
+                <span
                   aria-hidden
-                  className="ml-[0.05em] inline-block size-[0.1em] translate-y-[-0.06em] bg-[var(--water)] align-baseline"
+                  className="ml-[0.06em] inline-block size-[0.11em] translate-y-[-0.04em] bg-[var(--water)] align-baseline"
                 />
               </span>
-            </h1>
+              <span className="mt-2 block text-[color:var(--text-secondary)]">
+                on your own domain.
+              </span>
+            </motion.h2>
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              style={{ opacity: supportOpacity }}
-              transition={{ duration: 0.8, delay: intro + 1.5 }}
-              className="mt-6 max-w-3xl"
-            >
-              <DimensionLine label="drawn to fit · live in two weeks" />
-            </motion.div>
-
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{ opacity: supportOpacity }}
-              transition={{ duration: 1, delay: intro + 1.6, ease: EASE.snappy }}
-              className="mt-8 max-w-xl text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg"
-            >
-              {profile.heroIntroduction}
-            </motion.p>
-
-            {/* Bottom row */}
-            <motion.div
-              style={{ opacity: supportOpacity }}
-              className="absolute inset-x-6 bottom-9 flex items-center justify-between text-[13px] text-foreground/50 md:inset-x-10"
-            >
-              <motion.button
-                type="button"
-                onClick={() => {
-                  const top =
-                    (heroRef.current?.offsetTop ?? 0) +
-                    (heroRef.current?.offsetHeight ?? window.innerHeight);
-                  // Route through Lenis when it's driving the scroll, so
-                  // the glide matches the rest of the page.
-                  const lenis = (
-                    window as unknown as {
-                      __lenis?: { scrollTo: (target: number) => void };
-                    }
-                  ).__lenis;
-                  if (lenis) lenis.scrollTo(top);
-                  else window.scrollTo({ top, behavior: 'smooth' });
-                }}
-                data-cursor="hover"
-                aria-label="Scroll to next section"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: intro + 1.8, ease: EASE.snappy }}
-                className="inline-flex items-center px-2 py-1 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                Keep scrolling
-                <motion.span
-                  className="ml-2 inline-block"
-                  animate={{ y: [0, 4, 0] }}
-                  transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
-                >
-                  ↓
-                </motion.span>
-              </motion.button>
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: intro + 1.8, ease: EASE.snappy }}
-              >
-                {profile.location}
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          {/* Portal destination — the offer block */}
-          <motion.div
-            style={{
-              opacity: aboutOpacity,
-              y: aboutLift,
-              visibility: aboutVisibility,
-              willChange: 'transform, opacity',
-            }}
-            className="absolute inset-0 z-[2] flex items-center px-6 py-24 md:px-10"
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-10% 0px' }}
+            transition={{ duration: 0.8, delay: 0.15, ease: EASE.snappy }}
+            className="mt-9 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
           >
-            <div className="mx-auto w-full max-w-5xl">
-              <HandNote className="mb-6">the offer, in plain terms —</HandNote>
-              <h2 className="max-w-4xl font-display text-[clamp(30px,4.6vw,64px)] leading-[0.95] text-foreground">
-                Designed, built, and{' '}
-                {/* nowrap keeps the landing period welded to "live": without
-                    it the word wraps at narrow widths and the portal's target
-                    dot orphans onto a line of its own (a lone red mark). */}
-                <span className="whitespace-nowrap">
-                  live
-                  <motion.span
-                    ref={aboutDotRef}
-                    style={{ opacity: reducedMotion ? 1 : aboutDotOpacity }}
-                    aria-hidden
-                    className="ml-[0.06em] inline-block size-[0.11em] translate-y-[-0.04em] bg-[var(--water)] align-baseline"
-                  />
-                </span>
-                <span className="mt-2 block text-[color:var(--text-secondary)]">
-                  on your own domain.
-                </span>
-              </h2>
-
-              <motion.p
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-10% 0px' }}
-                transition={{ duration: 0.8, delay: 0.15, ease: EASE.snappy }}
-                className="mt-9 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
-              >
-                Fourteen days from first call to live URL. Every page drawn
-                from zero. <Annotate>Quoted in writing</Annotate> after one
-                call, and you only keep it if you love it.
-              </motion.p>
-              <div className="mt-9">
-                <Link
-                  to="/services"
-                  data-cursor="hover"
-                  className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  See the full offer
-                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
+            Fourteen days from first call to live URL. Every page drawn from
+            zero. <Annotate>Quoted in writing</Annotate> after one call, and
+            you only keep it if you love it.
+          </motion.p>
+          <div className="mt-9">
+            <Link
+              to="/services"
+              data-cursor="hover"
+              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              See the full offer
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </section>
 
