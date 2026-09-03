@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { DraftingCursor } from '@/components/effects/DraftingCursor';
+import { CornerTitleBlock } from '@/components/effects/TitleBlock';
 import { ScrollProgress } from '@/components/effects/ScrollProgress';
 import { NoiseOverlay } from '@/components/effects/NoiseOverlay';
 import { SmoothScroll } from '@/components/effects/SmoothScroll';
@@ -40,6 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Preloader />
       <NoiseOverlay />
       <DraftingCursor />
+      <CornerTitleBlock />
       <ScrollProgress />
       {/* Ruler ticks down the right edge — the sheet is measured */}
       <div
@@ -49,7 +51,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Header />
       <main
         id="main-content"
-        className="paper relative z-[2] flex-1"
+        className="paper relative z-[2] flex-1 overflow-x-clip"
         style={!isMobile ? { marginBottom: footerH } : undefined}
         tabIndex={-1}
       >

@@ -37,8 +37,12 @@
   --accent: var(--primary);
   --accent-foreground: var(--primary-foreground);
   --accent-soft: hsla(232 100% 58% / 0.10);
-  --water: hsl(4 66% 51%);                /* #D5382E red pencil */
+  --water: hsl(4 66% 51%);                /* #D5382E red pencil — MARKS ONLY */
   --water-deep: hsl(4 60% 40%);
+  /* Red pencil for TEXT. The mark red is 4.04:1 on paper, which fails body
+     contrast; drawn marks only have to clear 3:1, set copy never does. Any
+     red word, note or label uses this one. */
+  --water-ink: hsl(4 72% 38%);
   --water-soft: hsla(4 66% 51% / 0.22);
   --water-glow: hsla(4 66% 51% / 0.14);
 
@@ -127,6 +131,8 @@
   --accent-soft: hsla(227 100% 74% / 0.14);
   --water: hsl(6 100% 66%);               /* #FF5C4D redline, brightened for night */
   --water-deep: hsl(6 80% 52%);
+  /* Already light-on-dark and clearing 4.5:1, lifted a touch for small text */
+  --water-ink: hsl(6 100% 72%);
   --water-soft: hsla(6 100% 66% / 0.24);
   --water-glow: hsla(6 100% 66% / 0.14);
 
@@ -178,6 +184,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-water: var(--water);
   --color-water-deep: var(--water-deep);
+  --color-water-ink: var(--water-ink);
   --color-water-soft: var(--water-soft);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -333,8 +340,26 @@
   /* Drawing frame: the 1px ink outline every "detail view" gets */
   .draw-frame { border: 1px solid var(--border-strong); }
 
+  /* Poster type. The typographic-poster grammar lifts the display size cap,
+     which makes optical correction mandatory rather than optional: Archivo
+     at 200px+ with the default -0.01em reads loose and amateur. Tracking
+     tightens, the width axis narrows so a long line still fits a phone, and
+     ligatures come off because they are drawn for reading sizes. */
+  .poster {
+    font-variation-settings: 'wdth' 72;
+    letter-spacing: -0.032em;
+    font-feature-settings: 'liga' 0, 'clig' 0;
+    text-wrap: balance;
+  }
+  @media (max-width: 700px) {
+    .poster {
+      font-variation-settings: 'wdth' 66;
+      letter-spacing: -0.026em;
+    }
+  }
+
   /* Red-pencil ink for annotations */
-  .redline { color: var(--water); }
+  .redline { color: var(--water-ink); }
 
   /* Ruler ticks along an edge (vertical strip, desktop decoration) */
   .ruler-y {

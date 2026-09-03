@@ -29,7 +29,7 @@ export function Footer() {
   return (
     <footer className="paper relative z-[2] border-t border-[var(--border-strong)]">
       <div className="mx-auto max-w-[1440px] px-6 pb-8 pt-20 lg:px-10 lg:pt-24">
-        <h2 className="font-display text-[clamp(56px,13vw,220px)] leading-[0.82] text-foreground">
+        <h2 className="poster font-display text-[clamp(56px,13vw,220px)] leading-[0.82] text-foreground">
           Goyal<span className="text-[color:var(--water)]">.</span>
         </h2>
 

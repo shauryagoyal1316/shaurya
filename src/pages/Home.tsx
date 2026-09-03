@@ -1,7 +1,6 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  type MotionValue,
   motion,
   useReducedMotion,
   useScroll,
@@ -9,13 +8,12 @@ import {
   useTransform,
   useVelocity,
 } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, MessageCircle } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { Marquee } from '@/components/effects/Marquee';
-import { TiltCard } from '@/components/effects/TiltCard';
+import { SheetTitleBlock } from '@/components/effects/TitleBlock';
 import { getIntroOffset } from '@/components/effects/Preloader';
 import {
   Annotate,
@@ -27,12 +25,13 @@ import {
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { usePointerParallax } from '@/hooks/usePointerParallax';
 import { EASE } from '@/lib/motion';
-import { EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
+import { EMAIL, EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
 const MANIFESTO =
-  'Most business websites are templates wearing a logo. Yours should read like this page does: drawn for one business, then built to last.';
+  'Most business websites are one of those, wearing a logo. Yours should read the way this page does: drawn for a single business, then built so it still holds up in three years.';
 
-const capabilities = [
+/** The service lines. Type at four different weights, never cards. */
+const services = [
   {
     key: 'direction',
     title: 'Design direction',
@@ -42,46 +41,30 @@ const capabilities = [
   {
     key: 'build',
     title: 'Full-stack build',
-    body: 'Front end, back end, forms, bookings, quote requests. Built as one system, deployed on your own domain, fast on any phone.',
+    body: 'Front end, back end, forms, bookings, logins. Built as one system, deployed on your own domain, fast on any phone.',
     note: 'yes, the backend too',
   },
   {
     key: 'motion',
-    title: 'Motion & feel',
+    title: 'Motion and feel',
     body: 'The difference between a page and an experience: scroll choreography, and restraint where it counts.',
     note: 'why this page feels alive',
   },
   {
     key: 'aftercare',
-    title: 'Launch & aftercare',
-    body: 'Domain, hosting, and the basics that make Google notice. Live in about two weeks, and kept alive after launch.',
-    note: "I don't vanish after launch",
-  },
-];
-
-const processSteps = [
-  {
-    word: 'First',
-    title: 'Survey',
-    line: 'A 30-minute conversation becomes a one-page brief.',
-  },
-  {
-    word: 'Then',
-    title: 'Draft',
-    line: 'A working preview link on your phone within days.',
-  },
-  {
-    word: 'Last',
-    title: 'Build',
-    line: 'Live on your domain. You only take it if you love it.',
+    title: 'Launch and aftercare',
+    body: 'Domain, hosting, and the groundwork that makes Google notice. Kept alive long after it goes live.',
+    note: "I don't vanish at launch",
   },
 ];
 
 /**
- * Sheet 01 — the cover sheet. The signature dot-portal survives from the
- * old design (the period expands into a full-screen wash and lands on the
- * offer block); everything around it now reads as a working drawing:
- * dimension lines, red-pencil annotations, stamps, title-block cells.
+ * Sheet 01, the cover. Typographic poster grammar: type IS the imagery, and
+ * scale contrast does every job photography would have done. Seven acts,
+ * roughly 11 viewport-heights, peaking on the title block rebuilding itself.
+ *
+ * No cards anywhere on this page. The grammar forbids them and the old
+ * sticky capability stack was the thing most likely to read as a template.
  */
 export default function Home() {
   const reducedMotion = useReducedMotion();
@@ -93,7 +76,7 @@ export default function Home() {
   // Pointer parallax gives the on-load hero real depth without scroll or
   // WebGL: the headline floats a few px over the static sheet, and the red
   // period floats a touch more (nearest the eye). Zero cost on touch /
-  // reduced-motion — the hook returns static values and never listens.
+  // reduced-motion, where the hook returns static values and never listens.
   const { x: pointerX, y: pointerY } = usePointerParallax();
   const blockX = useTransform(pointerX, (v) => v * 6);
   const blockY = useTransform(pointerY, (v) => v * 6);
@@ -101,27 +84,17 @@ export default function Home() {
   const markY = useTransform(pointerY, (v) => v * 6);
   const lineX = useTransform(pointerX, (v) => v * -10);
 
-  // Sticky-stack progress for the capability cards.
-  const capRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: capProgress } = useScroll({
-    target: capRef,
-    offset: ['start start', 'end end'],
-  });
-
   return (
     <>
       <SEOHead />
-      {/* SHEET 01 — COVER. On-load "plotter" entrance: the sheet is drawn in
-          front of the visitor in ~1.5s, then gets out of the way. No scroll
-          pin and no scroll-linked work — the hero is a normal screen and the
-          content below is one short scroll away. */}
+
+      {/* ACT 1 — COVER. Arrest. One statement at viewport scale, struck onto
+          the sheet by the datum lines. No scroll cue: they are looking at it. */}
       <section
         ref={heroRef}
+        data-sheet="COVER"
         className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden px-6 py-28 md:px-10"
       >
-        {/* Construction crosshair STRIKES across the sheet — bold drafting
-            blue sweeping full-bleed, then settling to a quiet guide. The
-            instrument hitting the paper, not a faint hairline. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
           <motion.div
             initial={reducedMotion ? { scaleX: 1, opacity: 0.14 } : { scaleX: 0, opacity: 0.6 }}
@@ -145,7 +118,6 @@ export default function Home() {
             style={reducedMotion ? undefined : { x: lineX }}
             className="absolute inset-y-0 left-[9%] w-[2px] origin-top bg-primary md:w-px"
           />
-          {/* datum marker pops where they cross */}
           <motion.div
             initial={reducedMotion ? { scale: 1, opacity: 0.45 } : { scale: 0, opacity: 0 }}
             animate={reducedMotion ? { scale: 1, opacity: 0.45 } : { scale: 1, opacity: [0, 1, 0.45] }}
@@ -159,9 +131,7 @@ export default function Home() {
           style={reducedMotion ? undefined : { x: blockX, y: blockY }}
           className="relative z-[2] mx-auto w-full max-w-[1440px]"
         >
-          {/* Headline — each line SWINGS up from a tilted 3D plane (real
-              depth, no WebGL), staggered, weighty. This is the impact beat. */}
-          <h1 className="select-none font-display text-[clamp(58px,11.5vw,196px)] leading-[0.86] text-foreground">
+          <h1 className="poster select-none font-display text-[clamp(64px,13vw,232px)] leading-[0.82] text-foreground">
             <HeroLine delay={intro + 0.1} still={Boolean(reducedMotion)}>
               Websites,
             </HeroLine>
@@ -176,8 +146,6 @@ export default function Home() {
               <Annotate note="no templates. ever." className="align-top text-primary" delay={intro + 0.85}>
                 measure
               </Annotate>
-              {/* Red period: stamps in big and settles, with an ink ripple
-                  striking outward — the punctuation lands, it doesn't fade. */}
               <span className="relative ml-[0.05em] inline-block size-[0.1em] translate-y-[-0.06em] align-baseline">
                 <motion.span
                   initial={reducedMotion ? { scale: 1, opacity: 1 } : { scale: 2.4, opacity: 0 }}
@@ -200,18 +168,15 @@ export default function Home() {
             </HeroLine>
           </h1>
 
-          {/* Wrapper gates visibility so the dimension line's own reveal
-              never plays behind the preloader on a first visit. */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: intro + 0.95 }}
-            className="mt-6 max-w-3xl"
+            className="mt-8 max-w-3xl"
           >
-            <DimensionLine label="drawn to fit · live in two weeks" />
+            <DimensionLine label="drawn to fit · built to last" />
           </motion.div>
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,153 +187,115 @@ export default function Home() {
           </motion.p>
         </motion.div>
 
-        {/* Bottom row */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: intro + 1.5 }}
-          className="absolute inset-x-6 bottom-9 z-[2] flex items-center justify-between text-[13px] text-foreground/50 md:inset-x-10"
+          className="absolute inset-x-6 bottom-9 z-[2] flex items-center justify-between font-mono text-[11px] text-foreground/45 md:inset-x-10"
         >
-          <button
-            type="button"
-            onClick={() => {
-              const top =
-                (heroRef.current?.offsetTop ?? 0) +
-                (heroRef.current?.offsetHeight ?? window.innerHeight);
-              // Route through Lenis when it's driving the scroll so the glide
-              // matches the rest of the page.
-              const lenis = (
-                window as unknown as {
-                  __lenis?: { scrollTo: (target: number) => void };
-                }
-              ).__lenis;
-              if (lenis) lenis.scrollTo(top);
-              else window.scrollTo({ top, behavior: 'smooth' });
-            }}
-            data-cursor="hover"
-            aria-label="Scroll to the offer"
-            className="inline-flex items-center px-2 py-1 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            Keep scrolling
-            <motion.span
-              className="ml-2 inline-block"
-              animate={reducedMotion ? undefined : { y: [0, 4, 0] }}
-              transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
-            >
-              ↓
-            </motion.span>
-          </button>
-          <div>{profile.location}</div>
+          <span>{profile.location}</span>
+          <span>{profile.availability}</span>
         </motion.div>
       </section>
 
-      {/* THE OFFER — once the portal's landing target, now a plain section a
-          single scroll below the hero. */}
-      <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-32">
-        <div className="mx-auto w-full max-w-5xl">
-          <HandNote className="mb-6">the offer, in plain terms —</HandNote>
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ opacity: 0, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-10% 0px' }}
-              transition={{ duration: 0.85, ease: EASE.snappy }}
-              className="max-w-4xl font-display text-[clamp(30px,4.6vw,64px)] leading-[0.95] text-foreground"
-            >
-              Designed, built, and{' '}
-              {/* nowrap welds the red period to "live" so it never orphans. */}
-              <span className="whitespace-nowrap">
-                live
-                <span
-                  aria-hidden
-                  className="ml-[0.06em] inline-block size-[0.11em] translate-y-[-0.04em] bg-[var(--water)] align-baseline"
-                />
-              </span>
-              <span className="mt-2 block text-[color:var(--text-secondary)]">
-                on your own domain.
-              </span>
-            </motion.h2>
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-10% 0px' }}
-            transition={{ duration: 0.8, delay: 0.15, ease: EASE.snappy }}
-            className="mt-9 max-w-2xl text-lg font-light leading-relaxed text-[color:var(--text-secondary)] md:text-xl"
-          >
-            Fourteen days from first call to live URL. Every page drawn from
-            zero. <Annotate>Quoted in writing</Annotate> after one call, and
-            you only keep it if you love it.
-          </motion.p>
-          <div className="mt-9">
-            <Link
-              to="/services"
-              data-cursor="hover"
-              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              See the full offer
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* THE POINT (scroll-scrubbed) — set off-axis, to the right */}
-      <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 pb-10 pt-24 md:px-10 md:pb-14 md:pt-40">
-        <div className="mx-auto max-w-[1440px] md:flex md:justify-end">
-          <div className="md:w-[82%]">
-            <ScrollScrubText
-              text={MANIFESTO}
-              className="max-w-4xl font-sans text-[clamp(26px,4vw,54px)] font-medium leading-[1.2] tracking-[-0.02em] text-foreground"
-            />
-            {/* Stamp hangs over the next section's rule — paste-up, not grid */}
-            <div className="relative z-[4] mt-12 md:-mb-24">
-              <Stamp text="Measured twice" ink="blue" rotate={-4} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* DETAILS (sticky stack) */}
-      <section className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28">
-        <div className="mx-auto max-w-[1440px]">
-          <div className="mb-14">
-            <HandNote className="mb-5">what every build includes ↓</HandNote>
-            <h2 className="font-display text-[clamp(40px,6.5vw,96px)] leading-[0.88] text-foreground">
-              <SplitTextReveal text="The whole" stagger={0.04} />
-              <span className="block text-[color:var(--text-secondary)] md:ml-[14%]">
-                <SplitTextReveal text="craft." stagger={0.04} delay={0.1} />
-              </span>
-            </h2>
-          </div>
-
-          <div ref={capRef} className="relative flex flex-col gap-8 pb-8 md:gap-10">
-            {capabilities.map((cap, i) => (
-              <CapabilityCard
-                key={cap.key}
-                cap={cap}
-                index={i}
-                count={capabilities.length}
-                progress={capProgress}
-                still={Boolean(reducedMotion) || isMobile}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* TICKER — velocity-reactive, hung a degree off level. The 102%
-          bleed only exists to hide the rotated strip's corners, so it is
-          md-scoped like the rotation — on phones it would overflow the
-          viewport and make mobile Safari zoom the whole layout out. */}
+      {/* ACT 2 — THE CLAIM. Recognition. The page's biggest word, corrected in
+          red pencil, then the scale collapses straight to reading size. That
+          drop is the whole device: no media, just the interval. */}
       <section
-        className="relative z-[3] overflow-hidden border-y border-[var(--border-strong)] py-10 md:-mx-[1%] md:w-[102%] md:-rotate-1 md:py-14"
+        data-sheet="THE CLAIM"
+        className="relative z-[3] flex min-h-[104svh] items-center border-t border-[var(--border-strong)] px-6 py-28 md:px-10 md:py-40"
       >
-        {/* The velocity spring integrates on every scroll frame, so phones
-            (where the skew is invisible anyway) render the plain track and
-            keep that time. The hooks live in SkewOnVelocity so the spring
-            never even mounts on mobile / reduced motion. */}
+        <div className="mx-auto max-w-[1440px]">
+          <div className="relative inline-block">
+            <motion.h2
+              initial={reducedMotion ? undefined : { opacity: 0, y: 24 }}
+              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-12% 0px' }}
+              transition={{ duration: 0.9, ease: EASE.snappy }}
+              className="poster font-display text-[clamp(56px,15vw,268px)] leading-[0.8] text-foreground"
+            >
+              Templates
+            </motion.h2>
+            {/* The correction mark. A red pencil ruled straight through the
+                word is the oldest note in drafting, and it does the argument
+                without a sentence. */}
+            <motion.span
+              aria-hidden
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: '-12% 0px' }}
+              transition={{ duration: 0.75, delay: 0.55, ease: EASE.snappy }}
+              className="absolute left-[-2%] top-1/2 h-[6px] w-[104%] origin-left bg-[var(--water)] md:h-[9px]"
+            />
+          </div>
+
+          {/* 268px down to 17px in one interval. */}
+          <motion.p
+            initial={reducedMotion ? undefined : { opacity: 0 }}
+            whileInView={reducedMotion ? undefined : { opacity: 1 }}
+            viewport={{ once: true, margin: '-12% 0px' }}
+            transition={{ duration: 0.8, delay: 1.05 }}
+            className="mt-14 max-w-[46ch] text-[17px] font-light leading-[1.65] text-[color:var(--text-secondary)]"
+          >
+            {MANIFESTO}
+          </motion.p>
+        </div>
+      </section>
+
+      {/* ACT 3 — CRAFT. Interest. Four service lines as plain type at four
+          anchors, stepping down in scale. Deliberately not a grid, not cards,
+          and not four things that weigh the same. */}
+      <section
+        data-sheet="CRAFT"
+        className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-36"
+      >
+        <div className="mx-auto max-w-[1440px]">
+          <HandNote className="mb-6">what a build actually contains ↓</HandNote>
+
+          {services.map((service, i) => (
+            <div key={service.key}>
+              <DrawnRule strong={i === 0} />
+              <motion.article
+                initial={reducedMotion ? undefined : { opacity: 0, y: 22 }}
+                whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.8, ease: EASE.snappy }}
+                // Each row sits further right than the last: the block walks
+                // across the sheet instead of stacking in a column.
+                className="grid gap-4 py-12 md:grid-cols-12 md:items-baseline md:gap-10 md:py-16"
+                style={{ paddingLeft: isMobile ? undefined : `${i * 3.5}%` }}
+              >
+                <h3
+                  className="font-display leading-[0.9] text-foreground md:col-span-6"
+                  // Scale steps down row by row, so the eye is never given
+                  // four things of equal weight.
+                  style={{ fontSize: `clamp(${30 - i * 2}px, ${5.4 - i * 0.5}vw, ${76 - i * 8}px)` }}
+                >
+                  {service.title}
+                  <span className="text-[color:var(--water)]">.</span>
+                </h3>
+                <div className="md:col-span-6">
+                  <p className="max-w-[42ch] text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg">
+                    {service.body}
+                  </p>
+                  <HandNote className="mt-4 text-base" rotate={-1.5}>
+                    {service.note}
+                  </HandNote>
+                </div>
+              </motion.article>
+            </div>
+          ))}
+          <DrawnRule strong />
+        </div>
+      </section>
+
+      {/* ACT 4 — SOFTWARE. Substance. Quieter and denser than act 3: the
+          stack set as kinetic type, then the second service line stated once.
+          The ticker hangs a degree off level, which is a house requirement. */}
+      <section
+        data-sheet="SOFTWARE"
+        className="relative z-[3] overflow-hidden border-t border-[var(--border-strong)] py-14 md:-mx-[1%] md:w-[102%] md:-rotate-1 md:py-20"
+      >
         {reducedMotion || isMobile ? (
           <StackTicker />
         ) : (
@@ -378,107 +305,90 @@ export default function Home() {
         )}
       </section>
 
-      {/* SEQUENCE */}
-      <section className="relative z-[3] px-6 py-14 md:px-10 md:py-[4.5rem]">
-        <div className="mx-auto max-w-[1440px]">
-          <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
-            <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.9] text-foreground">
-              {/* JSX drops the newline between text and the span, leaving no
-                  soft-wrap opportunity — without <wbr /> the heading is one
-                  unbreakable run that widens the mobile layout viewport. */}
-              Three steps,
-              <wbr />
-              <span className="ml-4 text-[color:var(--text-secondary)]">two weeks.</span>
-            </h2>
-            <Link
-              to="/services"
-              data-cursor="hover"
-              className="hidden whitespace-nowrap text-[15px] text-foreground/60 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background md:inline-flex"
-            >
-              The full offer →
-            </Link>
-          </div>
-
-          <div className="md:ml-[12%]">
-          <DrawnRule strong />
-          {processSteps.map((step) => (
-            <div key={step.word}>
-              <div className="overflow-hidden">
-                <motion.div
-                  initial={{ y: '60%', opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, margin: '-8% 0px' }}
-                  transition={{ duration: 0.8, ease: EASE.snappy }}
-                  className="grid gap-2 py-8 md:grid-cols-12 md:items-baseline md:gap-8"
-                >
-                  <div className="font-note text-lg text-[color:var(--water)] md:col-span-1">
-                    {step.word}
-                  </div>
-                  <div className="font-display text-3xl leading-none text-foreground md:col-span-3 md:text-4xl">
-                    {step.title}
-                  </div>
-                  <p className="text-sm leading-relaxed text-[color:var(--text-secondary)] md:col-span-8 md:text-base">
-                    {step.line}
-                  </p>
-                </motion.div>
-              </div>
-              <DrawnRule strong />
+      <section className="relative z-[3] px-6 pb-28 pt-20 md:px-10 md:pb-40 md:pt-28">
+        <div className="mx-auto max-w-[1440px] md:flex md:justify-end">
+          <div className="md:w-[82%]">
+            <ScrollScrubText
+              text="Somewhere past the tenth spreadsheet tab, a business stops needing a website and starts needing software. I build the internal tools too: inventory, fleet, compliance, approvals, reporting."
+              className="max-w-4xl font-sans text-[clamp(24px,3.6vw,50px)] font-medium leading-[1.2] tracking-[-0.02em] text-foreground"
+            />
+            {/* Stamp hangs over the next section's rule: paste-up, not grid */}
+            <div className="relative z-[4] mt-12 md:-mb-20">
+              <Stamp text="In production · daily use" ink="blue" rotate={3} />
             </div>
-          ))}
-          </div>
-
-          <div className="mt-8 md:hidden">
-            <Link
-              to="/services"
-              data-cursor="hover"
-              className="text-[15px] text-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-            >
-              The full offer →
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* CONTACT — set hard right, the one right-aligned moment on the page */}
-      <section className="relative z-[3] px-6 py-24 md:px-10 md:py-40">
+      {/* ACT 5 — SILENCE. Anticipation. Authored empty sheet. Declared in
+          BRIEF.md so a verification pass does not read it as dead scroll. */}
+      <section
+        data-sheet="—"
+        className="relative z-[3] flex min-h-[88svh] items-center border-t border-[var(--border-strong)] px-6 md:px-10"
+      >
+        <div className="mx-auto w-full max-w-[1440px]">
+          <HandNote className="text-xl md:ml-[38%] md:text-2xl" rotate={-2.5}>
+            every drawing gets signed off. ↓
+          </HandNote>
+        </div>
+      </section>
+
+      {/* ACT 6 — THE PEAK. Invitation. The corner title block retires and
+          rebuilds here at full scale, ruled line by line, stopping on the one
+          field it will not fill in. Largest span on the page. */}
+      <section
+        id="approval"
+        data-sheet="APPROVAL"
+        className="relative z-[3] border-t border-[var(--border-strong)]"
+      >
+        {/* The pin. main is overflow-x:clip, which does not create a scroll
+            container, so sticky still resolves against the viewport here. */}
+        <div className="min-h-[210svh]">
+          <div className="sticky top-0 flex min-h-[100svh] items-center px-6 py-24 md:px-10">
+            <div className="mx-auto w-full max-w-[1100px]">
+              <SheetTitleBlock ctaHref={CONTACT_HREF} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ACT 7 — CLOSE. Calm. The grammar's inversion: after 268px type, the
+          smallest setting on the site and a plain underlined link. The one
+          right-aligned moment on the page, which is a house requirement. */}
+      <section
+        data-sheet="CLOSE"
+        className="relative z-[3] px-6 py-24 md:px-10 md:py-32"
+      >
         <div className="mx-auto max-w-[1440px] md:text-right">
-          <a
-            href={CONTACT_HREF}
-            data-cursor="view"
-            data-cursor-label="Email me"
-            className="group block"
-          >
-            <h2 className="font-display text-[clamp(56px,10.5vw,170px)] leading-[0.85] text-foreground transition-colors group-hover:text-primary">
-              Start
-              <wbr />
-              <span className="ml-6 text-[color:var(--text-secondary)] transition-colors group-hover:text-primary">
-                yours →
-              </span>
-            </h2>
-          </a>
-          <div className="mt-10 flex flex-wrap items-center gap-6 md:justify-end">
-            <Stamp text="Quoted in writing · walk anytime" ink="red" rotate={-5} />
+          <p className="text-sm font-light leading-relaxed text-[color:var(--text-secondary)] md:ml-auto md:max-w-[38ch]">
+            Two service lines, one person drawing both. If your business needs
+            either, the fastest route is a short message.
+          </p>
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-3 md:justify-end">
+            <a
+              href={CONTACT_HREF}
+              data-cursor="hover"
+              className="text-[15px] text-foreground underline decoration-[var(--water)] decoration-2 underline-offset-[6px] transition-colors hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              {EMAIL}
+            </a>
             <a
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="hover"
-              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="text-[15px] text-[color:var(--text-secondary)] underline decoration-[var(--border-strong)] underline-offset-[6px] transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              WhatsApp me
-              <MessageCircle className="size-4" />
+              WhatsApp
             </a>
             <Link
               to="/services"
               data-cursor="hover"
-              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] px-6 py-3.5 text-[15px] font-medium transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="inline-flex items-center gap-1.5 text-[15px] text-[color:var(--text-secondary)] underline decoration-[var(--border-strong)] underline-offset-[6px] transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              Services &amp; process
-              <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              The services
+              <ArrowUpRight className="size-3.5" />
             </Link>
-            <span className="text-sm text-foreground/50">
-              Email or WhatsApp. Reply within a day.
-            </span>
           </div>
         </div>
       </section>
@@ -486,14 +396,14 @@ export default function Home() {
   );
 }
 
-/** The technology ticker track — shared by both skewed and plain modes. */
+/** The technology ticker track, shared by both skewed and plain modes. */
 function StackTicker() {
   return (
     <Marquee duration={34}>
       {profile.stack.map((tech, i) => (
         <span
           key={i}
-          className="inline-flex items-center gap-[0.5em] whitespace-nowrap font-display text-[clamp(34px,6vw,96px)] leading-none text-foreground"
+          className="poster inline-flex items-center gap-[0.5em] whitespace-nowrap font-display text-[clamp(34px,6vw,96px)] leading-none text-foreground"
         >
           {tech}
           <span aria-hidden className="text-[0.5em] text-[color:var(--water)]">
@@ -515,7 +425,7 @@ function SkewOnVelocity({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * One headline line that SWINGS up into place from a tilted 3D plane — the
+ * One headline line that swings up into place from a tilted 3D plane, the
  * entrance's impact beat (real depth via CSS perspective, no WebGL). The
  * outer span carries the perspective; the inner motion span pivots on its
  * bottom edge so the line rotates upright rather than sliding. `still`
@@ -546,55 +456,3 @@ function HeroLine({
     </span>
   );
 }
-
-function CapabilityCard({
-  cap,
-  index,
-  count,
-  progress,
-  still,
-}: {
-  cap: (typeof capabilities)[number];
-  index: number;
-  count: number;
-  progress: MotionValue<number>;
-  still: boolean;
-}) {
-  // Each pinned card eases back as the next one stacks over it.
-  const scale = useTransform(
-    progress,
-    [index / count, 1],
-    [1, 1 - (count - index) * 0.04]
-  );
-
-  const inner = (
-    <motion.div
-      style={still ? undefined : { scale }}
-      // .paper (opaque + grid) so pinned cards occlude each other cleanly.
-      className="paper relative origin-top overflow-hidden border border-[var(--border-strong)] p-8 shadow-[var(--shadow-lg)] md:p-14"
-    >
-      <div className="flex justify-end">
-        <span
-          className="font-note text-lg text-[color:var(--water)]"
-          style={{ rotate: '-2deg' }}
-        >
-          {cap.note}
-        </span>
-      </div>
-      <h3 className="mt-8 font-display text-[clamp(30px,4.6vw,64px)] leading-[0.92] text-foreground md:mt-12">
-        {cap.title}
-        <span className="text-[color:var(--water)]">.</span>
-      </h3>
-      <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg">
-        {cap.body}
-      </p>
-    </motion.div>
-  );
-
-  return (
-    <div className="sticky" style={{ top: `calc(88px + ${index * 22}px)` }}>
-      {still ? inner : <TiltCard max={2.2} parallax={5}>{inner}</TiltCard>}
-    </div>
-  );
-}
-

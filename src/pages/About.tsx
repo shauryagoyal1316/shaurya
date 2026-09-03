@@ -1,22 +1,20 @@
-import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, MessageCircle } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { profile } from '@/data/profile';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollDrift } from '@/components/effects/ScrollDrift';
 import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
-import { TiltCard } from '@/components/effects/TiltCard';
+import { SheetTitleBlock } from '@/components/effects/TitleBlock';
 import {
   Annotate,
   DrawnRule,
   HandNote,
-  Stamp,
 } from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
 import { EMAIL, EMAIL_HREF, WHATSAPP_DISPLAY, WHATSAPP_HREF } from '@/lib/contact';
 
-/** Masked line reveal for body copy — the paragraph rises out of its own line box. */
+/** Masked line reveal for body copy: the paragraph rises out of its own line box. */
 function RevealParagraph({
   children,
   className,
@@ -42,26 +40,30 @@ function RevealParagraph({
 }
 
 /**
- * Sheet 03 — who drew this. Split editorial layout in the working-drawing
- * language: bordered capability cells, a spec-table sidebar, drawn rules.
+ * Sheet 03, who drew this. Same poster grammar at the lowest amplitude of
+ * the three pages: this one is mostly reading, so the type stays at reading
+ * scale and only the headings go large.
+ *
+ * The old three-column TiltCard panel grid is gone. A grid of identical
+ * cards is the single most recognisable machine-made page structure there
+ * is, and both the house rules and the taste floor ban it outright.
  */
 export default function About() {
   const reducedMotion = useReducedMotion();
-  const capabilityPanels = [
+
+  // Two, not three. A rule of three is a banned copy pattern here, and the
+  // third panel advertised an AI-assisted workflow, which reads badly on a
+  // page whose whole argument is that a person drew this by hand.
+  const disciplines = [
     {
       label: 'Direction',
-      title: 'Clear page strategy before pixels.',
-      body: 'The offer, sections, hierarchy, and user path get mapped before the design gets dressed up.',
+      title: 'Page strategy before pixels.',
+      body: 'The offer, the sections, the hierarchy, and the path a visitor takes are mapped before anything gets dressed up.',
     },
     {
       label: 'Build',
-      title: 'Front end, back end, and launch flow.',
-      body: 'The site is shaped as a complete system, not a disconnected visual mockup.',
-    },
-    {
-      label: 'AI workflow',
-      title: 'AI-assisted execution with taste.',
-      body: 'AI tools speed up production while every decision about quality and polish stays human.',
+      title: 'Front end, back end, and the launch.',
+      body: 'The site is shaped as one complete system rather than a visual mockup that somebody else has to wire up later.',
     },
   ];
 
@@ -73,16 +75,19 @@ export default function About() {
       />
 
       {/* BIO HERO */}
-      <section className="relative overflow-hidden px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-36">
+      <section
+        data-sheet="ABOUT"
+        className="relative overflow-hidden px-6 pb-16 pt-28 md:px-10 md:pb-24 md:pt-36"
+      >
         <div className="relative mx-auto max-w-[1440px]">
           <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reducedMotion ? undefined : { opacity: 0, y: 28 }}
+            animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE.snappy }}
             className="max-w-5xl"
           >
-            <HandNote className="mb-5">who drew all this —</HandNote>
-            <h1 className="font-display text-[clamp(52px,10.5vw,160px)] leading-[0.86] text-foreground">
+            <HandNote className="mb-5">who drew all this ↓</HandNote>
+            <h1 className="poster font-display text-[clamp(54px,11.5vw,186px)] leading-[0.84] text-foreground">
               Full websites,
               <span className="block text-[color:var(--text-secondary)]">
                 <Annotate note="design → deploy">one</Annotate> pair of hands.
@@ -90,50 +95,52 @@ export default function About() {
             </h1>
           </motion.div>
 
-          <div className="mt-12 grid border border-[var(--border-strong)] md:grid-cols-3">
-            {capabilityPanels.map((panel, i) => (
-              <motion.article
-                key={panel.label}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-10% 0px' }}
-                transition={{
-                  duration: 0.75,
-                  delay: i * 0.08,
-                  ease: EASE.snappy,
-                }}
-                className={`border-[var(--border-strong)] max-md:border-b md:border-r ${i === 2 ? 'md:border-r-0 max-md:border-b-0' : ''}`}
-              >
-                <TiltCard max={2.5} parallax={5} className="h-full">
-                  <div className="h-full p-6">
-                    <div className="mb-8 font-note text-base text-[color:var(--water)]" style={{ rotate: '-1.5deg' }}>
-                      {panel.label.toLowerCase()}
-                    </div>
-                    <h2 className="font-display text-2xl leading-[1.02] text-foreground">
-                      {panel.title}
-                    </h2>
-                    <p className="mt-5 text-sm leading-relaxed text-[color:var(--text-secondary)]">
-                      {panel.body}
-                    </p>
+          {/* Two disciplines as type rows, walking right. No cards. */}
+          <div className="mt-16 md:mt-24">
+            {disciplines.map((d, i) => (
+              <div key={d.label}>
+                <DrawnRule strong={i === 0} />
+                <motion.article
+                  initial={reducedMotion ? undefined : { opacity: 0, y: 18 }}
+                  whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-10% 0px' }}
+                  transition={{ duration: 0.75, ease: EASE.snappy }}
+                  className="grid gap-3 py-10 md:grid-cols-12 md:items-baseline md:gap-10 md:py-14"
+                  style={{ paddingLeft: `${i * 4}%` }}
+                >
+                  <div className="font-mono text-[11px] leading-none text-[color:var(--text-tertiary)] md:col-span-2">
+                    {d.label.toUpperCase()}
                   </div>
-                </TiltCard>
-              </motion.article>
+                  <h2 className="font-display text-2xl leading-[1.02] text-foreground md:col-span-5 md:text-4xl">
+                    {d.title}
+                  </h2>
+                  <p className="max-w-[44ch] text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:col-span-5">
+                    {d.body}
+                  </p>
+                </motion.article>
+              </div>
             ))}
+            <DrawnRule strong />
           </div>
         </div>
       </section>
 
-      <section className="px-6 pb-16 pt-8 md:px-10 md:pb-20 md:pt-12">
+      {/* BIO + SPEC TABLE */}
+      <section
+        data-sheet="THE HAND"
+        className="border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28"
+      >
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 md:grid-cols-12">
-          {/* Spec-table sidebar */}
           <motion.aside
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={reducedMotion ? undefined : { opacity: 0, y: 24 }}
+            whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-10% 0px' }}
             transition={{ duration: 0.85, ease: EASE.snappy }}
             className="md:col-span-4"
           >
-            <div className="mb-5 text-sm text-foreground/50">Currently</div>
+            <div className="mb-5 font-mono text-[11px] text-foreground/50">
+              CURRENTLY
+            </div>
             <div className="mb-6 font-display text-[clamp(24px,2.6vw,36px)] leading-[1.02] text-foreground">
               Building
               <span className="block text-[color:var(--text-secondary)]">
@@ -178,7 +185,6 @@ export default function About() {
             </dl>
           </motion.aside>
 
-          {/* Bio */}
           <div className="md:col-span-7 md:col-start-6">
             <ScrollScrubText
               text={profile.biography.split('\n\n')[0]}
@@ -197,8 +203,10 @@ export default function About() {
 
             <div className="mt-10 pt-7">
               <DrawnRule strong className="mb-7" />
-              <div className="mb-4 text-sm text-foreground/50">Approach</div>
-              <div className="max-w-2xl space-y-4 text-base font-light leading-[1.65] text-foreground md:text-[16px]">
+              <div className="mb-4 font-mono text-[11px] text-foreground/50">
+                APPROACH
+              </div>
+              <div className="max-w-2xl space-y-4 text-base font-light leading-[1.65] text-foreground">
                 {profile.approach.split('\n\n').map((para, i) => (
                   <RevealParagraph key={i} delay={i * 0.08}>
                     {para}
@@ -211,104 +219,106 @@ export default function About() {
       </section>
 
       {/* SKILLS / STACK */}
-      <section className="relative overflow-hidden border-t border-[var(--border-strong)] px-6 py-16 md:px-10 md:py-20">
+      <section
+        data-sheet="TOOLS"
+        className="relative overflow-hidden border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28"
+      >
         <div className="relative mx-auto max-w-[1440px]">
-          <h2 className="font-display text-[clamp(38px,5.5vw,88px)] leading-[0.9] text-foreground">
+          <h2 className="poster font-display text-[clamp(38px,6vw,104px)] leading-[0.88] text-foreground">
             <SplitTextReveal text="Skills" stagger={0.04} />{' '}
             <span className="text-[color:var(--text-secondary)]">
-              <SplitTextReveal text="& tools." stagger={0.04} delay={0.12} />
+              <SplitTextReveal text="and tools." stagger={0.04} delay={0.12} />
             </span>
           </h2>
 
-          <div className="mt-10 grid grid-cols-1 gap-12 md:grid-cols-2">
-            {/* Skills cloud — the two halves square up as you scroll */}
+          <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2">
             <ScrollDrift from={-48}>
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-              {profile.skills.map((s, i) => (
-                <motion.span
-                  key={s}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    delay: i * 0.05,
-                    ease: EASE.snappy,
-                  }}
-                  className="font-display text-[clamp(20px,2.6vw,34px)] leading-[1.05] text-foreground"
-                  style={
-                    reducedMotion
-                      ? undefined
-                      : {
-                          animation: `drift ${6 + (i % 4)}s ease-in-out ${
-                            i * 0.3
-                          }s infinite`,
-                        }
-                  }
-                >
-                  {s}
-                  {i < profile.skills.length - 1 && (
-                    <span className="mx-2.5 text-[color:var(--water)]">+</span>
-                  )}
-                </motion.span>
-              ))}
-            </div>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+                {profile.skills.map((s, i) => (
+                  <motion.span
+                    key={s}
+                    initial={reducedMotion ? undefined : { opacity: 0, y: 18 }}
+                    whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.6,
+                      delay: i * 0.05,
+                      ease: EASE.snappy,
+                    }}
+                    className="font-display text-[clamp(20px,2.6vw,34px)] leading-[1.05] text-foreground"
+                    style={
+                      reducedMotion
+                        ? undefined
+                        : {
+                            animation: `drift ${6 + (i % 4)}s ease-in-out ${
+                              i * 0.3
+                            }s infinite`,
+                          }
+                    }
+                  >
+                    {s}
+                    {i < profile.skills.length - 1 && (
+                      <span className="mx-2.5 text-[color:var(--water)]">+</span>
+                    )}
+                  </motion.span>
+                ))}
+              </div>
             </ScrollDrift>
 
-            {/* Stack */}
             <ScrollDrift from={56}>
-            <div className="paper-plain h-full border border-[var(--border-strong)] p-6 shadow-[var(--shadow-sm)]">
-              <div className="mb-5 text-sm text-foreground/50">The stack</div>
-              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-[14px] text-foreground">
-                {profile.stack.map((tech) => (
-                  <li key={tech} className="flex items-center gap-3">
-                    <span aria-hidden className="size-1.5 bg-primary" />
-                    {tech}
-                  </li>
-                ))}
-              </ul>
-            </div>
+              <div className="paper-plain h-full border border-[var(--border-strong)] p-6 shadow-[var(--shadow-sm)]">
+                <div className="mb-5 font-mono text-[11px] text-foreground/50">
+                  THE STACK
+                </div>
+                <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-[14px] text-foreground">
+                  {profile.stack.map((tech) => (
+                    <li key={tech} className="flex items-center gap-3">
+                      <span aria-hidden className="size-1.5 bg-primary" />
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </ScrollDrift>
           </div>
         </div>
       </section>
 
-      {/* OUTRO */}
-      <section className="border-t border-[var(--border-strong)] px-6 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-[1440px]">
-          <h2 className="font-display text-[clamp(38px,6.5vw,104px)] leading-[0.88] text-foreground">
-            <SplitTextReveal text="Like how" stagger={0.04} />{' '}
-            <span className="text-[color:var(--text-secondary)]">
-              <SplitTextReveal text="this feels?" stagger={0.04} delay={0.12} />
-            </span>
-          </h2>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link
-              to="/services"
-              data-cursor="hover"
-              className="group inline-flex items-center gap-3 border border-[var(--border-strong)] bg-primary px-7 py-3.5 text-[15px] font-medium text-primary-foreground shadow-[var(--shadow-md)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              Your site, drawn like this
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+      {/* APPROVAL — the same hand-off the other two sheets end on. */}
+      <section
+        data-sheet="APPROVAL"
+        className="relative border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-36"
+      >
+        <div className="mx-auto max-w-[1100px]">
+          <SheetTitleBlock ctaHref={EMAIL_HREF} />
+        </div>
+      </section>
+
+      {/* CLOSE */}
+      <section data-sheet="CLOSE" className="relative px-6 py-24 md:px-10 md:py-32">
+        <div className="mx-auto max-w-[1440px] md:text-right">
+          <p className="text-sm font-light leading-relaxed text-[color:var(--text-secondary)] md:ml-auto md:max-w-[38ch]">
+            If you like how this reads, that is the whole pitch. Yours would be
+            drawn the same way.
+          </p>
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-3 md:justify-end">
             <a
               href={EMAIL_HREF}
               data-cursor="hover"
-              className="inline-flex items-center gap-3 border border-[var(--border-strong)] px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="text-[15px] text-foreground underline decoration-[var(--water)] decoration-2 underline-offset-[6px] transition-colors hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              Email me
+              {EMAIL}
             </a>
             <a
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="hover"
-              className="inline-flex items-center gap-3 border border-[var(--border-strong)] px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex items-center gap-1.5 text-[15px] text-[color:var(--text-secondary)] underline decoration-[var(--border-strong)] underline-offset-[6px] transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              WhatsApp me
-              <MessageCircle className="size-4" />
+              WhatsApp
+              <ArrowUpRight className="size-3.5" />
             </a>
-            <Stamp text="Open for work" ink="blue" rotate={4} />
           </div>
         </div>
       </section>
@@ -329,7 +339,9 @@ function MetaRow({
 }) {
   return (
     <div className={`p-4 ${last ? '' : 'border-b border-[var(--border-strong)]'}`}>
-      <dt className="mb-1 text-[13px] text-foreground/50">{label}</dt>
+      <dt className="mb-1 font-mono text-[10px] text-foreground/50">
+        {label.toUpperCase()}
+      </dt>
       <dd className="text-[14px] text-foreground">{value || children}</dd>
     </div>
   );
