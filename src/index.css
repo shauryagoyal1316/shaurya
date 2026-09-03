@@ -13,12 +13,12 @@
 :root,
 :root[data-theme="light"] {
   /* Canvas + surfaces — drafting paper over ink */
-  --background: hsl(84 12% 93%);          /* cool technical paper #EEF0EB */
-  --foreground: hsl(100 7% 8%);           /* ink #141613 */
-  --surface-1: hsl(84 10% 90%);
-  --surface-2: hsl(84 9% 86%);
-  --surface-3: hsl(84 7% 78%);
-  --surface-premium: hsl(84 12% 95%);     /* solid — this system has no glass */
+  --background: hsl(40 22% 97%);          /* soft warm white */
+  --foreground: hsl(30 8% 17%);           /* softened ink, never pure black */
+  --surface-1: hsl(40 20% 95%);
+  --surface-2: hsl(40 16% 92%);
+  --surface-3: hsl(40 12% 86%);
+  --surface-premium: hsl(40 30% 98%);     /* solid — this system has no glass */
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
@@ -27,28 +27,28 @@
 
   /* Type hierarchy */
   --text-primary: var(--foreground);
-  --text-secondary: hsla(100 7% 8% / 0.64);
-  --text-tertiary: hsla(100 7% 8% / 0.42);
+  --text-secondary: hsla(30 8% 17% / 0.60);
+  --text-tertiary: hsla(30 8% 17% / 0.38);
 
   /* Brand — drafting blue; red pencil rides the old --water slots so every
      existing primary→water gradient becomes blueprint-blue→redline */
-  --primary: hsl(232 100% 58%);           /* #2B45FF drafting blue */
-  --primary-foreground: hsl(84 12% 95%);
+  --primary: hsl(228 34% 44%);            /* muted slate blue */
+  --primary-foreground: hsl(40 30% 98%);
   --accent: var(--primary);
   --accent-foreground: var(--primary-foreground);
-  --accent-soft: hsla(232 100% 58% / 0.10);
-  --water: hsl(4 66% 51%);                /* #D5382E red pencil — MARKS ONLY */
-  --water-deep: hsl(4 60% 40%);
+  --accent-soft: hsla(228 34% 44% / 0.08);
+  --water: hsl(10 42% 54%);               /* soft clay accent — MARKS ONLY */
+  --water-deep: hsl(10 40% 42%);
   /* Red pencil for TEXT. The mark red is 4.04:1 on paper, which fails body
      contrast; drawn marks only have to clear 3:1, set copy never does. Any
      red word, note or label uses this one. */
-  --water-ink: hsl(4 72% 38%);
-  --water-soft: hsla(4 66% 51% / 0.22);
-  --water-glow: hsla(4 66% 51% / 0.14);
+  --water-ink: hsl(10 45% 40%);
+  --water-soft: hsla(10 42% 54% / 0.18);
+  --water-glow: hsla(10 42% 54% / 0.10);
 
-  /* Graph-paper grid lines */
-  --grid-minor: hsla(232 45% 40% / 0.055);
-  --grid-major: hsla(232 45% 40% / 0.11);
+  /* Grid retired: the paper is plain now */
+  --grid-minor: transparent;
+  --grid-major: transparent;
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -58,10 +58,10 @@
   --destructive: hsl(0 70% 50%);
   --destructive-foreground: hsl(36 25% 96%);
 
-  /* Hairlines — a drawing's lines are meant to be SEEN */
-  --border: hsla(100 7% 8% / 0.22);
-  --border-strong: hsla(100 7% 8% / 0.55);
-  --input: hsla(100 7% 8% / 0.22);
+  /* Hairlines — present, not loud */
+  --border: hsla(30 8% 17% / 0.07);
+  --border-strong: hsla(30 8% 17% / 0.13);
+  --input: hsla(30 8% 17% / 0.07);
   --ring: var(--primary);
 
   --radius: 0rem; /* drawings have corners, not fillets */
@@ -82,10 +82,10 @@
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-pill:   cubic-bezier(0.34, 1.2, 0.64, 1);
 
-  /* Shadow scale — hard offset prints, not soft blurs */
-  --shadow-sm: 2px 2px 0 hsla(100 7% 8% / 0.12);
-  --shadow-md: 3px 3px 0 hsla(100 7% 8% / 0.16);
-  --shadow-lg: 5px 5px 0 hsla(100 7% 8% / 0.18);
+  /* Shadow scale — soft ambient depth */
+  --shadow-sm: 0 1px 2px hsla(30 8% 17% / 0.05);
+  --shadow-md: 0 4px 18px hsla(30 8% 17% / 0.06);
+  --shadow-lg: 0 18px 50px hsla(30 8% 17% / 0.08);
   --shadow-glow: 0 0 0 1px var(--accent-soft), 4px 4px 0 var(--accent-soft);
 
   /* Legacy tokens kept so vendored shadcn pieces still resolve */
@@ -108,12 +108,12 @@
 :root[data-theme="dark"],
 .dark {
   /* Night blueprint — pale lines on deep blue paper */
-  --background: hsl(219 49% 10%);         /* #0D1526 blueprint */
-  --foreground: hsl(220 45% 93%);         /* pale print #E6ECF7 */
-  --surface-1: hsl(219 42% 13%);
-  --surface-2: hsl(219 38% 16%);
-  --surface-3: hsl(219 32% 22%);
-  --surface-premium: hsl(219 45% 12%);
+  --background: hsl(225 12% 9%);          /* deep neutral, not blueprint */
+  --foreground: hsl(40 14% 92%);          /* warm paper white */
+  --surface-1: hsl(225 11% 12%);
+  --surface-2: hsl(225 10% 15%);
+  --surface-3: hsl(225 9% 21%);
+  --surface-premium: hsl(225 11% 11%);
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
@@ -121,36 +121,36 @@
   --popover-foreground: var(--foreground);
 
   --text-primary: var(--foreground);
-  --text-secondary: hsla(220 45% 93% / 0.66);
-  --text-tertiary: hsla(220 45% 93% / 0.42);
+  --text-secondary: hsla(40 14% 92% / 0.60);
+  --text-tertiary: hsla(40 14% 92% / 0.38);
 
-  --primary: hsl(227 100% 74%);           /* #7A97FF print blue */
-  --primary-foreground: hsl(219 49% 10%);
+  --primary: hsl(228 42% 72%);            /* muted slate blue for night */
+  --primary-foreground: hsl(225 12% 9%);
   --accent: var(--primary);
   --accent-foreground: var(--primary-foreground);
-  --accent-soft: hsla(227 100% 74% / 0.14);
-  --water: hsl(6 100% 66%);               /* #FF5C4D redline, brightened for night */
-  --water-deep: hsl(6 80% 52%);
+  --accent-soft: hsla(228 42% 72% / 0.12);
+  --water: hsl(12 52% 64%);               /* soft clay, lifted for night */
+  --water-deep: hsl(12 45% 52%);
   /* Already light-on-dark and clearing 4.5:1, lifted a touch for small text */
-  --water-ink: hsl(6 100% 72%);
-  --water-soft: hsla(6 100% 66% / 0.24);
-  --water-glow: hsla(6 100% 66% / 0.14);
+  --water-ink: hsl(12 58% 70%);
+  --water-soft: hsla(12 52% 64% / 0.20);
+  --water-glow: hsla(12 52% 64% / 0.10);
 
-  --grid-minor: hsla(220 70% 80% / 0.05);
-  --grid-major: hsla(220 70% 80% / 0.10);
+  --grid-minor: transparent;
+  --grid-major: transparent;
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
   --muted: var(--surface-2);
   --muted-foreground: hsla(220 45% 93% / 0.60);
 
-  --border: hsla(220 45% 93% / 0.22);
-  --border-strong: hsla(220 45% 93% / 0.55);
-  --input: hsla(220 45% 93% / 0.22);
+  --border: hsla(40 14% 92% / 0.07);
+  --border-strong: hsla(40 14% 92% / 0.14);
+  --input: hsla(40 14% 92% / 0.07);
 
-  --shadow-sm: 2px 2px 0 hsla(219 60% 4% / 0.7);
-  --shadow-md: 3px 3px 0 hsla(219 60% 4% / 0.8);
-  --shadow-lg: 5px 5px 0 hsla(219 60% 4% / 0.85);
+  --shadow-sm: 0 1px 2px hsla(225 40% 2% / 0.5);
+  --shadow-md: 0 4px 18px hsla(225 40% 2% / 0.55);
+  --shadow-lg: 0 18px 50px hsla(225 40% 2% / 0.6);
   --shadow-glow: 0 0 0 1px var(--accent-soft), 4px 4px 0 var(--accent-soft);
 
   --ds-gray-100: var(--surface-1);
@@ -285,12 +285,13 @@
     overflow-x: hidden;
   }
 
-  /* Display type is condensed-heavy Archivo, always uppercase-leaning */
+  /* Display type: open-width Archivo, sentence case, medium weight.
+     The condensed-black uppercase setting read as a poster shout. */
   .font-display {
-    font-variation-settings: 'wdth' 78;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
+    font-variation-settings: 'wdth' 92;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: -0.018em;
   }
 
   ::selection {
@@ -324,15 +325,7 @@
   /* The paper itself: opaque background + live graph grid. Any element that
      must be opaque (main column, footer, stacked cards) uses .paper instead
      of bg-background so the grid never disappears. */
-  .paper {
-    background-color: var(--background);
-    background-image:
-      linear-gradient(var(--grid-minor) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px),
-      linear-gradient(var(--grid-major) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
-    background-size: 12px 12px, 12px 12px, 96px 96px, 96px 96px;
-  }
+  .paper { background-color: var(--background); }
 
   /* Solid paper without grid — for cards that sit ON the drawing */
   .paper-plain { background-color: var(--surface-premium); }
@@ -346,15 +339,17 @@
      tightens, the width axis narrows so a long line still fits a phone, and
      ligatures come off because they are drawn for reading sizes. */
   .poster {
-    font-variation-settings: 'wdth' 72;
-    letter-spacing: -0.032em;
-    font-feature-settings: 'liga' 0, 'clig' 0;
+    font-variation-settings: 'wdth' 92;
+    font-weight: 500;
+    letter-spacing: -0.022em;
+    text-transform: none;
+    line-height: 0.95;
     text-wrap: balance;
   }
   @media (max-width: 700px) {
     .poster {
-      font-variation-settings: 'wdth' 66;
-      letter-spacing: -0.026em;
+      font-variation-settings: 'wdth' 84;
+      letter-spacing: -0.018em;
     }
   }
 

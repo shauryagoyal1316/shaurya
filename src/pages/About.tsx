@@ -6,11 +6,7 @@ import { ScrollDrift } from '@/components/effects/ScrollDrift';
 import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { SplitTextReveal } from '@/components/effects/SplitTextReveal';
 import { SheetTitleBlock } from '@/components/effects/TitleBlock';
-import {
-  Annotate,
-  DrawnRule,
-  HandNote,
-} from '@/components/effects/drawing';
+import { DrawnRule } from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
 import { EMAIL, EMAIL_HREF, WHATSAPP_DISPLAY, WHATSAPP_HREF } from '@/lib/contact';
 
@@ -86,11 +82,10 @@ export default function About() {
             transition={{ duration: 0.9, ease: EASE.snappy }}
             className="max-w-5xl"
           >
-            <HandNote className="mb-5">who drew all this ↓</HandNote>
             <h1 className="poster font-display text-[clamp(54px,11.5vw,186px)] leading-[0.84] text-foreground">
               Full websites,
               <span className="block text-[color:var(--text-secondary)]">
-                <Annotate note="design → deploy">one</Annotate> pair of hands.
+                one pair of hands.
               </span>
             </h1>
           </motion.div>

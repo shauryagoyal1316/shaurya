@@ -1,10 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { DraftingCursor } from '@/components/effects/DraftingCursor';
-import { CornerTitleBlock } from '@/components/effects/TitleBlock';
 import { ScrollProgress } from '@/components/effects/ScrollProgress';
-import { NoiseOverlay } from '@/components/effects/NoiseOverlay';
 import { SmoothScroll } from '@/components/effects/SmoothScroll';
 import { Preloader } from '@/components/effects/Preloader';
 import { useIsMobile } from '@/hooks/useMediaQuery';
@@ -39,15 +36,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen flex flex-col bg-background text-foreground">
       <SmoothScroll />
       <Preloader />
-      <NoiseOverlay />
-      <DraftingCursor />
-      <CornerTitleBlock />
       <ScrollProgress />
-      {/* Ruler ticks down the right edge — the sheet is measured */}
-      <div
-        aria-hidden
-        className="ruler-y fixed bottom-0 right-0 top-0 z-[3] hidden w-[14px] md:block"
-      />
       <Header />
       <main
         id="main-content"

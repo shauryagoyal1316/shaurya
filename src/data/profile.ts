@@ -6,7 +6,7 @@ export const profile: ProfileInfo = {
   lastName: 'Goyal',
   tagline: 'Websites & Business Software',
   heroIntroduction:
-    'I build complete websites for people who want something sharper than a template, and internal software for businesses outgrowing the spreadsheet. Front end, back end, motion, deployment: handled.',
+    'Complete websites for people who want something sharper than a template, and internal software for businesses outgrowing the spreadsheet.',
   biography: `I build full websites for people who want something sharper than a template. Front end, back end, layout, copy flow, motion, deployment. A website only works when the whole thing feels intentional.
 
 My job is taste and follow-through. I turn a business idea into a clear brief, choose the right stack, design the pages, and ship something that feels made for you.

@@ -3,13 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { SheetTitleBlock } from '@/components/effects/TitleBlock';
-import {
-  Annotate,
-  DimensionLine,
-  DrawnRule,
-  HandNote,
-  Stamp,
-} from '@/components/effects/drawing';
+import { DrawnRule } from '@/components/effects/drawing';
 import { EASE } from '@/lib/motion';
 import { EMAIL, EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
@@ -122,7 +116,6 @@ export default function Services() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="mt-10 max-w-3xl"
           >
-            <DimensionLine label="two lines of work · one person drawing both" />
           </motion.div>
 
           <motion.p
@@ -144,7 +137,6 @@ export default function Services() {
         className="relative border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-36"
       >
         <div className="mx-auto max-w-[1440px]">
-          <HandNote className="mb-6">what a website build contains ↓</HandNote>
           <h2 className="poster max-w-4xl font-display text-[clamp(36px,6vw,104px)] leading-[0.88] text-foreground">
             The whole
             <span className="ml-4 text-[color:var(--text-secondary)]">craft.</span>
@@ -179,7 +171,6 @@ export default function Services() {
       <section className="relative border-t border-[var(--border-strong)] px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1440px] md:flex md:justify-end">
           <div className="md:w-[78%]">
-            <HandNote className="mb-5">no stock case studies here ↓</HandNote>
             <h2 className="poster font-display text-[clamp(34px,5.4vw,80px)] leading-[0.88] text-foreground">
               You're looking
               <span className="ml-4 text-[color:var(--text-secondary)]">at it.</span>
@@ -193,7 +184,7 @@ export default function Services() {
             >
               The site you are reading is the demo. Judge it the way your own
               customers will: on your phone, at full speed, down to the smallest{' '}
-              <Annotate>detail</Annotate>. This is the standard your site gets
+              detail. This is the standard your site gets
               built to.
             </motion.p>
           </div>
@@ -206,7 +197,6 @@ export default function Services() {
         className="relative border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-36"
       >
         <div className="mx-auto max-w-[1440px]">
-          <HandNote className="mb-6">when the spreadsheet stops coping ↓</HandNote>
           <h2 className="poster font-display text-[clamp(38px,6.4vw,116px)] leading-[0.86] text-foreground">
             Software,
             <span className="ml-4 text-[color:var(--text-secondary)]">same pencil.</span>
@@ -256,7 +246,6 @@ export default function Services() {
                 day by teams that will never see this page.
               </motion.p>
               <div className="relative z-[4] mt-10 md:-mb-20">
-                <Stamp text="In production · daily use" ink="blue" rotate={3} />
               </div>
             </div>
           </div>

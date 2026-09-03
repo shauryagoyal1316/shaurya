@@ -15,46 +15,36 @@ import { ScrollScrubText } from '@/components/effects/ScrollScrubText';
 import { Marquee } from '@/components/effects/Marquee';
 import { SheetTitleBlock } from '@/components/effects/TitleBlock';
 import { getIntroOffset } from '@/components/effects/Preloader';
-import {
-  Annotate,
-  DimensionLine,
-  DrawnRule,
-  HandNote,
-  Stamp,
-} from '@/components/effects/drawing';
+import { DrawnRule } from '@/components/effects/drawing';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { usePointerParallax } from '@/hooks/usePointerParallax';
 import { EASE } from '@/lib/motion';
 import { EMAIL, EMAIL_HREF as CONTACT_HREF, WHATSAPP_HREF } from '@/lib/contact';
 
 const MANIFESTO =
-  'Most business websites are one of those, wearing a logo. Yours should read the way this page does: drawn for a single business, then built so it still holds up in three years.';
+  'Yours should be built for one business, and still hold up in three years.';
 
-/** The service lines. Type at four different weights, never cards. */
+/** The service lines. Type at four weights, never cards. */
 const services = [
   {
     key: 'direction',
     title: 'Design direction',
-    body: 'Typography, layout, colour, and pacing chosen for your business. Every page gets composed like a poster.',
-    note: 'the part templates skip',
+    body: 'Type, layout, and pacing chosen for your business.',
   },
   {
     key: 'build',
     title: 'Full-stack build',
-    body: 'Front end, back end, forms, bookings, logins. Built as one system, deployed on your own domain, fast on any phone.',
-    note: 'yes, the backend too',
+    body: 'Front end, back end, and the wiring behind the form. One system, on your own domain.',
   },
   {
     key: 'motion',
     title: 'Motion and feel',
-    body: 'The difference between a page and an experience: scroll choreography, and restraint where it counts.',
-    note: 'why this page feels alive',
+    body: 'Scroll choreography, with restraint where it counts.',
   },
   {
     key: 'aftercare',
     title: 'Launch and aftercare',
-    body: 'Domain, hosting, and the groundwork that makes Google notice. Kept alive long after it goes live.',
-    note: "I don't vanish at launch",
+    body: 'Domain, hosting, and the groundwork that gets you found.',
   },
 ];
 
@@ -143,9 +133,7 @@ export default function Home() {
               built to
             </HeroLine>
             <HeroLine delay={intro + 0.38} still={Boolean(reducedMotion)}>
-              <Annotate note="no templates. ever." className="align-top text-primary" delay={intro + 0.85}>
-                measure
-              </Annotate>
+              measure
               <span className="relative ml-[0.05em] inline-block size-[0.1em] translate-y-[-0.06em] align-baseline">
                 <motion.span
                   initial={reducedMotion ? { scale: 1, opacity: 1 } : { scale: 2.4, opacity: 0 }}
@@ -167,15 +155,6 @@ export default function Home() {
               </span>
             </HeroLine>
           </h1>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: intro + 0.95 }}
-            className="mt-8 max-w-3xl"
-          >
-            <DimensionLine label="drawn to fit · built to last" />
-          </motion.div>
 
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -250,8 +229,6 @@ export default function Home() {
         className="relative z-[3] border-t border-[var(--border-strong)] px-6 py-24 md:px-10 md:py-36"
       >
         <div className="mx-auto max-w-[1440px]">
-          <HandNote className="mb-6">what a build actually contains ↓</HandNote>
-
           {services.map((service, i) => (
             <div key={service.key}>
               <DrawnRule strong={i === 0} />
@@ -278,9 +255,6 @@ export default function Home() {
                   <p className="max-w-[42ch] text-base font-light leading-relaxed text-[color:var(--text-secondary)] md:text-lg">
                     {service.body}
                   </p>
-                  <HandNote className="mt-4 text-base" rotate={-1.5}>
-                    {service.note}
-                  </HandNote>
                 </div>
               </motion.article>
             </div>
@@ -312,10 +286,6 @@ export default function Home() {
               text="Somewhere past the tenth spreadsheet tab, a business stops needing a website and starts needing software. I build the internal tools too: inventory, fleet, compliance, approvals, reporting."
               className="max-w-4xl font-sans text-[clamp(24px,3.6vw,50px)] font-medium leading-[1.2] tracking-[-0.02em] text-foreground"
             />
-            {/* Stamp hangs over the next section's rule: paste-up, not grid */}
-            <div className="relative z-[4] mt-12 md:-mb-20">
-              <Stamp text="In production · daily use" ink="blue" rotate={3} />
-            </div>
           </div>
         </div>
       </section>
@@ -327,9 +297,9 @@ export default function Home() {
         className="relative z-[3] flex min-h-[88svh] items-center border-t border-[var(--border-strong)] px-6 md:px-10"
       >
         <div className="mx-auto w-full max-w-[1440px]">
-          <HandNote className="text-xl md:ml-[38%] md:text-2xl" rotate={-2.5}>
-            every drawing gets signed off. ↓
-          </HandNote>
+          <p className="text-lg font-light text-[color:var(--text-tertiary)] md:ml-[38%]">
+            Every drawing gets signed off.
+          </p>
         </div>
       </section>
 

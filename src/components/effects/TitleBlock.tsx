@@ -179,10 +179,10 @@ export function CornerTitleBlock() {
 }
 
 const SHEET_FIELDS = [
-  { label: 'DRAWING', value: 'A COMPLETE WEBSITE, DRAWN FOR ONE BUSINESS' },
-  { label: 'DRAWN BY', value: 'SHAURYA GOYAL' },
-  { label: 'MEDIUM', value: 'REACT, TYPESCRIPT, A REAL BACKEND' },
-  { label: 'STATUS', value: 'TAKING WORK' },
+  { label: 'Drawing', value: 'A complete website, built for one business' },
+  { label: 'Drawn by', value: 'Shaurya Goyal' },
+  { label: 'Medium', value: 'React, TypeScript, a real backend' },
+  { label: 'Status', value: 'Taking work' },
 ];
 
 /**
@@ -276,7 +276,7 @@ export function SheetTitleBlock({ ctaHref }: { ctaHref: string }) {
           className="grid gap-1 px-5 py-4 md:grid-cols-12 md:items-baseline md:gap-6 md:px-8 md:py-6"
         >
           <span className="font-mono text-[10px] leading-none text-[color:var(--text-tertiary)] md:col-span-3">
-            SCALE
+            Scale
           </span>
           <span className="font-mono text-sm text-foreground md:col-span-9">
             1:1 at {width || '—'} px, this screen
@@ -299,7 +299,7 @@ export function SheetTitleBlock({ ctaHref }: { ctaHref: string }) {
           className="group grid gap-3 px-5 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:grid-cols-12 md:items-baseline md:gap-6 md:px-8 md:py-8"
         >
           <span className="font-mono text-[10px] leading-none text-[color:var(--water-ink)] md:col-span-3">
-            APPROVED BY
+            Approved by
           </span>
           <span className="md:col-span-9">
             <motion.span
